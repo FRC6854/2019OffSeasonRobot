@@ -156,6 +156,9 @@ public class KitDrivetrain extends Subsystem implements Constants {
     return (int)rotations * 4096;
   }
 
+  //We technically shouldn't need this but it was in the differentialDrive class
+  //I think this exists only to prevent people from being stupid and
+  //Sending more than 100% power to a motor.
   /**
    * Limit motor values to the -1.0 to +1.0 range.
    */
