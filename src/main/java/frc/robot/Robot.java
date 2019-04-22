@@ -17,6 +17,9 @@ public class Robot extends TimedRobot implements RobotMap {
   //HELP WHY WONT THIS WORK
   //public SwerveWheelController = new SwerveWheelController(frontLeft, frontRight, backLeft, backRight);
 
+
+  //Note for later
+  // When IZone is used, the controller will automatically clear the integral accumulated error if the closed loop error is outside the IZone.
   public static Scheduler scheduler = Scheduler.getInstance();
 
   @Override
