@@ -56,7 +56,18 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void testInit() {
+    scheduler.removeAll();
     scheduler.add(new DriveDistance(10));
+    //drivetrain.driveRotations(10);
   }
+
+  @Override
+  public void testPeriodic() {
+    if (oi.getDriverAButtonPressed()) {
+      drivetrain.zeroSensor();
+      drivetrain.driveRotations(10);
+    }
+  }
+
 
 }

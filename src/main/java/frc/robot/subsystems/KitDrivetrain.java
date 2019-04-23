@@ -37,7 +37,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
     m_leftMaster.setInverted(false);
     m_rightMaster.setInverted(false);
 
-    m_leftMaster.setSensorPhase(false);
+    m_leftMaster.setSensorPhase(true);
     m_rightMaster.setSensorPhase(false);
 
     /* Configure Sensor Source for Pirmary PID */
@@ -134,12 +134,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public void driveRotations(double rotations){
     m_leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
-    m_rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+    //m_rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
   }
 
   public void driveTicks(int ticks){
     m_leftMaster.set(ControlMode.MotionMagic, ticks);
-    m_rightMaster.set(ControlMode.MotionMagic, ticks);
+    //m_rightMaster.set(ControlMode.MotionMagic, ticks);
   }
 
   public void tankDrive(double left, double right){
@@ -150,6 +150,11 @@ public class KitDrivetrain extends Subsystem implements Constants {
   public void fullStop(){
     m_leftMaster.set(ControlMode.Disabled, 0);
     m_rightMaster.set(ControlMode.Disabled, 0);
+  }
+
+  public void zeroSensor() {
+    m_leftMaster.setSelectedSensorPosition(0);
+    m_rightMaster.setSelectedSensorPosition(0);
   }
 
   private int rotationsToTicks(double rotations) {
@@ -190,6 +195,10 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public int getRightTicks(){
     return m_rightMaster.getSelectedSensorPosition();
+  }
+
+  public void debug() {
+    //SmartDashboard.putData(m_leftMaster.conTrol)
   }
 
 
