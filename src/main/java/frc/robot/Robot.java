@@ -11,13 +11,12 @@ public class Robot extends TimedRobot implements RobotMap {
 
   public static OI oi = new OI();
 
-  public static KitDrivetrain drivetrain = new KitDrivetrain(ID_LEFT_FRONT, ID_LEFT_BACK, ID_RIGHT_FRONT, ID_RIGHT_BACK);
+  public static KitDrivetrain drivetrain = new KitDrivetrain(CAN_LEFT_FRONT, CAN_LEFT_BACK, CAN_RIGHT_FRONT, CAN_RIGHT_BACK);
 
   public static Scheduler scheduler = Scheduler.getInstance();
 
   @Override
   public void robotInit() {
- 
   }
 
   @Override
