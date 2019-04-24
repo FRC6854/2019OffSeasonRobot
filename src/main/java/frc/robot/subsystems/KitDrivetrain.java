@@ -200,9 +200,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
   public void debug() {
     //SmartDashboard.putData(m_leftMaster.conTrol)
   }
-
-
-
+  
   @Override
   public void initDefaultCommand() {
   }
