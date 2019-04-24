@@ -1,9 +1,9 @@
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.Robot;
 
-public class DriveDistance extends Command {
+public class DriveDistance extends InstantCommand {
   int rotations;
   public DriveDistance(int rotations) {
 
@@ -16,17 +16,6 @@ public class DriveDistance extends Command {
   @Override
   protected void initialize() {
     Robot.drivetrain.driveRotations(rotations);
-  }
-
-  
-  @Override
-  protected void execute() {
-
-  }  
-
-  @Override
-  protected boolean isFinished() {
-    return false;
   }
 
   @Override
