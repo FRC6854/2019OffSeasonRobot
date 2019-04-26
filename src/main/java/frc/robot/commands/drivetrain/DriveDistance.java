@@ -13,6 +13,7 @@ public class DriveDistance extends InstantCommand {
 
   @Override
   protected void initialize() {
+    Robot.drivetrain.zeroSensor();
     Robot.drivetrain.driveRotations(rotations);
   }
 

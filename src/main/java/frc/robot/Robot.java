@@ -21,7 +21,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
-    SmartDashboard.putNumber("DT R Ticks", drivetrain.getLeftTicks());
+    SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
     scheduler.run();
   }
 
@@ -63,7 +63,7 @@ public class Robot extends TimedRobot implements RobotMap {
   public void testPeriodic() {
     if (oi.getDriverAButtonPressed()) {
       drivetrain.zeroSensor();
-      drivetrain.driveRotations(10);
+      drivetrain.driveRotations(1);
     }
   }
 }

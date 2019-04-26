@@ -6,7 +6,7 @@ public class OI implements RobotMap {
   XboxController driver = new XboxController(CONTROLLER_DRIVER);
   
   public double getDriverLeftStickY() {
-    return driver.getRawAxis(1) * -1;
+    return driver.getRawAxis(1)*-1;
   }
 
   public double getDriverLeftStickX() {

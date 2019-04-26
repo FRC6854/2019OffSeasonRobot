@@ -33,10 +33,13 @@ public class KitDrivetrain extends Subsystem implements Constants {
     rightMaster.configFactoryDefault();
 
     leftMaster.setInverted(false);
-    rightMaster.setInverted(false);
+    rightMaster.setInverted(true);
+
+    leftSlave.setInverted(false);
+    rightSlave.setInverted(true);
 
     leftMaster.setSensorPhase(true);
-    rightMaster.setSensorPhase(false);
+    rightMaster.setSensorPhase(true);
 
     /* Configure Sensor Source for Pirmary PID */
     leftMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
@@ -89,39 +92,39 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   // Copied from the WPILib Differential Drive Class with some minor alterations for compatibility
   public void arcadeDrive(double xSpeed, double zRotation ) {
-    xSpeed = limit(xSpeed);
-    xSpeed = applyDeadband(xSpeed, dt_kDefaultDeadband);
-
     zRotation = limit(zRotation);
     zRotation = applyDeadband(zRotation, dt_kDefaultDeadband);
 
+    xSpeed = limit(xSpeed);
+    xSpeed = applyDeadband(xSpeed, dt_kDefaultDeadband);
+
     // Square the inputs (while preserving the sign) to increase fine control
     // while permitting full power.
-    xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
     zRotation = Math.copySign(zRotation * zRotation, zRotation);
+    xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
 
     double leftMotorOutput;
     double rightMotorOutput;
 
-    double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
+    double maxInput = Math.copySign(Math.max(Math.abs(zRotation), Math.abs(xSpeed)), zRotation);
 
-    if (xSpeed >= 0.0) {
+    if (zRotation >= 0.0) {
       // First quadrant, else second quadrant
-      if (zRotation >= 0.0) {
+      if (xSpeed >= 0.0) {
         leftMotorOutput = maxInput;
-        rightMotorOutput = xSpeed - zRotation;
+        rightMotorOutput = zRotation - xSpeed;
       } else {
-        leftMotorOutput = xSpeed + zRotation;
+        leftMotorOutput = zRotation + xSpeed;
         rightMotorOutput = maxInput;
       }
     } else {
       // Third quadrant, else fourth quadrant
-      if (zRotation >= 0.0) {
-        leftMotorOutput = xSpeed + zRotation;
+      if (xSpeed >= 0.0) {
+        leftMotorOutput = zRotation + xSpeed;
         rightMotorOutput = maxInput;
       } else {
         leftMotorOutput = maxInput;
-        rightMotorOutput = xSpeed - zRotation;
+        rightMotorOutput = zRotation - xSpeed;
       }
     }
 
@@ -131,12 +134,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public void driveRotations(double rotations){
     leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
-    //rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+    rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
   }
 
   public void driveTicks(int ticks){
     leftMaster.set(ControlMode.MotionMagic, ticks);
-    //rightMaster.set(ControlMode.MotionMagic, ticks);
+    rightMaster.set(ControlMode.MotionMagic, ticks);
   }
 
   public void tankDrive(double left, double right){
