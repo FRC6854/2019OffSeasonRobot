@@ -1,7 +1,6 @@
 package frc.robot;
 
 public interface RobotMap {
-
   //Controller DriverStation Number
   final int CONTROLLER_DRIVER = 0;
 
@@ -19,7 +18,4 @@ public interface RobotMap {
   final int ANALOG_FR_ABSENCODER = 1;
   final int ANALOG_BL_ABSENCODER = 2;
   final int ANALOG_BR_ABSENCODER = 3;
-
-
-
 }

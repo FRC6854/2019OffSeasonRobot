@@ -8,7 +8,6 @@ import frc.robot.subsystems.SwerveDrivetrain.SwerveWheel;
 import frc.robot.subsystems.SwerveDrivetrain.SwerveWheelController;
 
 public class Robot extends TimedRobot implements RobotMap {
-
   public static OI oi = new OI();
 
   public static SwerveWheel frontLeft = new SwerveWheel(CAN_FL_STEER, ANALOG_FL_ABSENCODER, CAN_FL_DRIVE);
@@ -63,5 +62,4 @@ public class Robot extends TimedRobot implements RobotMap {
     scheduler.removeAll();
     scheduler.add(new TankDrive());
   }
-
 }
