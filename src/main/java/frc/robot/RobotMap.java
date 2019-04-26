@@ -1,7 +1,6 @@
 package frc.robot;
 
 public interface RobotMap {
-
   //Controller DriverStation Number
   final int CONTROLLER_DRIVER = 0;
 
@@ -10,6 +9,4 @@ public interface RobotMap {
   final int CAN_LEFT_BACK = 1;
   final int CAN_RIGHT_FRONT = 0;
   final int CAN_RIGHT_BACK = 3;
-
-
 }

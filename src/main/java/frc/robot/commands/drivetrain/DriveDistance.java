@@ -6,11 +6,9 @@ import frc.robot.Robot;
 public class DriveDistance extends InstantCommand {
   int rotations;
   public DriveDistance(int rotations) {
-
     super();
     requires(Robot.drivetrain);
     rotations = this.rotations;
-
   }
 
   @Override

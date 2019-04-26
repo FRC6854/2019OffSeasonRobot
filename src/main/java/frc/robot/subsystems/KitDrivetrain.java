@@ -7,86 +7,83 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class KitDrivetrain extends Subsystem implements Constants {
+  TalonSRX leftMaster;
+  VictorSPX leftSlave;
 
-  TalonSRX m_leftMaster;
-  VictorSPX m_leftSlave;
-
-  TalonSRX m_rightMaster;
-  VictorSPX m_rightSlave;
+  TalonSRX rightMaster;
+  VictorSPX rightSlave;
 
   public static final double kDefaultQuickStopThreshold = 0.2;
   public static final double kDefaultQuickStopAlpha = 0.1;
 
   public KitDrivetrain(int ID_LEFT_FRONT, int ID_LEFT_BACK, int ID_RIGHT_FRONT, int ID_RIGHT_BACK){
-    m_leftMaster = new TalonSRX(ID_LEFT_BACK);
-    m_leftSlave = new VictorSPX(ID_LEFT_FRONT);
-    m_rightMaster = new TalonSRX(ID_RIGHT_BACK);
-    m_rightSlave = new VictorSPX(ID_RIGHT_FRONT);
+    leftMaster = new TalonSRX(ID_LEFT_BACK);
+    leftSlave = new VictorSPX(ID_LEFT_FRONT);
+    rightMaster = new TalonSRX(ID_RIGHT_BACK);
+    rightSlave = new VictorSPX(ID_RIGHT_FRONT);
     
     init();
-   
   }
 
   private void init(){
-    m_leftSlave.follow(m_leftMaster);
-    m_rightSlave.follow(m_rightMaster);
+    leftSlave.follow(leftMaster);
+    rightSlave.follow(rightMaster);
 
-    m_leftMaster.configFactoryDefault();
-    m_rightMaster.configFactoryDefault();
+    leftMaster.configFactoryDefault();
+    rightMaster.configFactoryDefault();
 
-    m_leftMaster.setInverted(false);
-    m_rightMaster.setInverted(false);
+    leftMaster.setInverted(false);
+    rightMaster.setInverted(false);
 
-    m_leftMaster.setSensorPhase(true);
-    m_rightMaster.setSensorPhase(false);
+    leftMaster.setSensorPhase(true);
+    rightMaster.setSensorPhase(false);
 
     /* Configure Sensor Source for Pirmary PID */
-    m_leftMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
-    m_rightMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
+    leftMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
+    rightMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
 
-    m_leftMaster.setSelectedSensorPosition(0, 0, 0);
-    m_rightMaster.setSelectedSensorPosition(0, 0, 0);
+    leftMaster.setSelectedSensorPosition(0, 0, 0);
+    rightMaster.setSelectedSensorPosition(0, 0, 0);
 
     /* Set the peak and nominal outputs */
-    m_leftMaster.configNominalOutputForward(0, dt_kTimeoutMs);
-    m_rightMaster.configNominalOutputForward(0, dt_kTimeoutMs);
+    leftMaster.configNominalOutputForward(0, dt_kTimeoutMs);
+    rightMaster.configNominalOutputForward(0, dt_kTimeoutMs);
 
-    m_leftMaster.configNominalOutputReverse(0, dt_kTimeoutMs);
-    m_rightMaster.configNominalOutputReverse(0, dt_kTimeoutMs);
+    leftMaster.configNominalOutputReverse(0, dt_kTimeoutMs);
+    rightMaster.configNominalOutputReverse(0, dt_kTimeoutMs);
 
-    m_leftMaster.configPeakOutputForward(1, dt_kTimeoutMs);
-    m_rightMaster.configPeakOutputForward(1, dt_kTimeoutMs);
+    leftMaster.configPeakOutputForward(1, dt_kTimeoutMs);
+    rightMaster.configPeakOutputForward(1, dt_kTimeoutMs);
 
-    m_leftMaster.configPeakOutputReverse(-1, dt_kTimeoutMs);
-    m_rightMaster.configPeakOutputReverse(-1, dt_kTimeoutMs);   
+    leftMaster.configPeakOutputReverse(-1, dt_kTimeoutMs);
+    rightMaster.configPeakOutputReverse(-1, dt_kTimeoutMs);   
     
     /* Set Motion Magic gains in slot0 - see documentation */
-    m_leftMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
-    m_rightMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
+    leftMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
+    rightMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
     
-    m_leftMaster.config_kF(dt_kSlotIdx, dt_kF, dt_kTimeoutMs);
-    m_rightMaster.config_kF(dt_kSlotIdx, dt_kF, dt_kTimeoutMs);
+    leftMaster.config_kF(dt_kSlotIdx, dt_kF, dt_kTimeoutMs);
+    rightMaster.config_kF(dt_kSlotIdx, dt_kF, dt_kTimeoutMs);
     
-    m_leftMaster.config_kP(dt_kSlotIdx, dt_kP, dt_kTimeoutMs);
-    m_rightMaster.config_kP(dt_kSlotIdx, dt_kP, dt_kTimeoutMs);
+    leftMaster.config_kP(dt_kSlotIdx, dt_kP, dt_kTimeoutMs);
+    rightMaster.config_kP(dt_kSlotIdx, dt_kP, dt_kTimeoutMs);
     
-    m_leftMaster.config_kI(dt_kSlotIdx, dt_kI, dt_kTimeoutMs);
-    m_rightMaster.config_kI(dt_kSlotIdx, dt_kI, dt_kTimeoutMs);
+    leftMaster.config_kI(dt_kSlotIdx, dt_kI, dt_kTimeoutMs);
+    rightMaster.config_kI(dt_kSlotIdx, dt_kI, dt_kTimeoutMs);
     
-    m_leftMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
-    m_rightMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
+    leftMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
+    rightMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
     
     /* Set acceleration and vcruise velocity - see documentation */
-    m_leftMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
-    m_rightMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
+    leftMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
+    rightMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
     
-    m_leftMaster.configMotionAcceleration(500, dt_kTimeoutMs);
-    m_rightMaster.configMotionAcceleration(500, dt_kTimeoutMs);
+    leftMaster.configMotionAcceleration(500, dt_kTimeoutMs);
+    rightMaster.configMotionAcceleration(500, dt_kTimeoutMs);
 
 		/* Zero the sensor */
-    m_leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
-    m_rightMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
-
+    leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
+    rightMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
   }
 
 
@@ -128,33 +125,33 @@ public class KitDrivetrain extends Subsystem implements Constants {
       }
     }
 
-    m_leftMaster.set(ControlMode.PercentOutput, limit(leftMotorOutput) * dt_kDefaultMaxOutput);
-    m_rightMaster.set(ControlMode.PercentOutput, limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
+    leftMaster.set(ControlMode.PercentOutput, limit(leftMotorOutput) * dt_kDefaultMaxOutput);
+    rightMaster.set(ControlMode.PercentOutput, limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
   }
 
   public void driveRotations(double rotations){
-    m_leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
-    //m_rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+    leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+    //rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
   }
 
   public void driveTicks(int ticks){
-    m_leftMaster.set(ControlMode.MotionMagic, ticks);
-    //m_rightMaster.set(ControlMode.MotionMagic, ticks);
+    leftMaster.set(ControlMode.MotionMagic, ticks);
+    //rightMaster.set(ControlMode.MotionMagic, ticks);
   }
 
   public void tankDrive(double left, double right){
-    m_leftMaster.set(ControlMode.PercentOutput, left);
-    m_rightMaster.set(ControlMode.PercentOutput, right);
+    leftMaster.set(ControlMode.PercentOutput, left);
+    rightMaster.set(ControlMode.PercentOutput, right);
   }
 
   public void fullStop(){
-    m_leftMaster.set(ControlMode.Disabled, 0);
-    m_rightMaster.set(ControlMode.Disabled, 0);
+    leftMaster.set(ControlMode.Disabled, 0);
+    rightMaster.set(ControlMode.Disabled, 0);
   }
 
   public void zeroSensor() {
-    m_leftMaster.setSelectedSensorPosition(0);
-    m_rightMaster.setSelectedSensorPosition(0);
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
   }
 
   private int rotationsToTicks(double rotations) {
@@ -190,15 +187,15 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   public int getLeftTicks(){
-    return m_leftMaster.getSelectedSensorPosition();
+    return leftMaster.getSelectedSensorPosition();
   }
 
   public int getRightTicks(){
-    return m_rightMaster.getSelectedSensorPosition();
+    return rightMaster.getSelectedSensorPosition();
   }
 
   public void debug() {
-    //SmartDashboard.putData(m_leftMaster.conTrol)
+    //SmartDashboard.putData(leftMaster.conTrol)
   }
   
   @Override

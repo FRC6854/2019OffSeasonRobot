@@ -8,7 +8,6 @@ import frc.robot.commands.drivetrain.DriveDistance;
 import frc.robot.subsystems.KitDrivetrain;
 
 public class Robot extends TimedRobot implements RobotMap {
-
   public static OI oi = new OI();
 
   public static KitDrivetrain drivetrain = new KitDrivetrain(CAN_LEFT_FRONT, CAN_LEFT_BACK, CAN_RIGHT_FRONT, CAN_RIGHT_BACK);
@@ -40,7 +39,6 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void autonomousPeriodic() {
-  
   }
 
   @Override
@@ -68,6 +66,4 @@ public class Robot extends TimedRobot implements RobotMap {
       drivetrain.driveRotations(10);
     }
   }
-
-
 }
