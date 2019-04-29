@@ -43,6 +43,13 @@ public class OperateArm extends Command implements Constants {
           selectedStage ++;
         }
       }
+      if (selectedStage == 1){
+        Robot.arm.driveAngle(STAGE_BOTTOM);
+      } else if (selectedStage == 2) {
+        Robot.arm.driveAngle(STAGE_MIDDLE);
+      } else if (selectedStage == 3) {
+        Robot.arm.driveAngle(STAGE_TOP);
+      }
     }
   }
 

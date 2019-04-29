@@ -30,6 +30,7 @@ public class ZeroArm extends Command {
 
   @Override
   protected void end() {
+    Robot.scheduler.add(new OperateArm());
   }
 
   @Override
