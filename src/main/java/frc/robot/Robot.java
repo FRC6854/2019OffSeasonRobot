@@ -22,6 +22,7 @@ public class Robot extends TimedRobot implements RobotMap {
   public void robotPeriodic() {
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
     SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
+    SmartDashboard.putData(drivetrain);
     scheduler.run();
   }
 
@@ -34,7 +35,8 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     scheduler.removeAll();
-    scheduler.add(new ArcadeDrive());
+    //scheduler.add(new ArcadeDrive());
+    scheduler.add(new DriveDistance(10));
   }
 
   @Override

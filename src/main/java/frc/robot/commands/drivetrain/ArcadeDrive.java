@@ -7,7 +7,6 @@ public class ArcadeDrive extends Command {
   public ArcadeDrive() {
     super();
     requires(Robot.drivetrain);
-    
   }
 
   @Override

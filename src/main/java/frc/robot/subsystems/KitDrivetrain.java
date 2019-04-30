@@ -157,8 +157,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
     rightMaster.setSelectedSensorPosition(0);
   }
 
-  private int rotationsToTicks(double rotations) {
+  public int rotationsToTicks(double rotations) {
     return (int)rotations * 4096;
+  }
+
+  public int ticksToRotations(int ticks){
+    return ticks / 4096;
   }
 
   //We technically shouldn't need this but it was in the differentialDrive class
