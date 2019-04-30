@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 public interface Constants {
-    
     /**
 	 * --------------------
 	 * 	DRIVETRAIN CONSTANTS
@@ -28,6 +27,28 @@ public interface Constants {
     public final double dt_kDefaultDeadband = 0.02;
     public final double dt_kDefaultMaxOutput = 1.0;
 
-    public final double dt_rightSideInvertMultiplier = -1.0;
+	public final double dt_rightSideInvertMultiplier = -1.0;
+	
+	/**
+	 * --------------------
+	 * 	ARM CONSTANTS
+	 * --------------------
+	 */
+    static final int arm_kSlotIdx = 0;
 
+	static final int arm_kPIDLoopIdx = 0;
+
+	static final int arm_kTimeoutMs = 0;
+
+	static final FeedbackDevice arm_kFeedbackDevice = FeedbackDevice.CTRE_MagEncoder_Relative;
+	final int arm_encoderTicksPerRev = 4096;
+	
+    public final double arm_kP = 1.0;
+    public final double arm_kI = 0.0; 
+    public final double arm_kD = 0.0;
+	public final double arm_kF = 0.2;
+	
+	public static int STAGE_BOTTOM = 30;
+	public static int STAGE_MIDDLE = 60;
+	public static int STAGE_TOP = 90;
 }

@@ -9,4 +9,7 @@ public interface RobotMap {
   final int CAN_LEFT_BACK = 1;
   final int CAN_RIGHT_FRONT = 0;
   final int CAN_RIGHT_BACK = 3;
+
+  // Arm TalonSRX
+  final int CAN_ARM = 5;
 }
