@@ -30,6 +30,10 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
     SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
     SmartDashboard.putData(drivetrain);
+
+    SmartDashboard.putString("Arm Control Mode", arm.getControlMode().name());
+
+    SmartDashboard.putData(arm);
     
     SmartDashboard.putNumber("Arm Angle", arm.getAngle());
     SmartDashboard.putBoolean("Arm Reverse LS", arm.getReverseLimitSwitch());
@@ -64,6 +68,7 @@ public class Robot extends TimedRobot implements RobotMap {
   public void teleopInit() {
     scheduler.removeAll();
     scheduler.add(new ArcadeDrive());
+    scheduler.add(new ZeroArm());
     
   }
 

@@ -100,6 +100,14 @@ public class Arm extends Subsystem implements Constants {
     return faults.ForwardLimitSwitch;
   }
 
+  public ControlMode getControlMode() {
+    return arm.getControlMode();
+  }
+
+  public double getArmVelocity() {
+    return arm.getSelectedSensorVelocity();
+  }
+
   @Override
   public void initDefaultCommand() {
   }

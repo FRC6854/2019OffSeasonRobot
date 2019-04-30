@@ -6,8 +6,8 @@ import frc.robot.subsystems.Constants;
 
 public class OperateArm extends Command implements Constants {
   public static boolean manualControl = true;
-  public static int stage = 0;
-  
+  public static int stage = 1;
+
   public OperateArm() {
     super();
     requires(Robot.arm);
@@ -21,8 +21,8 @@ public class OperateArm extends Command implements Constants {
   protected void execute() {
     double manualOutput = Robot.oi.getDriverRTrigger() - Robot.oi.getDriverLTrigger();
 
-    if (Math.abs(manualOutput) > 0.1) {
-      manualControl = true; 
+    if (manualOutput != 0) {
+      manualControl = true;
     } else {
       manualControl = false;
     }
@@ -31,25 +31,30 @@ public class OperateArm extends Command implements Constants {
       Robot.arm.driveManual(manualOutput);
     }
 
-    if (Robot.oi.getDriverLBumperPressed() || Robot.oi.getDriverRBumperPressed()) {
-      manualControl = false;
-      if (manualControl == false) {
-        if (Robot.oi.getDriverLBumperPressed()) {
-          if (stage == 1) {
-            stage = 1;
-          } else {
-            stage --;
-          }
-        } else if (Robot.oi.getDriverRBumperPressed()) {
-          if (stage == 3) {
-            stage = 3;
-          } else {
-            stage++;
-          }
+    // if (Robot.oi.getDriverLBumperPressed() || Robot.oi.getDriverRBumperPressed())
+    // {
+    if (manualControl == false) {
+      if (Robot.oi.getDriverLBumperPressed()) {
+        if (stage == 1) {
+          stage = 1;
+        } else {
+          stage--;
         }
-        Robot.arm.setStage(stage);
+      } else if (Robot.oi.getDriverRBumperPressed()) {
+        if (stage == 3) {
+          stage = 3;
+        } else {
+          stage++;
+        }
+       
       }
     }
+
+    if (manualControl == false) {
+        Robot.arm.setStage(stage);
+    }
+
+   
   }
 
   @Override
