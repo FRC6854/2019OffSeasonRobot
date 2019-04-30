@@ -29,6 +29,14 @@ public class OI implements RobotMap {
     return driver.getRawAxis(3);
   }
 
+  public boolean getDriverLBumperPressed(){
+    return driver.getRawButtonPressed(5);
+  }
+
+  public boolean getDriverRBumperPressed(){
+    return driver.getRawButtonPressed(6);
+  }
+
   public boolean getDriverAButtonPressed() {
     return driver.getAButtonPressed();
   }

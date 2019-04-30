@@ -46,13 +46,9 @@ public interface Constants {
     public final double arm_kP = 1.0;
     public final double arm_kI = 0.0; 
     public final double arm_kD = 0.0;
-    public final double arm_kF = 0.2;
-
-	public static final int POS_BOTTOM=1377;
-	public static final int POS_MIDDLE=4000;
-	public static final int POS_TOP=6281;
-
-	public static final int POS_SAFE_BOTTOM = 1024;
-
-	static final double maxHeight = 4096.0;
+	public final double arm_kF = 0.2;
+	
+	public static int STAGE_BOTTOM = 30;
+	public static int STAGE_MIDDLE = 60;
+	public static int STAGE_TOP = 90;
 }

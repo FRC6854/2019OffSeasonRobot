@@ -5,8 +5,8 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Constants;
 
 public class OperateArm extends Command implements Constants {
-  public boolean manualControl = true;
-  public int selectedStage = 1;
+  public static boolean manualControl = true;
+  public static int stage = 0;
   
   public OperateArm() {
     super();
@@ -20,6 +20,7 @@ public class OperateArm extends Command implements Constants {
   @Override
   protected void execute() {
     double manualOutput = Robot.oi.getDriverRTrigger() - Robot.oi.getDriverLTrigger();
+
     if (Math.abs(manualOutput) > 0.1) {
       manualControl = true; 
     } else {
@@ -34,21 +35,19 @@ public class OperateArm extends Command implements Constants {
       manualControl = false;
       if (manualControl == false) {
         if (Robot.oi.getDriverLBumperPressed()) {
-          if (selectedStage <= 1) {
-            selectedStage = 1;
+          if (stage == 1) {
+            stage = 1;
           } else {
-            selectedStage --;
+            stage --;
           }
         } else if (Robot.oi.getDriverRBumperPressed()) {
-          selectedStage ++;
+          if (stage == 3) {
+            stage = 3;
+          } else {
+            stage++;
+          }
         }
-      }
-      if (selectedStage == 1){
-        Robot.arm.driveAngle(STAGE_BOTTOM);
-      } else if (selectedStage == 2) {
-        Robot.arm.driveAngle(STAGE_MIDDLE);
-      } else if (selectedStage == 3) {
-        Robot.arm.driveAngle(STAGE_TOP);
+        Robot.arm.setStage(stage);
       }
     }
   }

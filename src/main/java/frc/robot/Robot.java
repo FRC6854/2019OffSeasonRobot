@@ -3,6 +3,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.arm.OperateArm;
+import frc.robot.commands.arm.ZeroArm;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.DriveDistance;
 import frc.robot.subsystems.Arm;
@@ -31,7 +33,10 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("Arm Angle", arm.getAngle());
     SmartDashboard.putBoolean("Arm Reverse LS", arm.getReverseLimitSwitch());
     SmartDashboard.putBoolean("Arm Frwd LS", arm.getForwardLimitSwitch());
-    
+    SmartDashboard.putNumber("Arm Stage", arm.selectedStage);
+    SmartDashboard.putNumber("Cmd Stage", OperateArm.stage);
+    SmartDashboard.putBoolean("Manual Control", OperateArm.manualControl);
+
     scheduler.run();
   }
 
@@ -44,6 +49,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     scheduler.removeAll();
+    scheduler.add(new ZeroArm());
     scheduler.add(new ArcadeDrive());
   }
 

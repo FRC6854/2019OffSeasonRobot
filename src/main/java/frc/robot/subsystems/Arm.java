@@ -10,6 +10,8 @@ public class Arm extends Subsystem implements Constants {
   TalonSRX arm;
   Faults faults;
 
+  public int selectedStage = 0; 
+
   public Arm(int ID_ARM) {
     arm = new TalonSRX(ID_ARM);
     faults = new Faults();
@@ -59,7 +61,15 @@ public class Arm extends Subsystem implements Constants {
     arm.set(ControlMode.MotionMagic, angleToTicks(angle));
   }
 
-  public void driveHeight(double inches) {
+  public void setStage(int stage) {
+    selectedStage = stage;
+    if (selectedStage == 1) {
+      driveAngle(STAGE_BOTTOM);
+    } else if (selectedStage == 2) {
+      driveAngle(STAGE_MIDDLE);
+    } else if (selectedStage == 3) {
+      driveAngle(STAGE_TOP);
+    }
   }
   
   private int angleToTicks(int angle) {
