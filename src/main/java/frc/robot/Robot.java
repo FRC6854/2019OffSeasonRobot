@@ -3,12 +3,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.arm.OperateArm;
-import frc.robot.commands.arm.ZeroArm;
-import frc.robot.commands.drivetrain.ArcadeDrive;
-import frc.robot.commands.drivetrain.DriveDistance;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.KitDrivetrain;
+import frc.robot.commands.arm.*;
+import frc.robot.commands.drivetrain.*;
+import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot implements RobotMap {
   public static OI oi = new OI();
@@ -41,6 +38,8 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("Arm Stage", arm.selectedStage);
     SmartDashboard.putNumber("Cmd Stage", OperateArm.stage);
     SmartDashboard.putBoolean("Manual Control", OperateArm.manualControl);
+
+    SmartDashboard.putData(new MotionProfile()); // RUN THE MOTION PROFILE IN THE DASHBOARD
 
     scheduler.run();
   }
