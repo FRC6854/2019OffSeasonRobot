@@ -21,6 +21,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
   public static final double kDefaultQuickStopAlpha = 0.1;
 
   BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
+  BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
 
 
   public KitDrivetrain(int ID_LEFT_FRONT, int ID_LEFT_BACK, int ID_RIGHT_FRONT, int ID_RIGHT_BACK){
@@ -33,7 +34,8 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   private void init(){
-    initBuffer(GeneratedMotionProfile.Points, GeneratedMotionProfile.kNumPoints);
+    initBufferLeft(GeneratedMotionProfile.pathLeft, GeneratedMotionProfile.pathLeft.length);
+    initBufferRight(GeneratedMotionProfile.pathRight, GeneratedMotionProfile.pathRight.length);
 
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
@@ -143,10 +145,15 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public void motionProfile(){
     leftMaster.startMotionProfile(_bufferedStreamLeft, 10, ControlMode.MotionProfile);
+    rightMaster.startMotionProfile(_bufferedStreamRight, 10, ControlMode.MotionProfile);
   }
 
-  public boolean isMotionProfileFinished(){
+  public boolean isMotionProfileLeftFinished(){
     return leftMaster.isMotionProfileFinished();
+  }
+
+  public boolean isMotionProfileRightFinished(){
+    return rightMaster.isMotionProfileFinished();
   }
 
   public void driveRotations(double rotations){
@@ -222,7 +229,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
     //SmartDashboard.putData(leftMaster.conTrol)
   }
 
-  private void initBuffer(double[][] profile, int totalCnt) {
+  private void initBufferLeft(double[][] profile, int totalCnt) {
 
     boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
                             // since you can use negative numbers in profile).
@@ -256,6 +263,43 @@ public class KitDrivetrain extends Subsystem implements Constants {
         point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
 
         _bufferedStreamLeft.Write(point);
+    }
+  }
+
+  private void initBufferRight(double[][] profile, int totalCnt) {
+
+    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
+                            // since you can use negative numbers in profile).
+
+    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
+                                                   // automatically, you can alloc just one
+
+    /* clear the buffer, in case it was used elsewhere */
+    _bufferedStreamRight.Clear();
+
+    /* Insert every point into buffer, no limit on size */
+    for (int i = 0; i < totalCnt; ++i) {
+
+        double direction = forward ? +1 : -1;
+        double positionRot = profile[i][0];
+        double velocityRPM = profile[i][1];
+        int durationMilliseconds = (int) profile[i][2];
+
+        /* for each point, fill our structure and pass it to API */
+        point.timeDur = durationMilliseconds;
+        point.position = direction * positionRot * 4096; // Convert Revolutions to
+                                                                                      // Units
+        point.velocity = direction * velocityRPM * 4096 / 600.0; // Convert RPM to
+                                                                                              // Units/100ms
+        point.auxiliaryPos = 0;
+        point.auxiliaryVel = 0;
+        point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+        point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
+        point.zeroPos = (i == 0); /* set this to true on the first point */
+        point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
+        point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
+
+        _bufferedStreamRight.Write(point);
     }
   }
   
