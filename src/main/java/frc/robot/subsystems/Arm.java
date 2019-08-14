@@ -11,6 +11,7 @@ public class Arm extends Subsystem implements Constants {
   Faults faults;
 
   public int selectedStage = 0; 
+  public int numStages = 3;
 
   public Arm(int ID_ARM) {
     arm = new TalonSRX(ID_ARM);

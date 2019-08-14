@@ -21,40 +21,36 @@ public class OperateArm extends Command implements Constants {
   protected void execute() {
     double manualOutput = Robot.oi.getDriverRTrigger() - Robot.oi.getDriverLTrigger();
 
-    if (manualOutput != 0) {
+    // If the triggers are pressed (> 0) then set the arm to manual mode
+    if (manualOutput > 0) {
       manualControl = true;
-    } else {
+    }
+
+    // If in manual mode and the stage switch buttons are pressed switch to stage mode
+    if (manualControl == true && (Robot.oi.getDriverRBumperPressed() || Robot.oi.getDriverLBumperPressed())) {
       manualControl = false;
     }
 
+    // Select the stage using the bumpers... + for increase - for decrease
+    if (Robot.oi.getDriverRBumperPressed()) {
+      if (stage < Robot.arm.numStages) {
+        stage ++;
+      }
+    } else if (Robot.oi.getDriverLBumperPressed()) {
+      if (stage > 0) {
+        stage --;
+      }
+    } 
+
+    // If in manual mode drive the arm manually
     if (manualControl) {
       Robot.arm.driveManual(manualOutput);
     }
 
-    // if (Robot.oi.getDriverLBumperPressed() || Robot.oi.getDriverRBumperPressed())
-    // {
-    if (manualControl == false) {
-      if (Robot.oi.getDriverLBumperPressed()) {
-        if (stage == 1) {
-          stage = 1;
-        } else {
-          stage--;
-        }
-      } else if (Robot.oi.getDriverRBumperPressed()) {
-        if (stage == 3) {
-          stage = 3;
-        } else {
-          stage++;
-        }
-       
-      }
-    }
-
+    // If in stage mode send the selected stage to the arm
     if (manualControl == false) {
         Robot.arm.setStage(stage);
     }
-
-   
   }
 
   @Override
