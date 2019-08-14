@@ -17,7 +17,7 @@ public class Robot extends TimedRobot implements RobotMap {
   public static Scheduler scheduler = Scheduler.getInstance();
 
   public static Arm arm = new Arm(CAN_ARM);
-
+  
   @Override
   public void robotInit() {
   }

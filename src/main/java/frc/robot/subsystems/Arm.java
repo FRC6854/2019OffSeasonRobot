@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Robot;
 
 public class Arm extends Subsystem implements Constants {
   TalonSRX arm;
@@ -12,6 +13,10 @@ public class Arm extends Subsystem implements Constants {
 
   public int selectedStage = 0; 
   public int numStages = 3;
+
+  public static int STAGE_BOTTOM = 30;
+	public static int STAGE_MIDDLE = 60;
+	public static int STAGE_TOP = 90;
 
   public Arm(int ID_ARM) {
     arm = new TalonSRX(ID_ARM);
@@ -70,6 +75,16 @@ public class Arm extends Subsystem implements Constants {
       driveAngle(STAGE_MIDDLE);
     } else if (selectedStage == 3) {
       driveAngle(STAGE_TOP);
+    }
+  }
+
+  public void teachStage(int stage, int newAngle) {
+    if (stage == 1) {
+      STAGE_BOTTOM = newAngle;
+    } else if (stage == 2) {
+      STAGE_MIDDLE = newAngle;
+    } else if (stage == 3) {
+      STAGE_TOP = newAngle;
     }
   }
   

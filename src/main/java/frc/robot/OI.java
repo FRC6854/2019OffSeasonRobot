@@ -36,8 +36,16 @@ public class OI implements RobotMap {
     return driver.getRawButtonPressed(5);
   }
 
+  public boolean getDriverLBumper(){
+    return driver.getRawButton(5);
+  }
+
   public boolean getDriverRBumperPressed(){
     return driver.getRawButtonPressed(6);
+  }
+
+  public boolean getDriverRBumper(){
+    return driver.getRawButton(6);
   }
 
   public boolean getDriverAButtonPressed() {
@@ -60,6 +68,9 @@ public class OI implements RobotMap {
     return driver.getStartButtonPressed();
   }
 
+  public boolean getDriverStartButton(){
+    return driver.getStartButton();
+  }
 
   // ----------------
   // FILE SYSTEM

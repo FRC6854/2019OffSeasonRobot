@@ -51,6 +51,11 @@ public class OperateArm extends Command implements Constants {
     if (manualControl == false) {
         Robot.arm.setStage(stage);
     }
+
+    // LB RB and START to teach
+    if (Robot.oi.getDriverLBumper() && Robot.oi.getDriverRBumper() && Robot.oi.getDriverStartButton()) {
+      Robot.scheduler.add(new ProgramStage());
+    }
   }
 
   @Override

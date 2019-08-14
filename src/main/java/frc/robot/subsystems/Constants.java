@@ -47,8 +47,4 @@ public interface Constants {
     public final double arm_kI = 0.0; 
     public final double arm_kD = 0.0;
 	public final double arm_kF = 0.2;
-	
-	public static int STAGE_BOTTOM = 30;
-	public static int STAGE_MIDDLE = 60;
-	public static int STAGE_TOP = 90;
 }
