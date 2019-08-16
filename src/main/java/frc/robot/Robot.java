@@ -7,12 +7,15 @@ import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.roborio.CSVFileReader;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Limelight.LightMode;
 
 public class Robot extends TimedRobot implements RobotMap {
   public static OI oi = new OI();
   public static CSVFileReader reader = new CSVFileReader();
 
   public static KitDrivetrain drivetrain = new KitDrivetrain(CAN_LEFT_FRONT, CAN_LEFT_BACK, CAN_RIGHT_FRONT, CAN_RIGHT_BACK);
+  
+  public static Limelight limelight = new Limelight(LightMode.OFF);
 
   public static Scheduler scheduler = Scheduler.getInstance();
 
