@@ -1,8 +1,9 @@
-package frc.robot;
+package frc.robot.lib;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Filesystem;
 import java.io.File;
+import frc.robot.RobotMap;
 
 public class OI implements RobotMap {
   XboxController driver = new XboxController(CONTROLLER_DRIVER);

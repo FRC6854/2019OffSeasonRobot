@@ -1,6 +1,4 @@
-package frc.robot.roborio;
-
-import frc.robot.Robot;
+package frc.robot.lib;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -9,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVFileReader {
-  public static Double[][] pathLeft(String folder) {
+  public Double[][] pathLeft(String folder) {
     List<List<Double>> table = new ArrayList<List<Double>>();
 
     BufferedReader reader;
@@ -43,7 +41,7 @@ public class CSVFileReader {
     return array;
   }
 
-  public static Double[][] pathRight(String folder) {
+  public Double[][] pathRight(String folder) {
     List<List<Double>> table = new ArrayList<List<Double>>();
 
     BufferedReader reader;

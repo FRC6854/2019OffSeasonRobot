@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.Filesystem;
 
-import frc.robot.GeneratedMotionProfile;
 import frc.robot.Robot;
 
 public class KitDrivetrain extends Subsystem implements Constants {
@@ -146,7 +145,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public void loadMotionProfiles(String folderName) {
     Double[][] leftPath = Robot.reader.pathLeft(Filesystem.getDeployDirectory().getAbsolutePath() + "/" + folderName);
-    Double[][] rightPath = Robot.reader.pathLeft(Filesystem.getDeployDirectory().getAbsolutePath() + "/" + folderName);
+    Double[][] rightPath = Robot.reader.pathRight(Filesystem.getDeployDirectory().getAbsolutePath() + "/" + folderName);
 
     initBufferLeft(leftPath, leftPath.length);
     initBufferRight(rightPath, rightPath.length);

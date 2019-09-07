@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.Robot;
 
 public class Arm extends Subsystem implements Constants {
   TalonSRX arm;

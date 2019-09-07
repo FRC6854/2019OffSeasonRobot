@@ -16,7 +16,7 @@ public class MotionProfile extends Command {
 
   @Override
   protected void execute() {
-    
+    System.out.println("Waiting for Motion Profile Finished");
   }
 
   @Override
