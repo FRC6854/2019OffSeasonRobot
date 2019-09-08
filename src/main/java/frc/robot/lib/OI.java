@@ -82,6 +82,9 @@ public class OI implements RobotMap {
     for(int i = 0; i < DIO.length; i++) {
       DigitalOutput output = new DigitalOutput(DIO[i]);
       output.set(binary[i]);
+
+      // Same as free() in documentation
+      output.close();
     }
   }
 }
