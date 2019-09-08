@@ -23,6 +23,8 @@ public class Robot extends TimedRobot implements RobotMap {
   
   @Override
   public void robotInit() {
+    // Should be full blue
+    oi.ledData(40);
   }
 
   @Override

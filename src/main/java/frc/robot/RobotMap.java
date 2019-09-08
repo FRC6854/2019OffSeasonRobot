@@ -12,4 +12,14 @@ public interface RobotMap {
 
   // Arm TalonSRX
   final int CAN_ARM = 4;
+
+  final int[] DIO = {
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  };
 }

@@ -2,6 +2,8 @@ package frc.robot.lib;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.RobotMap;
+import frc.robot.lib.BinaryMath;
+import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class OI implements RobotMap {
   XboxController driver = new XboxController(CONTROLLER_DRIVER);
@@ -72,5 +74,14 @@ public class OI implements RobotMap {
 
   public boolean getDriverStartButton(){
     return driver.getStartButton();
+  }
+
+  public void ledData(int number) {
+    boolean[] binary = BinaryMath.getBinaryform(number);
+
+    for(int i = 0; i < DIO.length; i++) {
+      DigitalOutput output = new DigitalOutput(DIO[i]);
+      output.set(binary[i]);
+    }
   }
 }
