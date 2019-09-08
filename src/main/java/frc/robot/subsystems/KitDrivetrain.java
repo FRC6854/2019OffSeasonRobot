@@ -233,10 +233,6 @@ public class KitDrivetrain extends Subsystem implements Constants {
     return rightMaster.getSelectedSensorPosition();
   }
 
-  public void debug() {
-    // SmartDashboard.putData(leftMaster.conTrol)
-  }
-
   private void initBufferLeft(Double[][] profile, int totalCnt) {
 
     boolean forward = true; // set to false to drive in opposite direction of profile (not really needed

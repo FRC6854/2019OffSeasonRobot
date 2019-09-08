@@ -1,13 +1,10 @@
 package frc.robot.lib;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Filesystem;
-import java.io.File;
 import frc.robot.RobotMap;
 
 public class OI implements RobotMap {
   XboxController driver = new XboxController(CONTROLLER_DRIVER);
-  File deploy = Filesystem.getDeployDirectory();
   
   public double getDriverLeftStickY() {
     return driver.getRawAxis(1)*-1;
@@ -75,12 +72,5 @@ public class OI implements RobotMap {
 
   public boolean getDriverStartButton(){
     return driver.getStartButton();
-  }
-
-  // ----------------
-  // FILE SYSTEM
-  // ----------------
-  public String deployPath() {
-    return deploy.getAbsolutePath();
   }
 }

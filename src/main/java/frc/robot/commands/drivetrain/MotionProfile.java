@@ -4,13 +4,18 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class MotionProfile extends Command {
-  public MotionProfile() {
+  final String folder;
+
+  public MotionProfile(String path) {
     super();
+    folder = path;
     requires(Robot.drivetrain);
   }
 
   @Override
   protected void initialize() {
+    Robot.drivetrain.loadMotionProfiles(folder);
+    Robot.drivetrain.zeroSensor();
     Robot.drivetrain.motionProfile();
   }
 

@@ -44,7 +44,7 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("Cmd Stage", OperateArm.stage);
     SmartDashboard.putBoolean("Manual Control", OperateArm.manualControl);
 
-    SmartDashboard.putData(new MotionProfile()); // RUN THE MOTION PROFILE IN THE DASHBOARD
+    SmartDashboard.putData(new MotionProfile("testing")); // RUN THE MOTION PROFILE IN THE DASHBOARD
 
     scheduler.run();
   }
@@ -73,7 +73,6 @@ public class Robot extends TimedRobot implements RobotMap {
     scheduler.removeAll();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
-    
   }
 
   @Override
