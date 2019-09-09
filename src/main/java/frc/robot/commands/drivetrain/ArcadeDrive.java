@@ -2,7 +2,7 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.Limelight.LightMode;
+import frc.team6854.Limelight.LightMode;
 
 public class ArcadeDrive extends Command {
   public ArcadeDrive() {

@@ -1,4 +1,4 @@
-package frc.robot.lib;
+package frc.team6854;
 
 public class BinaryMath {
 

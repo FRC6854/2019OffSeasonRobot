@@ -1,8 +1,8 @@
-package frc.robot.lib;
+package frc.team6854;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.RobotMap;
-import frc.robot.lib.BinaryMath;
+import frc.team6854.BinaryMath;
 import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class OI implements RobotMap {

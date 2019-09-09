@@ -5,9 +5,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
-import frc.robot.lib.*;
+import frc.team6854.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Limelight.LightMode;
+import frc.team6854.Limelight;
+import frc.team6854.Limelight.LightMode;
 
 public class Robot extends TimedRobot implements RobotMap {
   public static OI oi = new OI();
