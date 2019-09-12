@@ -21,11 +21,11 @@ public class Robot extends TimedRobot implements RobotMap {
   public static Scheduler scheduler = Scheduler.getInstance();
 
   public static Arm arm = new Arm(CAN_ARM);
+
+  public static LEDController leds = new LEDController();
   
   @Override
   public void robotInit() {
-    // Should be full blue
-    oi.ledData(40);
   }
 
   @Override
@@ -74,6 +74,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
+    leds.setTeleop();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
   }

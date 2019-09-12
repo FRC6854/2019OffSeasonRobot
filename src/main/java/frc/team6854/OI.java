@@ -1,12 +1,15 @@
 package frc.team6854;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.RobotMap;
 import frc.team6854.BinaryMath;
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class OI implements RobotMap {
   XboxController driver = new XboxController(CONTROLLER_DRIVER);
+  DriverStation ds = DriverStation.getInstance();
   
   public double getDriverLeftStickY() {
     return driver.getRawAxis(1)*-1;
@@ -76,15 +79,16 @@ public class OI implements RobotMap {
     return driver.getStartButton();
   }
 
+  public Alliance getAlliance() {
+    return ds.getAlliance();
+  }
+
   public void ledData(int number) {
     boolean[] binary = BinaryMath.getBinaryform(number);
 
     for(int i = 0; i < DIO.length; i++) {
       DigitalOutput output = new DigitalOutput(DIO[i]);
       output.set(binary[i]);
-
-      // Same as free() in documentation
-      output.close();
     }
   }
 }

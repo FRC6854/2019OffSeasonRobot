@@ -7,37 +7,56 @@ public class BinaryMath {
       - Collin
     */
     
-    int container[] = new int[8];
     boolean result[] = new boolean[8];
-    int i = 0;
-    while (number > 0){
+
+    StringBuilder binaryString = new StringBuilder();
+    binaryString.append(Integer.toBinaryString(number)).reverse();
+    char binaryLetterArray[] = binaryString.toString().toCharArray();
+
+    System.out.println("Binary String: " + binaryString);
+
+    for (int i = 0; i < binaryLetterArray.length; i++) {
+      if(binaryLetterArray[i] == '0') {
+        result[i] = false;
+      }
+      else if(binaryLetterArray[i] == '1') {
+        result[i] = true;
+      }
+    }
+
+    /*while (number > 0){
         container[i] = number%2;
         i++;
         number = number/2;
     }
-    for (int j = 7; j >= 0; j--) {
+    for (int j = 0; j <= 7; j++) {
       if(container[j] == 1){
         result[j] = true;
       }
       else {
         result[j] = false;
       }
-    }
+    }*/
     return result;
   }
 
   public static int getDecimalForm(boolean[] binary){
     int result = 0;
-    StringBuilder binaryString = new StringBuilder();
-    for(int i = binary.length - 1; i >= 0; i--){
-      if(binary[i] == true){
-        binaryString.append("1");
+    
+    int[] a = new int[binary.length];
+    for(int i = 0; i < binary.length; i++) {
+      if(binary[i] == true) {
+        a[i] = 1;
       }
       else {
-        binaryString.append("0");
+        a[i] = 0;
       }
     }
-    result = Integer.parseInt(binaryString.toString(), 2);
+
+    for(int j = 0; j < 7; j++) {
+      result = result | (a[j] << j);
+    }
+
     return result;
   }
 }
