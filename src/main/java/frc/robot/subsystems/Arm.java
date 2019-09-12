@@ -11,11 +11,11 @@ public class Arm extends Subsystem implements Constants {
   Faults faults;
 
   public int selectedStage = 0; 
-  public int numStages = 3;
+  public int numStages = 2; // 0, 1, 2
 
-  public static int STAGE_BOTTOM = 30;
-	public static int STAGE_MIDDLE = 60;
-	public static int STAGE_TOP = 90;
+  public static int STAGE_BOTTOM = 1377;
+	public static int STAGE_MIDDLE = 3463;
+	public static int STAGE_TOP = 5800;
 
   public Arm(int ID_ARM) {
     arm = new TalonSRX(ID_ARM);
@@ -107,6 +107,10 @@ public class Arm extends Subsystem implements Constants {
     return ticksToAngle(arm.getSelectedSensorPosition());
   }
 
+  public int getTicks() {
+    return arm.getSelectedSensorPosition();
+  }
+
   public boolean getReverseLimitSwitch() {
     return faults.ReverseLimitSwitch;
   }
@@ -121,6 +125,14 @@ public class Arm extends Subsystem implements Constants {
 
   public double getArmVelocity() {
     return arm.getSelectedSensorVelocity();
+  }
+
+  public boolean getErrorMargin (int goal, int tickError) {
+    if(getTicks() > goal - tickError && getTicks() < goal + tickError) {
+      return true;
+    }
+
+    return false;
   }
 
   @Override

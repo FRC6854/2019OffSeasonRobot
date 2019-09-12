@@ -55,6 +55,10 @@ public class OI implements RobotMap {
     return driver.getAButtonPressed();
   }
 
+  public boolean getDriverAButton() {
+    return driver.getAButton();
+  }
+
   public boolean getDriverBButtonPressed() {
     return driver.getBButtonPressed();
   }

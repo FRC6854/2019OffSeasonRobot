@@ -44,7 +44,6 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putBoolean("Arm Reverse LS", arm.getReverseLimitSwitch());
     SmartDashboard.putBoolean("Arm Frwd LS", arm.getForwardLimitSwitch());
     SmartDashboard.putNumber("Arm Stage", arm.selectedStage);
-    SmartDashboard.putNumber("Cmd Stage", OperateArm.stage);
     SmartDashboard.putBoolean("Manual Control", OperateArm.manualControl);
 
     SmartDashboard.putData(new MotionProfile("testing")); // RUN THE MOTION PROFILE IN THE DASHBOARD
@@ -74,7 +73,6 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
-    leds.setTeleop();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
   }

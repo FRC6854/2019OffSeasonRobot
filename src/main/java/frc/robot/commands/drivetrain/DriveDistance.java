@@ -13,6 +13,7 @@ public class DriveDistance extends Command {
 
   @Override
   protected void initialize() {
+    Robot.leds.setDefault();
     System.out.println("Running Distance");
     Robot.drivetrain.zeroSensor();
     System.out.println(rotations);

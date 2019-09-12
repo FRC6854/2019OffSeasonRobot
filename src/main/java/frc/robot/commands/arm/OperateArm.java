@@ -6,7 +6,6 @@ import frc.robot.subsystems.Constants;
 
 public class OperateArm extends Command implements Constants {
   public static boolean manualControl = true;
-  public static int stage = 1;
 
   public OperateArm() {
     super();
@@ -22,8 +21,12 @@ public class OperateArm extends Command implements Constants {
     double manualOutput = Robot.oi.getDriverRTrigger() - Robot.oi.getDriverLTrigger();
 
     // If the triggers are pressed (> 0) then set the arm to manual mode
-    if (manualOutput > 0) {
+    if (manualOutput > 0 || manualOutput < 0) {
       manualControl = true;
+    }
+
+    if(Robot.oi.getDriverBButtonPressed()) {
+      Robot.scheduler.add(new ReleaseHatch());
     }
 
     // If in manual mode and the stage switch buttons are pressed switch to stage mode
@@ -32,15 +35,15 @@ public class OperateArm extends Command implements Constants {
     }
 
     // Select the stage using the bumpers... + for increase - for decrease
-    if (Robot.oi.getDriverRBumperPressed()) {
-      if (stage < Robot.arm.numStages) {
-        stage ++;
+    if (Robot.oi.getDriverRBumperPressed() && manualControl == false) {
+      if (Robot.arm.selectedStage < Robot.arm.numStages) {
+        Robot.arm.selectedStage ++;
       }
-    } else if (Robot.oi.getDriverLBumperPressed()) {
-      if (stage > 0) {
-        stage --;
+    } else if (Robot.oi.getDriverLBumperPressed() && manualControl == false) {
+      if (Robot.arm.selectedStage > 0) {
+        Robot.arm.selectedStage --;
       }
-    } 
+    }
 
     // If in manual mode drive the arm manually
     if (manualControl) {
@@ -49,7 +52,7 @@ public class OperateArm extends Command implements Constants {
 
     // If in stage mode send the selected stage to the arm
     if (manualControl == false) {
-        Robot.arm.setStage(stage);
+        Robot.arm.setStage(Robot.arm.selectedStage);
     }
 
     // LB RB and START to teach

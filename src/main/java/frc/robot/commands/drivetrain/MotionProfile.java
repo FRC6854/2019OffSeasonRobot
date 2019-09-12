@@ -17,6 +17,7 @@ public class MotionProfile extends Command {
     Robot.drivetrain.loadMotionProfiles(folder);
     Robot.drivetrain.zeroSensor();
     Robot.drivetrain.motionProfile();
+    Robot.leds.setDefault();
   }
 
   @Override
