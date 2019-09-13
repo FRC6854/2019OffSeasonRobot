@@ -34,15 +34,25 @@ public class OperateArm extends Command implements Constants {
       manualControl = false;
     }
 
+    System.out.println(manualControl);
+
     // Select the stage using the bumpers... + for increase - for decrease
-    if (Robot.oi.getDriverRBumperPressed() && manualControl == false) {
+    if (Robot.oi.getDriverRBumperPressed() == true) {
+      System.out.println("Arm Up");
       if (Robot.arm.selectedStage < Robot.arm.numStages) {
         Robot.arm.selectedStage ++;
       }
-    } else if (Robot.oi.getDriverLBumperPressed() && manualControl == false) {
+    }
+    
+    if (Robot.oi.getDriverLBumperPressed() == true) {
+      System.out.println("Arm Down");
       if (Robot.arm.selectedStage > 0) {
         Robot.arm.selectedStage --;
       }
+    }
+
+    if(manualControl == false) {
+      Robot.arm.setStage(Robot.arm.selectedStage);
     }
 
     // If in manual mode drive the arm manually
@@ -50,15 +60,12 @@ public class OperateArm extends Command implements Constants {
       Robot.arm.driveManual(manualOutput);
     }
 
-    // If in stage mode send the selected stage to the arm
-    if (manualControl == false) {
-        Robot.arm.setStage(Robot.arm.selectedStage);
-    }
-
+    /*
     // LB RB and START to teach
     if (Robot.oi.getDriverLBumper() && Robot.oi.getDriverRBumper() && Robot.oi.getDriverStartButton()) {
       Robot.scheduler.add(new ProgramStage());
     }
+    */
   }
 
   @Override

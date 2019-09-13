@@ -12,13 +12,13 @@ public class ReleaseHatch extends Command {
   @Override
   protected void initialize() {
     switch(Robot.arm.selectedStage) {
-      case 0:
+      case 1:
         Robot.arm.driveTicks(1000);
         break;
-      case 1:
+      case 2:
         Robot.arm.driveTicks(3000);
         break;
-      case 2:
+      case 3:
         Robot.arm.driveTicks(5200);
         break;
     }
@@ -31,13 +31,13 @@ public class ReleaseHatch extends Command {
   @Override
   protected boolean isFinished() {
     switch(Robot.arm.selectedStage) {
-      case 0:
+      case 1:
         if(Robot.arm.getErrorMargin(0, 1050))
           return true;
-      case 1:
+      case 2:
         if(Robot.arm.getErrorMargin(3000, 50))
           return true;
-      case 2:
+      case 3:
         if(Robot.arm.getErrorMargin(5200, 50))
           return true;
     }

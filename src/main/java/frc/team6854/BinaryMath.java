@@ -13,8 +13,6 @@ public class BinaryMath {
     binaryString.append(Integer.toBinaryString(number)).reverse();
     char binaryLetterArray[] = binaryString.toString().toCharArray();
 
-    System.out.println("Binary String: " + binaryString);
-
     for (int i = 0; i < binaryLetterArray.length; i++) {
       if(binaryLetterArray[i] == '0') {
         result[i] = false;
@@ -23,20 +21,7 @@ public class BinaryMath {
         result[i] = true;
       }
     }
-
-    /*while (number > 0){
-        container[i] = number%2;
-        i++;
-        number = number/2;
-    }
-    for (int j = 0; j <= 7; j++) {
-      if(container[j] == 1){
-        result[j] = true;
-      }
-      else {
-        result[j] = false;
-      }
-    }*/
+    
     return result;
   }
 

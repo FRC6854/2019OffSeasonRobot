@@ -10,10 +10,10 @@ public class Arm extends Subsystem implements Constants {
   TalonSRX arm;
   Faults faults;
 
-  public int selectedStage = 0; 
-  public int numStages = 2; // 0, 1, 2
+  public int selectedStage = 1; 
+  public int numStages = 3;
 
-  public static int STAGE_BOTTOM = 1377;
+  public static int STAGE_BOTTOM = 1000;
 	public static int STAGE_MIDDLE = 3463;
 	public static int STAGE_TOP = 5800;
 
@@ -69,11 +69,11 @@ public class Arm extends Subsystem implements Constants {
   public void setStage(int stage) {
     selectedStage = stage;
     if (selectedStage == 1) {
-      driveAngle(STAGE_BOTTOM);
+      driveTicks(STAGE_BOTTOM);
     } else if (selectedStage == 2) {
-      driveAngle(STAGE_MIDDLE);
+      driveTicks(STAGE_MIDDLE);
     } else if (selectedStage == 3) {
-      driveAngle(STAGE_TOP);
+      driveTicks(STAGE_TOP);
     }
   }
 

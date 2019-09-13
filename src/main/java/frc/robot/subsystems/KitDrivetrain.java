@@ -34,7 +34,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   private void init() {
-    loadMotionProfiles("testing");
+    //loadMotionProfiles("testing");
 
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);

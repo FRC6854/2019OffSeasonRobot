@@ -40,7 +40,7 @@ public class Robot extends TimedRobot implements RobotMap {
 
     SmartDashboard.putData(arm);
     
-    SmartDashboard.putNumber("Arm Angle", arm.getAngle());
+    SmartDashboard.putNumber("Arm Ticks", arm.getTicks());
     SmartDashboard.putBoolean("Arm Reverse LS", arm.getReverseLimitSwitch());
     SmartDashboard.putBoolean("Arm Frwd LS", arm.getForwardLimitSwitch());
     SmartDashboard.putNumber("Arm Stage", arm.selectedStage);
