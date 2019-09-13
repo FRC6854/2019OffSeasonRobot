@@ -2,27 +2,13 @@ package frc.team6854;
 
 public class BinaryMath {
 
-  public static boolean[] getBinaryform(int number) {
-    /*int array is not needed but makes it easier for me to understand
-      - Collin
-    */
-    
-    boolean result[] = new boolean[8];
+  public static char[] getBinaryform(int number) {
 
     StringBuilder binaryString = new StringBuilder();
-    binaryString.append(Integer.toBinaryString(number)).reverse();
+    binaryString.append(Integer.toBinaryString(number));
     char binaryLetterArray[] = binaryString.toString().toCharArray();
 
-    for (int i = 0; i < binaryLetterArray.length; i++) {
-      if(binaryLetterArray[i] == '0') {
-        result[i] = false;
-      }
-      else if(binaryLetterArray[i] == '1') {
-        result[i] = true;
-      }
-    }
-    
-    return result;
+    return binaryLetterArray;
   }
 
   public static int getDecimalForm(boolean[] binary){
