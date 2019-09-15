@@ -1,32 +1,11 @@
 package frc.team6854;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class LEDController extends Subsystem {
-    public static DigitalOutput bit1 = new DigitalOutput(Robot.DIO[0]);
-    public static DigitalOutput bit2 = new DigitalOutput(Robot.DIO[1]);
-    public static DigitalOutput bit4 = new DigitalOutput(Robot.DIO[2]);
-    public static DigitalOutput bit8 = new DigitalOutput(Robot.DIO[3]);
-    public static DigitalOutput bit16 = new DigitalOutput(Robot.DIO[4]);
-    public static DigitalOutput bit32 = new DigitalOutput(Robot.DIO[5]);
-    public static DigitalOutput bit64 = new DigitalOutput(Robot.DIO[6]);
-    public static DigitalOutput bit128 = new DigitalOutput(Robot.DIO[7]);
-    
-    public static DigitalOutput[] binaryOutput = {
-      bit1,
-      bit2,
-      bit4,
-      bit8,
-      bit16,
-      bit32,
-      bit64,
-      bit128
-    };
-
     public void setTeleop() {
         if(Robot.oi.getAlliance() == Alliance.Blue) {
             Robot.oi.ledDataSerialPort(RobotMap.BLUE_TELEOP);

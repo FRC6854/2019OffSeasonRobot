@@ -2,7 +2,6 @@ package frc.team6854;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.team6854.BinaryMath;
 
