@@ -6,14 +6,13 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.team6854.BinaryMath;
 
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class OI implements RobotMap {
   XboxController driver = new XboxController(CONTROLLER_DRIVER);
   DriverStation ds = DriverStation.getInstance();
-  I2C arduino = new I2C(I2C.Port.kOnboard, 4);
+  SerialPort arduino = new SerialPort(9600, SerialPort.Port.kUSB);
 
   public double getDriverLeftStickY() {
     return driver.getRawAxis(1)*-1;
@@ -91,13 +90,11 @@ public class OI implements RobotMap {
     return ds.getAlliance();
   }
 
-  public void ledDataI2C(int number) {
+  public void ledDataSerialPort(int number) {
     String binaryString = BinaryMath.getBinaryform(number).toString();
 
     System.out.println(binaryString);
 
-    byte[] binary = binaryString.getBytes();
-
-    arduino.writeBulk(binary, binary.length);
+    arduino.writeString(binaryString);
   }
 }

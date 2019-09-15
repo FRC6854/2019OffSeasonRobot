@@ -29,49 +29,49 @@ public class LEDController extends Subsystem {
 
     public void setTeleop() {
         if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_TELEOP);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_TELEOP);
         }
         else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataI2C(RobotMap.RED_TELEOP);
+            Robot.oi.ledDataSerialPort(RobotMap.RED_TELEOP);
         }
         else {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_TELEOP);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_TELEOP);
         }
     }
 
     public void setAuto() {
         if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_AUTO);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_AUTO);
         }
         else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataI2C(RobotMap.RED_AUTO);
+            Robot.oi.ledDataSerialPort(RobotMap.RED_AUTO);
         }
         else {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_AUTO);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_AUTO);
         }
     }
 
     public void setVision() {
         if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_VISION);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_VISION);
         }
         else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataI2C(RobotMap.RED_VISION);
+            Robot.oi.ledDataSerialPort(RobotMap.RED_VISION);
         }
         else {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_VISION);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_VISION);
         }
     }
 
     public void setDefault() {
         if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_DEFAULT);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_DEFAULT);
         }
         else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataI2C(RobotMap.RED_DEFAULT);
+            Robot.oi.ledDataSerialPort(RobotMap.RED_DEFAULT);
         }
         else {
-            Robot.oi.ledDataI2C(RobotMap.BLUE_DEFAULT);
+            Robot.oi.ledDataSerialPort(RobotMap.BLUE_DEFAULT);
         }
     }
 
