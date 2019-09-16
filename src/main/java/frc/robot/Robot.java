@@ -60,7 +60,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     scheduler.removeAll();
-    //scheduler.add(new ArcadeDrive());
+    // Drive 10 Rotations
     scheduler.add(new DriveDistance(10));
     scheduler.add(new ZeroArm());
     
@@ -73,6 +73,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
+    leds.setDefault();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
   }
