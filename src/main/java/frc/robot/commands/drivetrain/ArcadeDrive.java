@@ -24,8 +24,6 @@ public class ArcadeDrive extends Command {
 
     // B button to vision aim using vision
     if (Robot.oi.getDriverAButton()) {
-      Robot.leds.setVision();
-
       Robot.limelight.setLEDMode(LightMode.ON);
 
       double steeringAdjust = kP * tX;
@@ -33,8 +31,6 @@ public class ArcadeDrive extends Command {
 
       Robot.drivetrain.tankDrive(operatorThrottle += steeringAdjust, operatorThrottle -= steeringAdjust);
     } else {
-      Robot.leds.setTeleop();
-
       Robot.limelight.setLEDMode(LightMode.OFF);
 
       Robot.drivetrain.arcadeDrive(Robot.oi.getDriverLeftStickY(), Robot.oi.getDriverRightStickX());
