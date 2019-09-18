@@ -36,14 +36,12 @@ public class OperateArm extends Command implements Constants {
 
     // Select the stage using the bumpers... + for increase - for decrease
     if (Robot.oi.getDriverRBumperPressed() == true) {
-      System.out.println("Arm Up");
       if (Robot.arm.selectedStage < Robot.arm.numStages) {
         Robot.arm.selectedStage ++;
       }
     }
     
     if (Robot.oi.getDriverLBumperPressed() == true) {
-      System.out.println("Arm Down");
       if (Robot.arm.selectedStage > 0) {
         Robot.arm.selectedStage --;
       }

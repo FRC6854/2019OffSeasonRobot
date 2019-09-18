@@ -93,8 +93,14 @@ public class OI implements RobotMap {
   }
 
   public void ledDataSerialPort(int number) {
+    // Read the current line of text in the Serial Channel
     System.out.println(arduino.readString());
+
+    // Write the number to the Serial Channel
     arduino.writeString(Integer.toString(number));
+
+    // Since the output buffer is 8 bytes and we usually only print 2 bytes, we must flush the buffer to send the line
+    // The limitation of this is that we can only send up to 99,999,999
     arduino.flush();
   }
 }

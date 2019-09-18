@@ -13,24 +13,13 @@ public interface RobotMap {
   // Arm TalonSRX
   final int CAN_ARM = 4;
 
-  final int RED_DEFAULT = 30;
-  final int RED_TELEOP = 31;
+  final int RED_TELEOP = 30;
+  final int RED_DEFAULT = 31;
   final int RED_AUTO = 32;
   final int RED_VISION = 33;
 
-  final int BLUE_DEFAULT = 40;
-  final int BLUE_TELEOP = 41;
+  final int BLUE_TELEOP = 40;
+  final int BLUE_DEFAULT = 41;
   final int BLUE_AUTO = 42;
-  final int BLUE_VISION = 43;  
-
-  final int[] DIO = {
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9
-  };
+  final int BLUE_VISION = 43;
 }

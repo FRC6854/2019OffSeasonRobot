@@ -6,6 +6,47 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class LEDController extends Subsystem {
+    public enum LEDMode {
+        TELEOP,
+        AUTO,
+        VISION,
+        DEFAULT
+    };
+
+    public LEDMode currentMode = LEDMode.TELEOP;
+    LEDMode lastMode = null;
+
+    public void resetLastMode() {
+        lastMode = null;
+    }
+
+    public void setMode() {
+        if(currentMode != lastMode) {
+            switch(currentMode) {
+                case TELEOP:
+                    setTeleop();
+                    lastMode = LEDMode.TELEOP;
+                    break;
+                case AUTO:
+                    setAuto();
+                    lastMode = LEDMode.AUTO;
+                    break;
+                case VISION:
+                    setVision();
+                    lastMode = LEDMode.VISION;
+                    break;
+                case DEFAULT:
+                    setDefault();
+                    lastMode = LEDMode.DEFAULT;
+                    break;
+                default:
+                    setDefault();
+                    lastMode = LEDMode.DEFAULT;
+                    break;
+            }
+        }
+    }
+
     public void setTeleop() {
         if(Robot.oi.getAlliance() == Alliance.Blue) {
             Robot.oi.ledDataSerialPort(RobotMap.BLUE_TELEOP);

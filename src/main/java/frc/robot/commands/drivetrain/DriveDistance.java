@@ -2,6 +2,7 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.team6854.LEDController.LEDMode;
 
 public class DriveDistance extends Command {
   int rotations;
@@ -13,10 +14,8 @@ public class DriveDistance extends Command {
 
   @Override
   protected void initialize() {
-    Robot.leds.setDefault();
-    System.out.println("Running Distance");
+    Robot.leds.currentMode = LEDMode.AUTO;
     Robot.drivetrain.zeroSensor();
-    System.out.println(rotations);
     Robot.drivetrain.driveRotations(rotations);
   }
 

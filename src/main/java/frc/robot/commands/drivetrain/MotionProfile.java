@@ -3,6 +3,8 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
+import frc.team6854.LEDController.LEDMode;
+
 public class MotionProfile extends Command {
   final String folder;
 
@@ -17,11 +19,11 @@ public class MotionProfile extends Command {
     Robot.drivetrain.loadMotionProfiles(folder);
     Robot.drivetrain.zeroSensor();
     Robot.drivetrain.motionProfile();
-    Robot.leds.setDefault();
   }
 
   @Override
   protected void execute() {
+    Robot.leds.currentMode = LEDMode.AUTO;
     System.out.println("Waiting for Motion Profile Finished");
   }
 

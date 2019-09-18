@@ -8,6 +8,7 @@ import frc.robot.commands.drivetrain.*;
 import frc.team6854.*;
 import frc.robot.subsystems.*;
 import frc.team6854.Limelight;
+import frc.team6854.LEDController.LEDMode;
 import frc.team6854.Limelight.LightMode;
 
 public class Robot extends TimedRobot implements RobotMap {
@@ -31,20 +32,16 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void robotPeriodic() {
     arm.updateFaults();
+    leds.setMode();
 
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
     SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
     SmartDashboard.putData(drivetrain);
 
     SmartDashboard.putString("Arm Control Mode", arm.getControlMode().name());
-
-    SmartDashboard.putData(arm);
-    
-    SmartDashboard.putNumber("Arm Ticks", arm.getTicks());
-    SmartDashboard.putBoolean("Arm Reverse LS", arm.getReverseLimitSwitch());
-    SmartDashboard.putBoolean("Arm Frwd LS", arm.getForwardLimitSwitch());
     SmartDashboard.putNumber("Arm Stage", arm.selectedStage);
-    SmartDashboard.putBoolean("Manual Control", OperateArm.manualControl);
+    SmartDashboard.putNumber("Arm Ticks", arm.getTicks());
+    SmartDashboard.putData(arm);
 
     SmartDashboard.putData(new MotionProfile("testing")); // RUN THE MOTION PROFILE IN THE DASHBOARD
 
@@ -60,6 +57,9 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     scheduler.removeAll();
+
+    leds.resetLastMode();
+
     // Drive 10 Rotations
     scheduler.add(new DriveDistance(10));
     scheduler.add(new ZeroArm());
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
-    leds.setDefault();
+    leds.resetLastMode();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
   }
@@ -84,8 +84,8 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void testInit() {
+    leds.resetLastMode();
     scheduler.removeAll();
-    scheduler.add(new DriveDistance(10));
   }
 
   @Override

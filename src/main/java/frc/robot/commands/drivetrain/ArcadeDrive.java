@@ -2,7 +2,9 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+
 import frc.team6854.Limelight.LightMode;
+import frc.team6854.LEDController.LEDMode;
 
 public class ArcadeDrive extends Command {
   public ArcadeDrive() {
@@ -13,8 +15,6 @@ public class ArcadeDrive extends Command {
   @Override
   protected void initialize() {
   }
-
-  // Note: Based off chapter 8 of limelight docs
   
   @Override
   protected void execute() {
@@ -24,13 +24,17 @@ public class ArcadeDrive extends Command {
 
     // B button to vision aim using vision
     if (Robot.oi.getDriverAButton()) {
+      Robot.leds.currentMode = LEDMode.VISION;
       Robot.limelight.setLEDMode(LightMode.ON);
 
       double steeringAdjust = kP * tX;
       double operatorThrottle = Robot.oi.getDriverLeftStickY();
 
       Robot.drivetrain.tankDrive(operatorThrottle += steeringAdjust, operatorThrottle -= steeringAdjust);
-    } else {
+    } 
+
+    else {
+      Robot.leds.currentMode = LEDMode.TELEOP;
       Robot.limelight.setLEDMode(LightMode.OFF);
 
       Robot.drivetrain.arcadeDrive(Robot.oi.getDriverLeftStickY(), Robot.oi.getDriverRightStickX());
