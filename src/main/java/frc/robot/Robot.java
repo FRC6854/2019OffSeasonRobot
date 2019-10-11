@@ -6,13 +6,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
 import frc.team6854.*;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.*; 
 import frc.team6854.Limelight;
 import frc.team6854.LEDController.LEDMode;
 import frc.team6854.Limelight.LightMode;
 
 public class Robot extends TimedRobot implements RobotMap {
-  public static OI oi = new OI();
   public static CSVFileReader reader = new CSVFileReader();
 
   public static KitDrivetrain drivetrain = new KitDrivetrain(CAN_LEFT_FRONT, CAN_LEFT_BACK, CAN_RIGHT_FRONT, CAN_RIGHT_BACK);
@@ -24,6 +23,8 @@ public class Robot extends TimedRobot implements RobotMap {
   public static Arm arm = new Arm(CAN_ARM);
 
   public static LEDController leds = new LEDController();
+  
+  public static OI oi = new OI();
   
   @Override
   public void robotInit() {
@@ -37,6 +38,8 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
     SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
     SmartDashboard.putData(drivetrain);
+
+    SmartDashboard.putString("Current LED Mode", leds.currentMode.name());
 
     SmartDashboard.putString("Arm Control Mode", arm.getControlMode().name());
     SmartDashboard.putNumber("Arm Stage", arm.selectedStage);
@@ -61,9 +64,8 @@ public class Robot extends TimedRobot implements RobotMap {
     leds.resetLastMode();
 
     // Drive 10 Rotations
-    scheduler.add(new DriveDistance(10));
+    scheduler.add(new DriveDistance(2));
     scheduler.add(new ZeroArm());
-    
   }
 
   @Override

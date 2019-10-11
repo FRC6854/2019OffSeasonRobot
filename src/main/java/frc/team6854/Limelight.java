@@ -68,7 +68,23 @@ public class Limelight extends Subsystem {
     public double getPipeline() {
       return limelight.getEntry("getpipe").getDouble(0);
     }
+
+    /**
+     * Sets the camMode to the selected value passed to the method (0 or 1)
+     * @param value the value to set the camMode to
+     */
+    public void setDriverMode(double value) {
+      limelight.getEntry("camMode").setDouble(value);
+    }
   
+    /**
+     * Get the current camMode
+     * @return 0 means normal and 1 means driver mode
+     */
+    public double driverMode() {
+      return limelight.getEntry("camMode").getDouble(0);
+    }
+
     /**
      * Sets limelight’s LED state
      * @param mode set the mode to either DEFAULT, OFF, BLINK, or ON

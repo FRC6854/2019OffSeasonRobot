@@ -24,7 +24,6 @@ public class MotionProfile extends Command {
   @Override
   protected void execute() {
     Robot.leds.currentMode = LEDMode.AUTO;
-    System.out.println("Waiting for Motion Profile Finished");
   }
 
   @Override

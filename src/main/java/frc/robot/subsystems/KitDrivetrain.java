@@ -139,16 +139,17 @@ public class KitDrivetrain extends Subsystem implements Constants {
     }
 
     leftMaster.set(ControlMode.PercentOutput, limit(leftMotorOutput) * dt_kDefaultMaxOutput);
-    rightMaster.set(ControlMode.PercentOutput,
-        limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
+    rightMaster.set(ControlMode.PercentOutput, limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
   }
 
   public void loadMotionProfiles(String folderName) {
-    Double[][] leftPath = Robot.reader.pathLeft(Filesystem.getDeployDirectory().getAbsolutePath() + "/" + folderName);
+    Double[][] leftPath = Robot.reader.pathLeft("/home/lvuser/paths/" + folderName);
     Double[][] rightPath = Robot.reader.pathRight(Filesystem.getDeployDirectory().getAbsolutePath() + "/" + folderName);
 
     initBufferLeft(leftPath, leftPath.length);
     initBufferRight(rightPath, rightPath.length);
+
+    System.out.println("Finished Loading Motion Profiles");
   }
 
   public void motionProfile() {
@@ -162,6 +163,11 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public boolean isMotionProfileRightFinished() {
     return rightMaster.isMotionProfileFinished();
+  }
+
+  public void driveMeters(double meters) {
+    leftMaster.set(ControlMode.MotionMagic, metersToTicks(meters));
+    rightMaster.set(ControlMode.MotionMagic, metersToTicks(meters));
   }
 
   public void driveRotations(double rotations) {
@@ -191,6 +197,10 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public int rotationsToTicks(double rotations) {
     return (int) rotations * 4096;
+  }
+
+  public int metersToTicks(double meters) {
+    return rotationsToTicks(meters / (2 * Math.PI * 0.0762));
   }
 
   public int ticksToRotations(int ticks) {
@@ -265,6 +275,8 @@ public class KitDrivetrain extends Subsystem implements Constants {
       point.zeroPos = (i == 0); /* set this to true on the first point */
       point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
       point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
+
+      System.out.println(point.position);
 
       _bufferedStreamLeft.Write(point);
     }

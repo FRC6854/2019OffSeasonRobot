@@ -6,7 +6,13 @@ import frc.robot.Robot;
 import frc.team6854.Limelight.LightMode;
 import frc.team6854.LEDController.LEDMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class ArcadeDrive extends Command {
+  double tX = Robot.limelight.targetX();
+  double kP = 0.04;
+  double maxCommand = 0.5;
+
   public ArcadeDrive() {
     super();
     requires(Robot.drivetrain);
@@ -18,19 +24,20 @@ public class ArcadeDrive extends Command {
   
   @Override
   protected void execute() {
-    
-    double tX = Robot.limelight.targetX();
-    double kP = 0.01;
+    tX = Robot.limelight.targetX();
 
     // B button to vision aim using vision
-    if (Robot.oi.getDriverAButton()) {
+    if (Robot.oi.getDriverAButton() == true) {
       Robot.leds.currentMode = LEDMode.VISION;
       Robot.limelight.setLEDMode(LightMode.ON);
 
       double steeringAdjust = kP * tX;
+      if(steeringAdjust >= maxCommand) {
+        steeringAdjust = maxCommand;
+      }
       double operatorThrottle = Robot.oi.getDriverLeftStickY();
 
-      Robot.drivetrain.tankDrive(operatorThrottle += steeringAdjust, operatorThrottle -= steeringAdjust);
+      Robot.drivetrain.arcadeDrive(operatorThrottle, steeringAdjust);
     } 
 
     else {

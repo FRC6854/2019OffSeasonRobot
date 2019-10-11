@@ -13,11 +13,16 @@ public class OI implements RobotMap {
   SerialPort arduino;
 
   public OI() {
-    arduino = new SerialPort(9600, SerialPort.Port.kUSB);
+    // Init the SerialPort on baud 9600
+    arduino = new SerialPort(9600, SerialPort.Port.kUSB1);
+
+    // Whenever the readString function recieves a \n it will return
+    // less bytes than it requested from the arduino
+    arduino.enableTermination();
   }
 
   public double getDriverLeftStickY() {
-    return driver.getRawAxis(1)*-1;
+    return driver.getRawAxis(1) * -1;
   }
 
   public double getDriverLeftStickX() {
@@ -93,8 +98,13 @@ public class OI implements RobotMap {
   }
 
   public void ledDataSerialPort(int number) {
+    System.out.println("Sending Serial Port Data");
+
     // Read the current line of text in the Serial Channel
-    System.out.println(arduino.readString());
+    String dataRecieved = arduino.readString();
+
+    // Print out the data recieved
+    System.out.println(dataRecieved);
 
     // Write the number to the Serial Channel
     arduino.writeString(Integer.toString(number));
