@@ -3,12 +3,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.Filesystem;
-
 import frc.robot.Robot;
 
 public class KitDrivetrain extends Subsystem implements Constants {
@@ -144,7 +143,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public void loadMotionProfiles(String folderName) {
     Double[][] leftPath = Robot.reader.pathLeft("/home/lvuser/paths/" + folderName);
-    Double[][] rightPath = Robot.reader.pathRight(Filesystem.getDeployDirectory().getAbsolutePath() + "/" + folderName);
+    Double[][] rightPath = Robot.reader.pathRight("/home/lvuser/paths/" + folderName);
 
     initBufferLeft(leftPath, leftPath.length);
     initBufferRight(rightPath, rightPath.length);
@@ -188,6 +187,13 @@ public class KitDrivetrain extends Subsystem implements Constants {
   public void fullStop() {
     leftMaster.set(ControlMode.Disabled, 0);
     rightMaster.set(ControlMode.Disabled, 0);
+    leftMaster.setNeutralMode(NeutralMode.Brake);
+    rightMaster.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public void coast() {
+    leftMaster.setNeutralMode(NeutralMode.Coast);
+    rightMaster.setNeutralMode(NeutralMode.Coast);
   }
 
   public void zeroSensor() {
@@ -260,13 +266,13 @@ public class KitDrivetrain extends Subsystem implements Constants {
       double direction = forward ? +1 : -1;
       double positionRot = profile[i][0];
       double velocityRPM = profile[i][1];
-      int durationMilliseconds = 10;
+      int durationMilliseconds = 50;
 
       /* for each point, fill our structure and pass it to API */
       point.timeDur = durationMilliseconds;
       point.position = direction * positionRot * 4096; // Convert Revolutions to
                                                        // Units
-      point.velocity = direction * velocityRPM * 4096 / 600.0; // Convert RPM to
+      point.velocity = direction * velocityRPM * 4096 / 500.0; // Convert RPM to
                                                                // Units/100ms
       point.auxiliaryPos = 0;
       point.auxiliaryVel = 0;
@@ -299,13 +305,13 @@ public class KitDrivetrain extends Subsystem implements Constants {
       double direction = forward ? +1 : -1;
       double positionRot = profile[i][0];
       double velocityRPM = profile[i][1];
-      int durationMilliseconds = 10;
+      int durationMilliseconds = 50;
 
       /* for each point, fill our structure and pass it to API */
       point.timeDur = durationMilliseconds;
       point.position = direction * positionRot * 4096; // Convert Revolutions to
                                                        // Units
-      point.velocity = direction * velocityRPM * 4096 / 600.0; // Convert RPM to
+      point.velocity = direction * velocityRPM * 4096 / 500.0; // Convert RPM to
                                                                // Units/100ms
       point.auxiliaryPos = 0;
       point.auxiliaryVel = 0;

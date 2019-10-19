@@ -8,7 +8,6 @@ import frc.robot.commands.drivetrain.*;
 import frc.team6854.*;
 import frc.robot.subsystems.*; 
 import frc.team6854.Limelight;
-import frc.team6854.LEDController.LEDMode;
 import frc.team6854.Limelight.LightMode;
 
 public class Robot extends TimedRobot implements RobotMap {
@@ -65,7 +64,6 @@ public class Robot extends TimedRobot implements RobotMap {
 
     // Drive 10 Rotations
     scheduler.add(new DriveDistance(2));
-    scheduler.add(new ZeroArm());
   }
 
   @Override
