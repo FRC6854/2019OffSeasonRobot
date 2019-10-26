@@ -15,7 +15,7 @@ public class ZeroArm extends Command {
 
   @Override
   protected void execute() {
-    Robot.arm.driveManual(-0.25);
+    Robot.arm.driveManual(-0.1);
   }
 
   @Override

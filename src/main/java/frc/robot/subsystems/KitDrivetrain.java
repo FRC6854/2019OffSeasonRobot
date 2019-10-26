@@ -241,6 +241,14 @@ public class KitDrivetrain extends Subsystem implements Constants {
     }
   }
 
+  public int getLeftVelocity() {
+    return leftMaster.getSelectedSensorVelocity();
+  }
+
+  public int getRightVelocity() {
+    return rightMaster.getSelectedSensorVelocity();
+  }
+
   public int getLeftTicks() {
     return leftMaster.getSelectedSensorPosition();
   }
