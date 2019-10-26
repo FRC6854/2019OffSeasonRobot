@@ -9,25 +9,32 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
+import frc.robot.utils.MotorControllers;
 
 public class KitDrivetrain extends Subsystem implements Constants {
-  TalonSRX leftMaster;
-  VictorSPX leftSlave;
-
-  TalonSRX rightMaster;
-  VictorSPX rightSlave;
+  private static KitDrivetrain instance = null;
 
   public static final double kDefaultQuickStopThreshold = 0.2;
   public static final double kDefaultQuickStopAlpha = 0.1;
 
+  private TalonSRX leftMaster;
+  private VictorSPX leftSlave;
+
+  private TalonSRX rightMaster;
+  private VictorSPX rightSlave;
+
+  private MotorControllers controllers;
+
   BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
   BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
 
-  public KitDrivetrain(int ID_LEFT_FRONT, int ID_LEFT_BACK, int ID_RIGHT_FRONT, int ID_RIGHT_BACK) {
-    leftMaster = new TalonSRX(ID_LEFT_BACK);
-    leftSlave = new VictorSPX(ID_LEFT_FRONT);
-    rightMaster = new TalonSRX(ID_RIGHT_BACK);
-    rightSlave = new VictorSPX(ID_RIGHT_FRONT);
+  public KitDrivetrain() {
+    controllers = MotorControllers.getInstance();
+
+    leftMaster = controllers.getLeftMaster();
+    leftSlave = controllers.getLeftSlave();
+    rightMaster = controllers.getRightMaster();
+    rightSlave = controllers.getRightSlave();
 
     init();
   }
@@ -331,6 +338,13 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
       _bufferedStreamRight.Write(point);
     }
+  }
+
+  public static KitDrivetrain getInstance() {
+    if(instance == null)
+			instance = new KitDrivetrain();
+		
+		return instance;
   }
 
   @Override

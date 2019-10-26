@@ -5,10 +5,15 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.utils.MotorControllers;
 
 public class Arm extends Subsystem implements Constants {
-  TalonSRX arm;
-  Faults faults;
+  private static Arm instance = null;
+
+  private TalonSRX arm;
+  private Faults faults;
+
+  private MotorControllers controllers;
 
   public int selectedStage = 1; 
   public int numStages = 3;
@@ -17,9 +22,10 @@ public class Arm extends Subsystem implements Constants {
 	public static int STAGE_MIDDLE = 3463;
 	public static int STAGE_TOP = 5800;
 
-  public Arm(int ID_ARM) {
-    arm = new TalonSRX(ID_ARM);
-    faults = new Faults();
+  public Arm() {
+    controllers = MotorControllers.getInstance();
+    arm = controllers.getArm();
+    faults = controllers.getArmFaults();
     init();
   }
 
@@ -133,6 +139,17 @@ public class Arm extends Subsystem implements Constants {
     }
 
     return false;
+  }
+
+  public static Arm getInstance() {
+    if (instance == null) {
+      try {
+        instance = new Arm();
+      } catch (Exception ex) {
+        System.out.println(ex);
+      }
+    }
+    return instance;
   }
 
   @Override

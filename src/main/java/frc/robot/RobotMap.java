@@ -1,8 +1,13 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.SPI.Port;
+
 public interface RobotMap {
   //Controller DriverStation Number
   final int CONTROLLER_DRIVER = 0;
+
+  // Gyro Port on RoboRIO
+  final Port GRYO_PORT = Port.kMXP;
 
   //Drivetrain Motorcontroller CAN Id's
   final int CAN_LEFT_FRONT = 2;
