@@ -149,8 +149,11 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   public void loadMotionProfiles(String folderName) {
-    Double[][] leftPath = Robot.reader.pathLeft("/home/lvuser/paths/" + folderName);
-    Double[][] rightPath = Robot.reader.pathRight("/home/lvuser/paths/" + folderName);
+    //Double[][] leftPath = Robot.reader.pathLeft("/home/lvuser/paths/" + folderName);
+    //Double[][] rightPath = Robot.reader.pathRight("/home/lvuser/paths/" + folderName);
+
+    Double[][] leftPath = null;
+    Double[][] rightPath = null;
 
     initBufferLeft(leftPath, leftPath.length);
     initBufferRight(rightPath, rightPath.length);

@@ -2,17 +2,27 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.KitDrivetrain;
+import frc.team6854.Limelight;
+import frc.team6854.OI;
 import frc.team6854.LEDController.LEDMode;
 import frc.team6854.Limelight.LightMode;
 
 public class ArcadeDrive extends Command {
+  private KitDrivetrain drivetrain = null;
+  private Limelight limelight = null;
+  private OI oi = null;
+
   double tX = 0;
   double kP = 0.04;
   double maxCommand = 0.5;
 
   public ArcadeDrive() {
-    super();
-    requires(Robot.drivetrain);
+    drivetrain = KitDrivetrain.getInstance();
+    limelight = Limelight.getInstance();
+    oi = OI.getInstance();
+
+    requires(drivetrain);
   }
 
   @Override
@@ -21,29 +31,27 @@ public class ArcadeDrive extends Command {
   
   @Override
   protected void execute() {
-    tX = Robot.limelight.targetX();
+    tX = limelight.targetX();
 
     // A button to vision aim using vision
-    if (Robot.oi.getDriverAButton() == true) {
-      Robot.leds.currentMode = LEDMode.VISION;
-      Robot.limelight.setDriverMode(0);
-      Robot.limelight.setLEDMode(LightMode.ON);
+    if (oi.getDriverAButton() == true) {
+      limelight.setDriverMode(0);
+      limelight.setLEDMode(LightMode.ON);
 
       double steeringAdjust = kP * tX;
       if(steeringAdjust >= maxCommand) {
         steeringAdjust = maxCommand;
       }
-      double operatorThrottle = Robot.oi.getDriverLeftStickY();
+      double operatorThrottle = oi.getDriverLeftStickY();
 
-      Robot.drivetrain.arcadeDrive(operatorThrottle, steeringAdjust);
+      drivetrain.arcadeDrive(operatorThrottle, steeringAdjust);
     } 
 
     else {
-      Robot.leds.currentMode = LEDMode.TELEOP;
-      Robot.limelight.setLEDMode(LightMode.OFF);
-      Robot.limelight.setDriverMode(1);
+      limelight.setLEDMode(LightMode.OFF);
+      limelight.setDriverMode(1);
 
-      Robot.drivetrain.arcadeDrive(Robot.oi.getDriverLeftStickY(), Robot.oi.getDriverRightStickX());
+      drivetrain.arcadeDrive(oi.getDriverLeftStickY(), oi.getDriverRightStickX());
     }
   }
 

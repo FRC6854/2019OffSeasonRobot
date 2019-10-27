@@ -1,25 +1,31 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.subsystems.Arm;
 
 public class ReleaseHatch extends Command {
+  private Arm arm = null;
+  private Scheduler scheduler = null;
+
   public ReleaseHatch() {
-    super();
-    requires(Robot.arm);
+    arm = Arm.getInstance();
+    scheduler = Scheduler.getInstance();
+
+    requires(arm);
   }
 
   @Override
   protected void initialize() {
-    switch(Robot.arm.selectedStage) {
+    switch(arm.selectedStage) {
       case 1:
-        Robot.arm.driveTicks(500);
+        arm.driveTicks(500);
         break;
       case 2:
-        Robot.arm.driveTicks(3000);
+        arm.driveTicks(3000);
         break;
       case 3:
-        Robot.arm.driveTicks(5200);
+        arm.driveTicks(5200);
         break;
     }
   }
@@ -30,15 +36,15 @@ public class ReleaseHatch extends Command {
 
   @Override
   protected boolean isFinished() {
-    switch(Robot.arm.selectedStage) {
+    switch(arm.selectedStage) {
       case 1:
-        if(Robot.arm.getErrorMargin(500, 50))
+        if(arm.getErrorMargin(500, 50))
           return true;
       case 2:
-        if(Robot.arm.getErrorMargin(3000, 50))
+        if(arm.getErrorMargin(3000, 50))
           return true;
       case 3:
-        if(Robot.arm.getErrorMargin(5200, 50))
+        if(arm.getErrorMargin(5200, 50))
           return true;
     }
     return false;
@@ -46,7 +52,7 @@ public class ReleaseHatch extends Command {
 
   @Override
   protected void end() {
-    Robot.scheduler.add(new OperateArm());
+    scheduler.add(new OperateArm());
   }
 
   @Override

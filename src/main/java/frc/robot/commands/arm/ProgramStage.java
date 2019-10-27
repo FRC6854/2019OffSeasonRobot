@@ -1,11 +1,21 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.subsystems.Arm;
+import frc.team6854.OI;
 
 public class ProgramStage extends Command {
+  private Arm arm = null;
+  private Scheduler scheduler = null;
+  private OI oi = null;
+
   public ProgramStage() {
-    requires(Robot.arm);
+    arm = Arm.getInstance();
+    scheduler = Scheduler.getInstance();
+    oi = OI.getInstance();
+
+    requires(arm);
   }
 
   @Override
@@ -14,14 +24,14 @@ public class ProgramStage extends Command {
 
   @Override
   protected void execute() {
-    double manualOutput = Robot.oi.getDriverRTrigger() - Robot.oi.getDriverLTrigger();
-    Robot.arm.driveManual(manualOutput); 
+    double manualOutput = oi.getDriverRTrigger() - oi.getDriverLTrigger();
+    arm.driveManual(manualOutput); 
   }
 
   @Override
   protected boolean isFinished() {
-    if (Robot.oi.getDriverStartButtonPressed()) {
-      Robot.arm.teachStage(Robot.arm.selectedStage, Robot.arm.getAngle());
+    if (oi.getDriverStartButtonPressed()) {
+      arm.teachStage(arm.selectedStage, arm.getAngle());
       return true;
     }
 
@@ -30,7 +40,7 @@ public class ProgramStage extends Command {
 
   @Override
   protected void end() {
-    Robot.scheduler.add(new OperateArm());
+    scheduler.add(new OperateArm());
   }
 
   @Override

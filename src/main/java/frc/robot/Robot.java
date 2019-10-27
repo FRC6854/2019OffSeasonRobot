@@ -10,43 +10,39 @@ import frc.robot.commands.gyro.*;
 import frc.team6854.*;
 import frc.robot.subsystems.*; 
 import frc.team6854.Limelight;
-import frc.team6854.Limelight.LightMode;
 
 public class Robot extends TimedRobot implements RobotMap {
 
-  public static CSVFileReader reader = new CSVFileReader();
-
-  public static KitDrivetrain drivetrain;
+  private static KitDrivetrain drivetrain;
   
-  public static Limelight limelight = new Limelight(LightMode.OFF);
+  private static Limelight limelight;
 
-  public static Scheduler scheduler;
+  private static Scheduler scheduler;
 
-  public static Arm arm;
+  private static Arm arm;
 
-  public static Gyro gyro;
+  private static Gyro gyro;
 
-  public static LEDController leds = new LEDController();
+  private static LEDController leds;
   
-  public static OI oi = new OI();
+  private static OI oi = new OI();
   
   @Override
   public void robotInit() {
     drivetrain = KitDrivetrain.getInstance();
+    limelight = Limelight.getInstance();
     arm = Arm.getInstance();
     scheduler = Scheduler.getInstance();
     gyro = Gyro.getInstance();
+    leds = LEDController.getInstance();
   }
 
   @Override
   public void robotPeriodic() {
     arm.updateFaults();
-    leds.setMode();
 
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
     SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
-
-    SmartDashboard.putString("Current LED Mode", leds.currentMode.name());
 
     SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
 
@@ -67,7 +63,6 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     scheduler.removeAll();
-    leds.resetLastMode();
 
     // Drive 2 meters, turn left 90, drive 2 meters 
     scheduler.add(new Drive90Drive());
@@ -80,7 +75,6 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
-    leds.resetLastMode();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
   }
@@ -91,7 +85,6 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void testInit() {
-    leds.resetLastMode();
     scheduler.removeAll();
   }
 

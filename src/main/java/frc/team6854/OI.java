@@ -8,17 +8,36 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class OI implements RobotMap {
-  XboxController driver = new XboxController(CONTROLLER_DRIVER);
-  DriverStation ds = DriverStation.getInstance();
-  SerialPort arduino;
+  private static OI instance = null;
+
+  private XboxController driver = new XboxController(CONTROLLER_DRIVER);
+  private DriverStation ds;
+  private SerialPort arduino;
+
+  private String lastCommandArduino = null;
+  private boolean connected = false;
 
   public OI() {
-    // Init the SerialPort on baud 9600
-    arduino = new SerialPort(9600, SerialPort.Port.kUSB1);
+    ds = DriverStation.getInstance();
+    
+    try {
+      // Init the SerialPort on baud 9600
+      arduino = new SerialPort(9600, SerialPort.Port.kUSB1);
 
-    // Whenever the readString function recieves a \n it will return
-    // less bytes than it requested from the arduino
-    arduino.enableTermination();
+      // Whenever the readString function recieves a \n it will return
+      // less bytes than it requested from the arduino
+      arduino.enableTermination();
+
+      // Will wait a max of half a second
+      arduino.setTimeout(0.5);
+
+      // Set connected to be false
+      connected = true;
+    }
+    catch (Exception e) {
+      System.out.print("Failed to connect to Arduino: ");
+      System.out.println(e.toString());
+    }
   }
 
   public double getDriverLeftStickY() {
@@ -98,19 +117,31 @@ public class OI implements RobotMap {
   }
 
   public void ledDataSerialPort(int number) {
-    System.out.println("Sending Serial Port Data");
+    // Set a string variable to the number
+    String dataWrite = Integer.toString(number);
 
-    // Read the current line of text in the Serial Channel
-    String dataRecieved = arduino.readString();
+    if (lastCommandArduino != dataWrite && connected == true) {
+      // Set the last command to the command about to be sent
+      lastCommandArduino = dataWrite;
 
-    // Print out the data recieved
-    System.out.println(dataRecieved);
+      // Write the number to the Serial Channel
+      arduino.writeString(dataWrite);
 
-    // Write the number to the Serial Channel
-    arduino.writeString(Integer.toString(number));
+      // Since the output buffer is 8 bytes and we usually only print 2 bytes, we must flush the buffer to send the line
+      // The limitation of this is that we can only send up to 99,999,999
+      arduino.flush();
 
-    // Since the output buffer is 8 bytes and we usually only print 2 bytes, we must flush the buffer to send the line
-    // The limitation of this is that we can only send up to 99,999,999
-    arduino.flush();
+      // Read the current line of text in the Serial Channel
+      String dataReceived = arduino.readString();
+
+      // Print out the data received
+      System.out.println("Arduino Sent: " + dataReceived);
+    }
+  }
+
+  public static OI getInstance () {
+    if (instance == null)
+      instance = new OI();
+    return instance;
   }
 }

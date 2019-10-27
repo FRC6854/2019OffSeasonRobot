@@ -1,15 +1,24 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Constants;
+import frc.team6854.OI;
 
 public class OperateArm extends Command implements Constants {
-  public static boolean manualControl = true;
+  private Arm arm = null;
+  private Scheduler scheduler = null;
+  private OI oi = null;
+
+  private static boolean manualControl = true;
 
   public OperateArm() {
-    super();
-    requires(Robot.arm);
+    arm = Arm.getInstance();
+    scheduler = Scheduler.getInstance();
+    oi = OI.getInstance();
+    
+    requires(arm);
   }
 
   @Override
@@ -18,50 +27,43 @@ public class OperateArm extends Command implements Constants {
 
   @Override
   protected void execute() {
-    double manualOutput = Robot.oi.getDriverRTrigger() - Robot.oi.getDriverLTrigger();
+    double manualOutput = oi.getDriverRTrigger() - oi.getDriverLTrigger();
 
     // If the triggers are pressed (> 0) then set the arm to manual mode
     if (manualOutput > 0 || manualOutput < 0) {
       manualControl = true;
     }
 
-    if(Robot.oi.getDriverBButtonPressed()) {
-      Robot.scheduler.add(new ReleaseHatch());
+    if(oi.getDriverBButtonPressed()) {
+      scheduler.add(new ReleaseHatch());
     }
 
     // If in manual mode and the stage switch buttons are pressed switch to stage mode
-    if (manualControl == true && (Robot.oi.getDriverRBumperPressed() || Robot.oi.getDriverLBumperPressed())) {
+    if (manualControl == true && (oi.getDriverRBumperPressed() || oi.getDriverLBumperPressed())) {
       manualControl = false;
     }
 
     // Select the stage using the bumpers... + for increase - for decrease
-    if (Robot.oi.getDriverRBumperPressed() == true) {
-      if (Robot.arm.selectedStage < Robot.arm.numStages) {
-        Robot.arm.selectedStage ++;
+    if (oi.getDriverRBumperPressed() == true) {
+      if (arm.selectedStage < arm.numStages) {
+        arm.selectedStage ++;
       }
     }
     
-    if (Robot.oi.getDriverLBumperPressed() == true) {
-      if (Robot.arm.selectedStage > 0) {
-        Robot.arm.selectedStage --;
+    if (oi.getDriverLBumperPressed() == true) {
+      if (arm.selectedStage > 0) {
+        arm.selectedStage --;
       }
     }
 
     if(manualControl == false) {
-      Robot.arm.setStage(Robot.arm.selectedStage);
+      arm.setStage(arm.selectedStage);
     }
 
     // If in manual mode drive the arm manually
     if (manualControl) {
-      Robot.arm.driveManual(manualOutput);
+      arm.driveManual(manualOutput);
     }
-
-    /*
-    // LB RB and START to teach
-    if (Robot.oi.getDriverLBumper() && Robot.oi.getDriverRBumper() && Robot.oi.getDriverStartButton()) {
-      Robot.scheduler.add(new ProgramStage());
-    }
-    */
   }
 
   @Override

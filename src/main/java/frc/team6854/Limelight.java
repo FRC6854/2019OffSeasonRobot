@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Limelight extends Subsystem {
 
-    NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+    private static Limelight instance = null;
+    private NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
   
     public static enum LightMode {
       DEFAULT,
@@ -14,13 +15,7 @@ public class Limelight extends Subsystem {
       BLINK,
       ON
     }
-  
-    public LightMode defaultMode;
-  
-    public Limelight(LightMode defaultLightMode) {
-      this.defaultMode = defaultLightMode;
-    }
-  
+
     /**
      * Whether the limelight has any valid targets (0 or 1)
      * @return Returns true if vision target is found
@@ -114,13 +109,6 @@ public class Limelight extends Subsystem {
     }
   
     /**
-     * Set the current LED mode to the default LED mode
-     */
-    public void setLEDModeDefault(){
-      setLEDMode(defaultMode);
-    }
-  
-    /**
      * Uses current targetY to calculate the distance to the target
      * @return the distance to the target in inches (estimation)
      */
@@ -142,6 +130,12 @@ public class Limelight extends Subsystem {
       // isn't the "X angle to the target" just targetX()?
       double horzFOV = 59.6;
       return Math.atan(Math.tan(Math.toRadians(horzFOV))*targetX()/160);
+    }
+
+    public static Limelight getInstance () {
+      if (instance == null)
+        instance = new Limelight();
+      return instance;
     }
   
     @Override

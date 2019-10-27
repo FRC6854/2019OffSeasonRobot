@@ -5,94 +5,99 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-public class LEDController extends Subsystem {
-    public enum LEDMode {
+public class LEDController extends Subsystem implements RobotMap {
+    private static LEDController instance;
+    private static OI oi;
+
+    public static enum LEDMode {
         TELEOP,
         AUTO,
         VISION,
-        DEFAULT
+        DEFAULT,
+        ERROR
     };
 
-    public LEDMode currentMode = LEDMode.TELEOP;
-    LEDMode lastMode = null;
-
-    public void resetLastMode() {
-        lastMode = null;
+    public LEDController () {
+        oi = OI.getInstance();
     }
 
-    public void setMode() {
-        if(currentMode != lastMode) {
-            switch(currentMode) {
-                case TELEOP:
-                    setTeleop();
-                    lastMode = LEDMode.TELEOP;
-                    break;
-                case AUTO:
-                    setAuto();
-                    lastMode = LEDMode.AUTO;
-                    break;
-                case VISION:
-                    setVision();
-                    lastMode = LEDMode.VISION;
-                    break;
-                case DEFAULT:
-                    setDefault();
-                    lastMode = LEDMode.DEFAULT;
-                    break;
-                default:
-                    setDefault();
-                    lastMode = LEDMode.DEFAULT;
-                    break;
-            }
+    public void setMode(LEDMode mode) {
+        switch (mode) {
+            case TELEOP:
+                setTeleop();
+                break;
+            case AUTO:
+                setAuto();
+                break;
+            case VISION:
+                setVision();
+                break;
+            case DEFAULT:
+                setDefault();
+                break;
+            case ERROR:
+            default:
+                setDefault();
+                break;
         }
     }
 
     public void setTeleop() {
-        if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_TELEOP);
+        if(oi.getAlliance() == Alliance.Blue) {
+            oi.ledDataSerialPort(BLUE_TELEOP);
         }
-        else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataSerialPort(RobotMap.RED_TELEOP);
+        else if(oi.getAlliance() == Alliance.Red) {
+            oi.ledDataSerialPort(RED_TELEOP);
         }
         else {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_TELEOP);
+            oi.ledDataSerialPort(BLUE_TELEOP);
         }
     }
 
     public void setAuto() {
-        if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_AUTO);
+        if(oi.getAlliance() == Alliance.Blue) {
+            oi.ledDataSerialPort(BLUE_AUTO);
         }
-        else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataSerialPort(RobotMap.RED_AUTO);
+        else if(oi.getAlliance() == Alliance.Red) {
+            oi.ledDataSerialPort(RED_AUTO);
         }
         else {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_AUTO);
+            oi.ledDataSerialPort(BLUE_AUTO);
         }
     }
 
     public void setVision() {
-        if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_VISION);
+        if(oi.getAlliance() == Alliance.Blue) {
+            oi.ledDataSerialPort(BLUE_VISION);
         }
-        else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataSerialPort(RobotMap.RED_VISION);
+        else if(oi.getAlliance() == Alliance.Red) {
+            oi.ledDataSerialPort(RED_VISION);
         }
         else {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_VISION);
+            oi.ledDataSerialPort(BLUE_VISION);
         }
     }
 
     public void setDefault() {
-        if(Robot.oi.getAlliance() == Alliance.Blue) {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_DEFAULT);
+        if(oi.getAlliance() == Alliance.Blue) {
+            oi.ledDataSerialPort(BLUE_DEFAULT);
         }
-        else if(Robot.oi.getAlliance() == Alliance.Red) {
-            Robot.oi.ledDataSerialPort(RobotMap.RED_DEFAULT);
+        else if(oi.getAlliance() == Alliance.Red) {
+            oi.ledDataSerialPort(RED_DEFAULT);
         }
         else {
-            Robot.oi.ledDataSerialPort(RobotMap.BLUE_DEFAULT);
+            oi.ledDataSerialPort(BLUE_DEFAULT);
         }
+    }
+
+    public void setError() {
+        oi.ledDataSerialPort(ERROR);
+    }
+
+    public static LEDController getInstance () {
+        if (instance == null)
+          instance = new LEDController();
+        return instance;
     }
 
     @Override

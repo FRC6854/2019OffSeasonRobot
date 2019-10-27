@@ -1,12 +1,19 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Robot;
+import frc.robot.subsystems.Arm;
 
 public class ZeroArm extends Command {
+  private Arm arm = null;
+  private Scheduler scheduler = null;
+
   public ZeroArm() {
-    super();
-    requires(Robot.arm);
+    arm = Arm.getInstance();
+    scheduler = Scheduler.getInstance();
+    
+    requires(arm);
   }
 
   @Override
@@ -15,13 +22,13 @@ public class ZeroArm extends Command {
 
   @Override
   protected void execute() {
-    Robot.arm.driveManual(-0.1);
+    arm.driveManual(-0.1);
   }
 
   @Override
   protected boolean isFinished() {
-    if (Robot.arm.getReverseLimitSwitch() == true){
-      Robot.arm.zeroSensor();
+    if (arm.getReverseLimitSwitch() == true){
+      arm.zeroSensor();
       return true;
     } else {
       return false;
@@ -30,7 +37,7 @@ public class ZeroArm extends Command {
 
   @Override
   protected void end() {
-    Robot.scheduler.add(new OperateArm());
+    scheduler.add(new OperateArm());
   }
 
   @Override

@@ -1,11 +1,14 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.KitDrivetrain;
 
 public class DriveAngle extends Command {
+  private KitDrivetrain drivetrain = null;
+  private Gyro gyro = null;
 
-  double angle = -90;
+  double angle = 0;
   double currentAngle = 0;
 
   double speed = 0;
@@ -18,8 +21,11 @@ public class DriveAngle extends Command {
   double toleranceDegrees = 3;
 
   public DriveAngle(double angle) {
-    requires(Robot.drivetrain);
-    requires(Robot.gyro);
+    drivetrain = KitDrivetrain.getInstance();
+    gyro = Gyro.getInstance();
+
+    requires(drivetrain);
+    requires(gyro);
 
     this.angle = angle;
   }
@@ -30,7 +36,7 @@ public class DriveAngle extends Command {
 
   @Override
   protected void execute() {
-    currentAngle = Robot.gyro.getAngle();
+    currentAngle = gyro.getAngle();
     error = angle - currentAngle;
     speed = kP * error;
     System.out.println("Error: " + error);
@@ -43,7 +49,7 @@ public class DriveAngle extends Command {
       speed = -maxSpeed;
     }
 
-    Robot.drivetrain.arcadeDrive(0, speed);
+    drivetrain.arcadeDrive(0, speed);
 
     if(currentAngle <= (angle + toleranceDegrees) && currentAngle >= (angle - toleranceDegrees)) {
       timer++;
@@ -58,7 +64,7 @@ public class DriveAngle extends Command {
   @Override
   protected void end() {
     System.out.println("Finished setting angle to: " + angle);
-    Robot.drivetrain.arcadeDrive(0, 0);
+    drivetrain.arcadeDrive(0, 0);
   }
   
   @Override
