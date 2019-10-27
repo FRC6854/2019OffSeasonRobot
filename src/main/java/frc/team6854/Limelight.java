@@ -68,8 +68,13 @@ public class Limelight extends Subsystem {
      * Sets the camMode to the selected value passed to the method (0 or 1)
      * @param value the value to set the camMode to
      */
-    public void setDriverMode(double value) {
-      limelight.getEntry("camMode").setDouble(value);
+    public void setDriverMode(boolean value) {
+      if (value == true) {
+        limelight.getEntry("camMode").setDouble(1);
+      }
+      else { 
+        limelight.getEntry("camMode").setDouble(0);
+      }
     }
   
     /**

@@ -36,13 +36,15 @@ public class LEDController extends Subsystem implements RobotMap {
                 setDefault();
                 break;
             case ERROR:
+                setError();
+                break;
             default:
                 setDefault();
                 break;
         }
     }
 
-    public void setTeleop() {
+    private void setTeleop() {
         if(oi.getAlliance() == Alliance.Blue) {
             oi.ledDataSerialPort(BLUE_TELEOP);
         }
@@ -54,7 +56,7 @@ public class LEDController extends Subsystem implements RobotMap {
         }
     }
 
-    public void setAuto() {
+    private void setAuto() {
         if(oi.getAlliance() == Alliance.Blue) {
             oi.ledDataSerialPort(BLUE_AUTO);
         }
@@ -66,7 +68,7 @@ public class LEDController extends Subsystem implements RobotMap {
         }
     }
 
-    public void setVision() {
+    private void setVision() {
         if(oi.getAlliance() == Alliance.Blue) {
             oi.ledDataSerialPort(BLUE_VISION);
         }
@@ -78,7 +80,7 @@ public class LEDController extends Subsystem implements RobotMap {
         }
     }
 
-    public void setDefault() {
+    private void setDefault() {
         if(oi.getAlliance() == Alliance.Blue) {
             oi.ledDataSerialPort(BLUE_DEFAULT);
         }
@@ -90,7 +92,7 @@ public class LEDController extends Subsystem implements RobotMap {
         }
     }
 
-    public void setError() {
+    private void setError() {
         oi.ledDataSerialPort(ERROR);
     }
 

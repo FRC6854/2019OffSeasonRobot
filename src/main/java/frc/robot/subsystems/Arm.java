@@ -37,7 +37,6 @@ public class Arm extends Subsystem implements Constants {
 
     /* Configure Sensor Source for Pirmary PID */
     arm.configSelectedFeedbackSensor(arm_kFeedbackDevice, 0, 0);
-    arm.setSelectedSensorPosition(0, 0, 0);
     
     /* Set the peak and nominal outputs */
     arm.configNominalOutputForward(0, arm_kTimeoutMs);

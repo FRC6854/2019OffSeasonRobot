@@ -7,34 +7,22 @@ import frc.robot.command_groups.drivetrain.auto.Drive90Drive;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.gyro.*;
-import frc.team6854.*;
 import frc.robot.subsystems.*; 
-import frc.team6854.Limelight;
 
 public class Robot extends TimedRobot implements RobotMap {
 
   private static KitDrivetrain drivetrain;
-  
-  private static Limelight limelight;
 
   private static Scheduler scheduler;
 
   private static Arm arm;
 
   private static Gyro gyro;
-
-  private static LEDController leds;
-  
-  private static OI oi = new OI();
   
   @Override
   public void robotInit() {
     drivetrain = KitDrivetrain.getInstance();
-    limelight = Limelight.getInstance();
-    arm = Arm.getInstance();
     scheduler = Scheduler.getInstance();
-    gyro = Gyro.getInstance();
-    leds = LEDController.getInstance();
   }
 
   @Override
@@ -69,30 +57,9 @@ public class Robot extends TimedRobot implements RobotMap {
   }
 
   @Override
-  public void autonomousPeriodic() {
-  }
-
-  @Override
   public void teleopInit() {
     scheduler.removeAll();
     scheduler.add(new ArcadeDrive());
     scheduler.add(new ZeroArm());
-  }
-
-  @Override
-  public void teleopPeriodic() {
-  }
-
-  @Override
-  public void testInit() {
-    scheduler.removeAll();
-  }
-
-  @Override
-  public void testPeriodic() {
-    if (oi.getDriverAButtonPressed()) {
-      drivetrain.zeroSensor();
-      drivetrain.driveRotations(1);
-    }
   }
 }

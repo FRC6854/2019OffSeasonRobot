@@ -40,8 +40,6 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   private void init() {
-    //loadMotionProfiles("testing");
-
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
 
@@ -195,8 +193,8 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   public void fullStop() {
-    leftMaster.set(ControlMode.Disabled, 0);
-    rightMaster.set(ControlMode.Disabled, 0);
+    leftMaster.set(ControlMode.PercentOutput, 0);
+    rightMaster.set(ControlMode.PercentOutput, 0);
     leftMaster.setNeutralMode(NeutralMode.Brake);
     rightMaster.setNeutralMode(NeutralMode.Brake);
   }

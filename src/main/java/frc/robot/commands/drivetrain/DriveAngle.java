@@ -3,10 +3,13 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.KitDrivetrain;
+import frc.team6854.LEDController;
+import frc.team6854.LEDController.LEDMode;
 
 public class DriveAngle extends Command {
   private KitDrivetrain drivetrain = null;
   private Gyro gyro = null;
+  private LEDController leds = null;
 
   double angle = 0;
   double currentAngle = 0;
@@ -23,6 +26,7 @@ public class DriveAngle extends Command {
   public DriveAngle(double angle) {
     drivetrain = KitDrivetrain.getInstance();
     gyro = Gyro.getInstance();
+    leds = LEDController.getInstance();
 
     requires(drivetrain);
     requires(gyro);
@@ -36,6 +40,7 @@ public class DriveAngle extends Command {
 
   @Override
   protected void execute() {
+    leds.setMode(LEDMode.AUTO);
     currentAngle = gyro.getAngle();
     error = angle - currentAngle;
     speed = kP * error;

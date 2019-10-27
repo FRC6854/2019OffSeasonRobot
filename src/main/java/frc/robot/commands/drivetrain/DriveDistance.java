@@ -2,11 +2,14 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.KitDrivetrain;
+import frc.team6854.LEDController;
+import frc.team6854.LEDController.LEDMode;
 import frc.robot.subsystems.Gyro;
 
 public class DriveDistance extends Command {
   private KitDrivetrain drivetrain = null;
   private Gyro gyro = null;
+  private LEDController leds = null;
   
   double meters;
 
@@ -18,7 +21,8 @@ public class DriveDistance extends Command {
   public DriveDistance(double meters) {
     drivetrain = KitDrivetrain.getInstance();
     gyro = Gyro.getInstance();
-    
+    leds = LEDController.getInstance();
+
     requires(drivetrain);
     requires(gyro);
 
@@ -33,6 +37,7 @@ public class DriveDistance extends Command {
 
   @Override
   protected void execute() {
+    leds.setMode(LEDMode.AUTO);
     timer++;
   }
 

@@ -2,7 +2,6 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 
 public class ZeroArm extends Command {
@@ -12,7 +11,7 @@ public class ZeroArm extends Command {
   public ZeroArm() {
     arm = Arm.getInstance();
     scheduler = Scheduler.getInstance();
-    
+
     requires(arm);
   }
 

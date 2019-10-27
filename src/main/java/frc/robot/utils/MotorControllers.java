@@ -10,16 +10,16 @@ import frc.robot.RobotMap;
 public class MotorControllers implements RobotMap {
     private static MotorControllers instance = null;
 
-    private TalonSRX leftMaster;
-    private VictorSPX leftSlave;
+    private TalonSRX leftMaster = null;
+    private VictorSPX leftSlave = null;
 
-    private TalonSRX rightMaster;
-    private VictorSPX rightSlave;
+    private TalonSRX rightMaster = null;
+    private VictorSPX rightSlave = null;
 
-    private TalonSRX arm;
-    private Faults armFaults;
+    private TalonSRX arm = null;
+    private Faults armFaults = null;
 
-    private AHRS gyro;
+    private AHRS gyro = null;
 
     public MotorControllers() {
         leftMaster = new TalonSRX(CAN_LEFT_FRONT);
