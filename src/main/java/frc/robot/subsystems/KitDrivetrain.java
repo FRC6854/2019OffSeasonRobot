@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.Robot;
 import frc.robot.utils.MotorControllers;
 
 public class KitDrivetrain extends Subsystem implements Constants {
@@ -150,13 +149,10 @@ public class KitDrivetrain extends Subsystem implements Constants {
     //Double[][] leftPath = Robot.reader.pathLeft("/home/lvuser/paths/" + folderName);
     //Double[][] rightPath = Robot.reader.pathRight("/home/lvuser/paths/" + folderName);
 
-    Double[][] leftPath = null;
-    Double[][] rightPath = null;
+    //initBufferLeft(leftPath, leftPath.length);
+    //initBufferRight(rightPath, rightPath.length);
 
-    initBufferLeft(leftPath, leftPath.length);
-    initBufferRight(rightPath, rightPath.length);
-
-    System.out.println("Finished Loading Motion Profiles");
+    //System.out.println("Finished Loading Motion Profiles");
   }
 
   public void motionProfile() {
