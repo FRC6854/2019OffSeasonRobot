@@ -1,20 +1,20 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
-import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import frc.robot.utils.PIDController;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.utils.MotorControllers;
 
 public class KitDrivetrain extends Subsystem implements Constants {
   private static KitDrivetrain instance = null;
-
-  public static final double kDefaultQuickStopThreshold = 0.2;
-  public static final double kDefaultQuickStopAlpha = 0.1;
 
   private TalonSRX leftMaster;
   private VictorSPX leftSlave;
@@ -22,10 +22,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
   private TalonSRX rightMaster;
   private VictorSPX rightSlave;
 
+  private AHRS gyro;
+
   private MotorControllers controllers;
 
-  BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
-  BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
+  private PIDController drivePID;
+	private PIDController gyroPID;
 
   public KitDrivetrain() {
     controllers = MotorControllers.getInstance();
@@ -34,6 +36,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
     leftSlave = controllers.getLeftSlave();
     rightMaster = controllers.getRightMaster();
     rightSlave = controllers.getRightSlave();
+    gyro = controllers.getGyro();
 
     init();
   }
@@ -100,6 +103,9 @@ public class KitDrivetrain extends Subsystem implements Constants {
     /* Zero the sensor */
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
     rightMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
+
+    drivePID = new PIDController(pDrive, iDrive, dDrive);
+    gyroPID = new PIDController(pGyro, iGyro, dGyro);
   }
 
   // Copied from the WPILib Differential Drive Class with some minor alterations
@@ -141,31 +147,8 @@ public class KitDrivetrain extends Subsystem implements Constants {
       }
     }
 
-    leftMaster.set(ControlMode.PercentOutput, limit(leftMotorOutput) * dt_kDefaultMaxOutput);
-    rightMaster.set(ControlMode.PercentOutput, limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
-  }
-
-  public void loadMotionProfiles(String folderName) {
-    //Double[][] leftPath = Robot.reader.pathLeft("/home/lvuser/paths/" + folderName);
-    //Double[][] rightPath = Robot.reader.pathRight("/home/lvuser/paths/" + folderName);
-
-    //initBufferLeft(leftPath, leftPath.length);
-    //initBufferRight(rightPath, rightPath.length);
-
-    //System.out.println("Finished Loading Motion Profiles");
-  }
-
-  public void motionProfile() {
-    leftMaster.startMotionProfile(_bufferedStreamLeft, 10, ControlMode.MotionProfile);
-    rightMaster.startMotionProfile(_bufferedStreamRight, 10, ControlMode.MotionProfile);
-  }
-
-  public boolean isMotionProfileLeftFinished() {
-    return leftMaster.isMotionProfileFinished();
-  }
-
-  public boolean isMotionProfileRightFinished() {
-    return rightMaster.isMotionProfileFinished();
+    driveLeft(limit(leftMotorOutput) * dt_kDefaultMaxOutput);
+    driveRight(limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
   }
 
   public void driveMeters(double meters) {
@@ -176,6 +159,14 @@ public class KitDrivetrain extends Subsystem implements Constants {
   public void driveRotations(double rotations) {
     leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
     rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+  }
+
+  public void driveLeft(double value) {
+    leftMaster.set(ControlMode.PercentOutput, value);
+  }
+
+  public void driveRight(double value) {
+    rightMaster.set(ControlMode.PercentOutput, value);
   }
 
   public void driveTicks(int ticks) {
@@ -200,7 +191,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
     rightMaster.setNeutralMode(NeutralMode.Coast);
   }
 
-  public void zeroSensor() {
+  public void zeroSensors() {
     leftMaster.setSelectedSensorPosition(0);
     rightMaster.setSelectedSensorPosition(0);
   }
@@ -217,12 +208,6 @@ public class KitDrivetrain extends Subsystem implements Constants {
     return ticks / 4096;
   }
 
-  // We technically shouldn't need this but it was in the differentialDrive class
-  // I think this exists only to prevent people from being stupid and
-  // Sending more than 100% power to a motor.
-  /**
-   * Limit motor values to the -1.0 to +1.0 range.
-   */
   private double limit(double value) {
     if (value > 1.0) {
       return 1.0;
@@ -245,6 +230,46 @@ public class KitDrivetrain extends Subsystem implements Constants {
     }
   }
 
+  public void driveSetpoint(double setPoint, double speed, double setAngle) {
+		driveSetpoint(setPoint, speed, setAngle, 1);
+	}
+
+	public void driveSetpoint(double setPoint, double speed, double setAngle, double tolerance) {
+		double output = drivePID.calcPID(setPoint, getAverageDistance(), tolerance);
+    double angle = gyroPID.calcPID(setAngle, getGyroAngle(), tolerance);
+    
+		driveLeft((output + angle) * speed);
+		driveRight((-output + angle) * speed);
+  }
+
+  public void turnDrive(double setAngle, double speed) {
+		turnDrive(setAngle, speed, 1);
+	}
+
+	public void turnDrive(double setAngle, double speed, double tolerance) {
+    double angle = gyroPID.calcPID(setAngle, getGyroAngle(), 1);
+    double min = 0.05;
+		if(Math.abs(setAngle-getGyroAngle()) < tolerance){ 
+			driveLeft(0); 
+			driveRight(0);
+		}
+		else if(angle > -min && angle < 0){
+			driveLeft(min);
+			driveRight(-min);
+		} 
+		else if(angle < min && angle > 0){ 
+			driveLeft(min);
+			driveRight(-min); 
+		} else{ 
+			driveLeft(angle * speed);
+			driveRight(-angle * speed); 
+		}
+	}
+  
+  public boolean drivePIDDone() {
+		return drivePID.isDone();
+	}
+
   public int getLeftVelocity() {
     return leftMaster.getSelectedSensorVelocity();
   }
@@ -261,80 +286,16 @@ public class KitDrivetrain extends Subsystem implements Constants {
     return rightMaster.getSelectedSensorPosition();
   }
 
-  private void initBufferLeft(Double[][] profile, int totalCnt) {
-
-    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
-                            // since you can use negative numbers in profile).
-
-    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
-                                                   // automatically, you can alloc just one
-
-    /* clear the buffer, in case it was used elsewhere */
-    _bufferedStreamLeft.Clear();
-
-    /* Insert every point into buffer, no limit on size */
-    for (int i = 0; i < totalCnt; ++i) {
-
-      double direction = forward ? +1 : -1;
-      double positionRot = profile[i][0];
-      double velocityRPM = profile[i][1];
-      int durationMilliseconds = 50;
-
-      /* for each point, fill our structure and pass it to API */
-      point.timeDur = durationMilliseconds;
-      point.position = direction * positionRot * 4096; // Convert Revolutions to
-                                                       // Units
-      point.velocity = direction * velocityRPM * 4096 / 500.0; // Convert RPM to
-                                                               // Units/100ms
-      point.auxiliaryPos = 0;
-      point.auxiliaryVel = 0;
-      point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-      point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
-      point.zeroPos = (i == 0); /* set this to true on the first point */
-      point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
-      point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
-
-      System.out.println(point.position);
-
-      _bufferedStreamLeft.Write(point);
-    }
+  public double getLeftTicksDistance() {
+    return getLeftTicks() * (1/350);
   }
 
-  private void initBufferRight(Double[][] profile, int totalCnt) {
+  public double getRightTicksDistance() {
+    return getRightTicks() * (1/350);
+  }
 
-    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
-                            // since you can use negative numbers in profile).
-
-    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
-                                                   // automatically, you can alloc just one
-
-    /* clear the buffer, in case it was used elsewhere */
-    _bufferedStreamRight.Clear();
-
-    /* Insert every point into buffer, no limit on size */
-    for (int i = 0; i < totalCnt; ++i) {
-
-      double direction = forward ? +1 : -1;
-      double positionRot = profile[i][0];
-      double velocityRPM = profile[i][1];
-      int durationMilliseconds = 50;
-
-      /* for each point, fill our structure and pass it to API */
-      point.timeDur = durationMilliseconds;
-      point.position = direction * positionRot * 4096; // Convert Revolutions to
-                                                       // Units
-      point.velocity = direction * velocityRPM * 4096 / 500.0; // Convert RPM to
-                                                               // Units/100ms
-      point.auxiliaryPos = 0;
-      point.auxiliaryVel = 0;
-      point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-      point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
-      point.zeroPos = (i == 0); /* set this to true on the first point */
-      point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
-      point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
-
-      _bufferedStreamRight.Write(point);
-    }
+  public double getAverageDistance() {
+    return (getLeftTicksDistance() + getRightTicksDistance()) / 2;
   }
 
   public static KitDrivetrain getInstance() {
@@ -344,7 +305,29 @@ public class KitDrivetrain extends Subsystem implements Constants {
 		return instance;
   }
 
+  public double getGyroAngle() {
+    return gyro.getAngle();
+  }
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public void reset() {
+    zeroSensors();
+    resetGyro();
+  }
+
+  public void changeDriveGains(double pDrive, double iDrive, double dDrive) {
+		drivePID.changePIDGains(pDrive, iDrive, dDrive);
+	}
+
+	public void changeGyroGains(double pGyro, double iGyro, double dGyro) {
+		gyroPID.changePIDGains(pGyro, iGyro, dGyro);
+	}
+
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new ArcadeDrive());
   }
 }

@@ -8,8 +8,8 @@ public interface Constants {
 	 * 	DRIVETRAIN CONSTANTS
 	 * --------------------
 	 */
-	public double dt_kRadius = 3;
-	public double robotRadius = 11.25;
+	public final double dt_kRadius = 3;
+	public final double robotRadius = 11.25;
 
 	public final int dt_kSlotIdx = 0;
 
@@ -29,6 +29,19 @@ public interface Constants {
 
 	public final double dt_rightSideInvertMultiplier = -1.0;
 	
+	public final double pDrive = 0.0013;
+	public final double iDrive = 0.001;
+	public final double dDrive = 0.0;
+
+	public final double pGyro = 0.015;
+	public final double iGyro = 0.0;
+	public final double dGyro = 0.1;
+
+	//Drive Speed Scalar
+	public final double jukeSpeedScale = 0.85;
+	public final double slowSpeedScale = 0.5;
+	public final double speedScale = 1;
+
 	/**
 	 * --------------------
 	 * 	ARM CONSTANTS

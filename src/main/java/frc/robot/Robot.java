@@ -19,15 +19,12 @@ public class Robot extends TimedRobot implements RobotMap {
   private static Scheduler scheduler;
 
   private static Arm arm;
-
-  private static Gyro gyro;
   
   @Override
   public void robotInit() {
     drivetrain = KitDrivetrain.getInstance();
     scheduler = Scheduler.getInstance();
     arm = Arm.getInstance();
-    gyro = Gyro.getInstance();
     oi = OI.getInstance();
   }
 
@@ -38,7 +35,7 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("DT L Ticks", drivetrain.getLeftTicks());
     SmartDashboard.putNumber("DT R Ticks", drivetrain.getRightTicks());
 
-    SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
+    SmartDashboard.putNumber("Gyro Angle", drivetrain.getGyroAngle());
 
     SmartDashboard.putNumber("Left Velocity", drivetrain.getLeftVelocity());
     SmartDashboard.putNumber("Right Velocity", drivetrain.getRightVelocity());
