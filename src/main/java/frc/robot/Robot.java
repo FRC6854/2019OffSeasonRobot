@@ -7,11 +7,14 @@ import frc.robot.command_groups.drivetrain.auto.Drive90Drive;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.gyro.*;
-import frc.robot.subsystems.*; 
+import frc.robot.subsystems.*;
+import frc.team6854.OI; 
 
 public class Robot extends TimedRobot implements RobotMap {
 
   private static KitDrivetrain drivetrain;
+
+  private static OI oi;
 
   private static Scheduler scheduler;
 
@@ -23,6 +26,9 @@ public class Robot extends TimedRobot implements RobotMap {
   public void robotInit() {
     drivetrain = KitDrivetrain.getInstance();
     scheduler = Scheduler.getInstance();
+    arm = Arm.getInstance();
+    gyro = Gyro.getInstance();
+    oi = OI.getInstance();
   }
 
   @Override

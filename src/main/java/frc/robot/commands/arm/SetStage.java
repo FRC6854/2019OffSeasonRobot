@@ -7,8 +7,13 @@ public class SetStage extends Command {
   private Arm arm = null;
 
   int stage = 1;
-  final int error = 50;
+ 
   boolean finished = false;
+
+  int timer = 0;
+
+  // execute() runs 50 times per second or every 20ms. So the command should run a minimum of half a second
+  static final int waitForTime = 25;
 
   public SetStage(int stage) {
     arm = Arm.getInstance();
@@ -25,7 +30,11 @@ public class SetStage extends Command {
 
   @Override
   protected void execute() {
-    finished = ((arm.getTicks() + error < arm.getTicks() && arm.getTicks() - error > arm.getTicks()) && arm.getArmVelocity() == 0);
+    timer++;
+
+    finished = (timer > waitForTime && (arm.getArmVelocity() == 0));
+
+    System.out.println("Stage finished: " + finished);
   }
 
   @Override

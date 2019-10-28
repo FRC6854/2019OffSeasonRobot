@@ -14,7 +14,7 @@ public class OI implements RobotMap {
   private DriverStation ds;
   private SerialPort arduino;
 
-  private String lastCommandArduino = null;
+  private static int lastCommandArduino = 0;
   private boolean connected = false;
 
   public OI() {
@@ -26,10 +26,7 @@ public class OI implements RobotMap {
 
       // Whenever the readString function recieves a \n it will return
       // less bytes than it requested from the arduino
-      arduino.enableTermination();
-
-      // Will wait a max of half a second
-      arduino.setTimeout(0.5);
+      //arduino.enableTermination();
 
       // Set connected to be false
       connected = true;
@@ -120,9 +117,9 @@ public class OI implements RobotMap {
     // Set a string variable to the number
     String dataWrite = Integer.toString(number);
 
-    if (lastCommandArduino != dataWrite && connected == true) {
+    if ((lastCommandArduino != number) && (connected == true)) {
       // Set the last command to the command about to be sent
-      lastCommandArduino = dataWrite;
+      lastCommandArduino = number;
 
       // Write the number to the Serial Channel
       arduino.writeString(dataWrite);
@@ -130,13 +127,13 @@ public class OI implements RobotMap {
       // Since the output buffer is 8 bytes and we usually only print 2 bytes, we must flush the buffer to send the line
       // The limitation of this is that we can only send up to 99,999,999
       arduino.flush();
-
-      // Read the current line of text in the Serial Channel
-      String dataReceived = arduino.readString();
-
-      // Print out the data received
-      System.out.println("Arduino Sent: " + dataReceived);
     }
+
+    // Read the current line of text in the Serial Channel
+    String dataReceived = arduino.readString();
+
+    // Print out the data received
+    System.out.println("Arduino Sent: " + dataReceived);
   }
 
   public static OI getInstance () {

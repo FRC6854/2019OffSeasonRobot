@@ -17,7 +17,7 @@ public class DriveAngle extends Command {
   double speed = 0;
   double maxSpeed = 0.5;
 
-  double kP = 0.05;
+  double kP = 0.0425;
   double timer = 0;
 
   double error = 0;
@@ -44,8 +44,6 @@ public class DriveAngle extends Command {
     currentAngle = gyro.getAngle();
     error = angle - currentAngle;
     speed = kP * error;
-    System.out.println("Error: " + error);
-    System.out.println("Output: " + speed);
 
     if(speed >= maxSpeed) {
       speed = maxSpeed;

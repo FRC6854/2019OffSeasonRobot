@@ -10,10 +10,10 @@ public interface RobotMap {
   final Port GRYO_PORT = Port.kMXP;
 
   //Drivetrain Motorcontroller CAN Id's
-  final int CAN_LEFT_FRONT = 2;
-  final int CAN_LEFT_BACK = 1;
-  final int CAN_RIGHT_FRONT = 0;
-  final int CAN_RIGHT_BACK = 3;
+  final int CAN_LEFT_FRONT = 1;
+  final int CAN_LEFT_BACK = 2;
+  final int CAN_RIGHT_FRONT = 3;
+  final int CAN_RIGHT_BACK = 0;
 
   // Arm TalonSRX
   final int CAN_ARM = 4;

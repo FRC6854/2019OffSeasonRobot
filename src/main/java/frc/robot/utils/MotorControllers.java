@@ -32,9 +32,8 @@ public class MotorControllers implements RobotMap {
     }
 
     public static MotorControllers getInstance() {
-		if(instance == null) {
+		if(instance == null)
 			instance = new MotorControllers();
-        }
             
 		return instance;
     }
