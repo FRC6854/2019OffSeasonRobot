@@ -14,6 +14,7 @@ public class Robot extends TimedRobot implements RobotMap {
 
   private static KitDrivetrain drivetrain;
 
+  // We need to declare OI as a variable to make sure it has an instance before other code starts to run
   private static OI oi;
 
   private static Scheduler scheduler;

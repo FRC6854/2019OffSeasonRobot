@@ -10,8 +10,8 @@ public class DriveAngle extends Command {
   private LEDController leds = null;
 
   double angle = 0;
-  double speed = 0;
-  double toleranceDegrees = 1;
+  final double speed = 0.5;
+  final double toleranceDegrees = 1;
 
   public DriveAngle(double angle) {
     drivetrain = KitDrivetrain.getInstance();
