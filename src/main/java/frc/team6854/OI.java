@@ -131,9 +131,6 @@ public class OI implements RobotMap {
 
     // Read the current line of text in the Serial Channel
     String dataReceived = arduino.readString();
-
-    // Print out the data received
-    System.out.println("Arduino Sent: " + dataReceived);
   }
 
   public static OI getInstance () {

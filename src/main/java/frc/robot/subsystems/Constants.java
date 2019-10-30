@@ -35,12 +35,14 @@ public interface Constants {
 
 	public final double pGyro = 0.015;
 	public final double iGyro = 0.0;
-	public final double dGyro = 0.1;
+	public final double dGyro = 0.09;
 
 	//Drive Speed Scalar
 	public final double jukeSpeedScale = 0.85;
 	public final double slowSpeedScale = 0.5;
 	public final double speedScale = 1;
+
+	public final double minSpeedScale = 0.015;
 
 	/**
 	 * --------------------

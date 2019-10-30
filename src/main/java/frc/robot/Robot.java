@@ -2,11 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.command_groups.drivetrain.auto.Drive90Drive;
+import frc.robot.command_groups.drivetrain.auto.*;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
-import frc.robot.commands.gyro.*;
 import frc.robot.subsystems.*;
 import frc.team6854.OI; 
 
@@ -20,6 +20,8 @@ public class Robot extends TimedRobot implements RobotMap {
   private static Scheduler scheduler;
 
   private static Arm arm;
+
+  private static SendableChooser<Integer> autoChooser = new SendableChooser<Integer>();
   
   @Override
   public void robotInit() {
@@ -27,6 +29,10 @@ public class Robot extends TimedRobot implements RobotMap {
     scheduler = Scheduler.getInstance();
     arm = Arm.getInstance();
     oi = OI.getInstance();
+
+    autoChooser.setDefaultOption("Drive 90 Drive", 1);
+    autoChooser.addOption("Drive Around Trailer", 2);
+    autoChooser.addOption("Drive 45 Drive", 3);
   }
 
   @Override
@@ -41,7 +47,10 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("Left Velocity", drivetrain.getLeftVelocity());
     SmartDashboard.putNumber("Right Velocity", drivetrain.getRightVelocity());
 
-    SmartDashboard.putData("Reset Gyro", new ResetGyro());
+    SmartDashboard.putNumber("Left Output", drivetrain.getLeftOutput());
+    SmartDashboard.putNumber("Right Output", drivetrain.getRightOutput());
+    
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     scheduler.run();
   }
@@ -49,6 +58,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void disabledInit() {
     scheduler.removeAll();
+
     drivetrain.fullStop();
   }
 
@@ -56,8 +66,17 @@ public class Robot extends TimedRobot implements RobotMap {
   public void autonomousInit() {
     scheduler.removeAll();
 
-    // Drive 2 meters, turn left 90, drive 2 meters 
-    scheduler.add(new Drive90Drive());
+    switch (autoChooser.getSelected()) {
+      case 1:
+        scheduler.add(new Drive90Drive());
+        break;
+      case 2:
+        scheduler.add(new DriveAroundTrailer());
+        break;
+      case 3:
+        scheduler.add(new Drive45Drive());
+        break;
+    }    
   }
 
   @Override

@@ -10,7 +10,7 @@ public class DriveAngle extends Command {
   private LEDController leds = null;
 
   double angle = 0;
-  final double speed = 0.5;
+  final double speed = 0.75;
   final double toleranceDegrees = 1;
 
   public DriveAngle(double angle) {
@@ -34,7 +34,7 @@ public class DriveAngle extends Command {
 
   @Override
   protected boolean isFinished() {
-    return drivetrain.drivePIDDone();
+    return drivetrain.gyroPIDDone();
   }
 
   @Override

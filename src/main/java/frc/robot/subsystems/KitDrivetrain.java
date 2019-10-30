@@ -27,7 +27,10 @@ public class KitDrivetrain extends Subsystem implements Constants {
   private MotorControllers controllers;
 
   private PIDController drivePID;
-	private PIDController gyroPID;
+  private PIDController gyroPID;
+  
+  private double leftOutput = 0;
+  private double rightOutput = 0;
 
   public KitDrivetrain() {
     controllers = MotorControllers.getInstance();
@@ -97,8 +100,8 @@ public class KitDrivetrain extends Subsystem implements Constants {
     leftMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
     rightMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
 
-    leftMaster.configMotionAcceleration(500, dt_kTimeoutMs);
-    rightMaster.configMotionAcceleration(500, dt_kTimeoutMs);
+    leftMaster.configMotionAcceleration(1000, dt_kTimeoutMs);
+    rightMaster.configMotionAcceleration(1000, dt_kTimeoutMs);
 
     /* Zero the sensor */
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
@@ -162,10 +165,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   public void driveLeft(double value) {
+    leftOutput = value;
     leftMaster.set(ControlMode.PercentOutput, value);
   }
 
   public void driveRight(double value) {
+    rightOutput = value;
     rightMaster.set(ControlMode.PercentOutput, value);
   }
 
@@ -175,13 +180,13 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
 
   public void tankDrive(double left, double right) {
-    leftMaster.set(ControlMode.PercentOutput, left);
-    rightMaster.set(ControlMode.PercentOutput, right);
+    driveLeft(left);
+    driveRight(right);
   }
 
   public void fullStop() {
-    leftMaster.set(ControlMode.PercentOutput, 0);
-    rightMaster.set(ControlMode.PercentOutput, 0);
+    driveLeft(0);
+    driveRight(0);
     leftMaster.setNeutralMode(NeutralMode.Brake);
     rightMaster.setNeutralMode(NeutralMode.Brake);
   }
@@ -267,8 +272,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
 	}
   
   public boolean drivePIDDone() {
-		return drivePID.isDone();
-	}
+		return drivePID.isDone() && (getAverageVelocity() == 0);
+  }
+  
+  public boolean gyroPIDDone() {
+    return gyroPID.isDone() && (getAverageOutput() == 0);
+  }
 
   public int getLeftVelocity() {
     return leftMaster.getSelectedSensorVelocity();
@@ -276,6 +285,22 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   public int getRightVelocity() {
     return rightMaster.getSelectedSensorVelocity();
+  }
+
+  public double getLeftOutput() {
+    return leftOutput;
+  }
+
+  public double getRightOutput() {
+    return rightOutput;
+  }
+
+  public double getAverageOutput() {
+    return (leftOutput + rightOutput) / 2;
+  }
+
+  public int getAverageVelocity() {
+    return (getRightVelocity() + getLeftVelocity()) / 2;
   }
 
   public int getLeftTicks() {
