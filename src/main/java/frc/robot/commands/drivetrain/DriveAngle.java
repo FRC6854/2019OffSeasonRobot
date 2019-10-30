@@ -11,13 +11,14 @@ public class DriveAngle extends Command {
 
   double angle = 0;
   final double speed = 0.75;
-  final double toleranceDegrees = 1;
+  final double toleranceDegrees = 1.5;
 
   public DriveAngle(double angle) {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
 
     requires(drivetrain);
+    setTimeout(2);
 
     this.angle = angle;
   }
@@ -34,7 +35,7 @@ public class DriveAngle extends Command {
 
   @Override
   protected boolean isFinished() {
-    return drivetrain.gyroPIDDone();
+    return drivetrain.gyroPIDDone() || isTimedOut();
   }
 
   @Override

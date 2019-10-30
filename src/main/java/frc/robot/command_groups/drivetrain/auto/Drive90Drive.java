@@ -1,6 +1,7 @@
 package frc.robot.command_groups.drivetrain.auto;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.commands.arm.DropHatch;
 import frc.robot.commands.arm.SetStage;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.gyro.ResetGyro;
@@ -23,9 +24,9 @@ public class Drive90Drive extends CommandGroup {
     addSequential(new DriveAngle(-90));
     addSequential(new DriveDistance(2));
     addSequential(new DriveAngle(0));
-    addSequential(new DriveDistance(1));
-    addSequential(new SetStage(2));
     addSequential(new SetStage(1));
+    addSequential(new DriveDistance(1));
+    addSequential(new DropHatch());
     addSequential(new DriveDistance(-1));
   }
 }

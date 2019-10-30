@@ -276,7 +276,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
   
   public boolean gyroPIDDone() {
-    return gyroPID.isDone() && (getAverageOutput() == 0);
+    return gyroPID.isDone() && (getAverageVelocity() == 0);
   }
 
   public int getLeftVelocity() {

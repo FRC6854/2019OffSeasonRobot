@@ -18,6 +18,10 @@ public class Arm extends Subsystem implements Constants {
   public int selectedStage = 1; 
   public int numStages = 3;
 
+  public static int STAGE_BOTTOM_DROP = 500;
+  public static int STAGE_MIDDLE_DROP = 3000;
+  public static int STAGE_TOP_DROP = 5200;
+
   public static int STAGE_BOTTOM = 1000;
 	public static int STAGE_MIDDLE = 3463;
 	public static int STAGE_TOP = 5800;
@@ -71,14 +75,33 @@ public class Arm extends Subsystem implements Constants {
     arm.set(ControlMode.MotionMagic, angleToTicks(angle));
   }
 
+  public void dropStage() {
+    switch (selectedStage) {
+      case 1:
+        driveTicks(STAGE_BOTTOM_DROP);
+        break;
+      case 2:
+        driveTicks(STAGE_MIDDLE_DROP);
+        break;
+      case 3:
+        driveTicks(STAGE_TOP_DROP);
+        break;
+    }
+    
+  }
+
   public void setStage(int stage) {
     selectedStage = stage;
-    if (selectedStage == 1) {
-      driveTicks(STAGE_BOTTOM);
-    } else if (selectedStage == 2) {
-      driveTicks(STAGE_MIDDLE);
-    } else if (selectedStage == 3) {
-      driveTicks(STAGE_TOP);
+    switch (stage) {
+      case 1:
+        driveTicks(STAGE_BOTTOM);
+        break;
+      case 2:
+        driveTicks(STAGE_MIDDLE);
+        break;
+      case 3:
+        driveTicks(STAGE_TOP);
+        break;
     }
   }
 

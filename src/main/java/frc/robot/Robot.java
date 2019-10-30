@@ -14,25 +14,30 @@ public class Robot extends TimedRobot implements RobotMap {
 
   private static KitDrivetrain drivetrain;
 
-  // We need to declare OI as a variable to make sure it has an instance before other code starts to run
-  private static OI oi;
-
   private static Scheduler scheduler;
 
   private static Arm arm;
 
   private static SendableChooser<Integer> autoChooser = new SendableChooser<Integer>();
+  private static SendableChooser<Integer> autoChooserHatch = new SendableChooser<Integer>();
   
   @Override
   public void robotInit() {
     drivetrain = KitDrivetrain.getInstance();
     scheduler = Scheduler.getInstance();
     arm = Arm.getInstance();
-    oi = OI.getInstance();
+    
+    // Create Instance of OI to make sure LEDs work
+    OI.getInstance();
 
     autoChooser.setDefaultOption("Drive 90 Drive", 1);
     autoChooser.addOption("Drive Around Trailer", 2);
     autoChooser.addOption("Drive 45 Drive", 3);
+    autoChooser.addOption("Drive 90 Drive Hatch", 4);
+
+    autoChooserHatch.setDefaultOption("Bottom Stage", 1);
+    autoChooserHatch.addOption("Middle Stage", 2);
+    autoChooserHatch.addOption("Top", 3);
   }
 
   @Override
@@ -75,6 +80,9 @@ public class Robot extends TimedRobot implements RobotMap {
         break;
       case 3:
         scheduler.add(new Drive45Drive());
+        break;
+      case 4:
+        scheduler.add(new Drive90DriveHatch(autoChooserHatch.getSelected()));
         break;
     }    
   }
