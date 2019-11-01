@@ -10,15 +10,20 @@ public class DriveAngle extends Command {
   private LEDController leds = null;
 
   double angle = 0;
-  final double speed = 0.75;
-  final double toleranceDegrees = 1.5;
+  final double speed = 0.5;
+  final double toleranceDegrees = 1;
+
+  
+  boolean withinTolerance = false;
+
+  int timer = 0;
 
   public DriveAngle(double angle) {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
 
     requires(drivetrain);
-    setTimeout(2);
+    setTimeout(3);
 
     this.angle = angle;
   }
@@ -31,11 +36,17 @@ public class DriveAngle extends Command {
   protected void execute() {
     leds.setMode(LEDMode.AUTO);
     drivetrain.turnDrive(angle, speed, toleranceDegrees);
+    withinTolerance = (drivetrain.getGyroAngle() < (angle + toleranceDegrees) && drivetrain.getGyroAngle() > (angle - toleranceDegrees));
+
+    if (drivetrain.gyroPIDDone() && withinTolerance) {
+      timer++;
+    }
   }
 
   @Override
   protected boolean isFinished() {
-    return drivetrain.gyroPIDDone() || isTimedOut();
+    System.out.println(withinTolerance);
+    return ((drivetrain.gyroPIDDone() && withinTolerance && timer > 25) || isTimedOut()) ;
   }
 
   @Override

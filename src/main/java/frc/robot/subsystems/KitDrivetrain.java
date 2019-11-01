@@ -205,7 +205,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
     return (int) rotations * 4096;
   }
 
-  public int metersToTicks(double meters) {
+  public double metersToTicks(double meters) {
     return rotationsToTicks(meters / (2 * Math.PI * 0.0762));
   }
 
@@ -276,7 +276,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
   }
   
   public boolean gyroPIDDone() {
-    return gyroPID.isDone() && (getAverageVelocity() == 0);
+    return gyroPID.isDone();
   }
 
   public int getLeftVelocity() {

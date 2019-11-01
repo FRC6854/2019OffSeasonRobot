@@ -22,8 +22,8 @@ public class Arm extends Subsystem implements Constants {
   public static int STAGE_MIDDLE_DROP = 3000;
   public static int STAGE_TOP_DROP = 5200;
 
-  public static int STAGE_BOTTOM = 1000;
-	public static int STAGE_MIDDLE = 3463;
+  public static int STAGE_BOTTOM = 1100;
+	public static int STAGE_MIDDLE = 3500;
 	public static int STAGE_TOP = 5800;
 
   public Arm() {

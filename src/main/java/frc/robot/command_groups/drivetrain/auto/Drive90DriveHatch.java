@@ -36,7 +36,7 @@ public class Drive90DriveHatch extends CommandGroup {
 
       case 2:
         addSequential(new SetStage(2));
-        addSequential(new DriveDistance(0.5));
+        addSequential(new DriveDistance(0.929));
         addParallel(new DropHatch());
         addSequential(new WaitTime(0.1));
         addParallel(new DriveDistance(-1));
