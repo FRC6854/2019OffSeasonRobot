@@ -8,12 +8,14 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.utils.PIDController;
-
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.utils.MotorControllers;
+import frc.robot.RobotMap;
 
-public class KitDrivetrain extends Subsystem implements Constants {
+public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private static KitDrivetrain instance = null;
 
   private TalonSRX leftMaster;
@@ -28,6 +30,11 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
   private PIDController drivePID;
   private PIDController gyroPID;
+  private PIDController driveTargetPID;
+
+  private DigitalInput frontSensor;
+
+  private AnalogInput distanceSensor;
   
   private double leftOutput = 0;
   private double rightOutput = 0;
@@ -40,6 +47,10 @@ public class KitDrivetrain extends Subsystem implements Constants {
     rightMaster = controllers.getRightMaster();
     rightSlave = controllers.getRightSlave();
     gyro = controllers.getGyro();
+
+    frontSensor = new DigitalInput(DIGITAL_DISTANCE);
+
+    distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
 
     init();
   }
@@ -109,6 +120,7 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
     drivePID = new PIDController(pDrive, iDrive, dDrive);
     gyroPID = new PIDController(pGyro, iGyro, dGyro);
+    driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
   }
 
   // Copied from the WPILib Differential Drive Class with some minor alterations
@@ -152,6 +164,14 @@ public class KitDrivetrain extends Subsystem implements Constants {
 
     driveLeft(limit(leftMotorOutput) * dt_kDefaultMaxOutput);
     driveRight(limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
+  }
+
+  public boolean getFrontSensor() {
+    return frontSensor.get();
+  }
+
+  public double getDistanceSensor() {
+    return distanceSensor.getVoltage() * analogVoltModifier;
   }
 
   public void driveMeters(double meters) {
@@ -245,6 +265,12 @@ public class KitDrivetrain extends Subsystem implements Constants {
     
 		driveLeft((output + angle) * speed);
 		driveRight((-output + angle) * speed);
+  }
+
+  public void driveVisionTarget(double distance, double angle, double speed, double tolerance) {
+    double forwardOutput = driveTargetPID.calcPID(distance, getDistanceSensor(), tolerance);
+
+    arcadeDrive(forwardOutput * speed, angle);
   }
 
   public void turnDrive(double setAngle, double speed) {

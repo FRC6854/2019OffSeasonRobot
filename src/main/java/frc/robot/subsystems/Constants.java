@@ -33,9 +33,13 @@ public interface Constants {
 	public final double iDrive = 0.001;
 	public final double dDrive = 0.0;
 
-	public final double pGyro = 0.015;
+	public final double pDriveTarget = 0.0013;
+	public final double iDriveTarget = 0.001;
+	public final double dDriveTarget = 0.0;
+
+	public final double pGyro = 0.0175;
 	public final double iGyro = 0.0;
-	public final double dGyro = 0.09;
+	public final double dGyro = 0.065;
 
 	//Drive Speed Scalar
 	public final double jukeSpeedScale = 0.85;
@@ -43,6 +47,9 @@ public interface Constants {
 	public final double speedScale = 1;
 
 	public final double minSpeedScale = 0.015;
+
+	// Distance Sensor
+	public final double analogVoltModifier = 100;
 
 	/**
 	 * --------------------

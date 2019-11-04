@@ -9,6 +9,12 @@ public interface RobotMap {
   // Gyro Port on RoboRIO
   final Port GRYO_PORT = Port.kMXP;
 
+  // Ultrasonic Sensor
+  final int ANALOG_ULTRASONIC = 1;
+
+  // Distance Sensor
+  final int DIGITAL_DISTANCE = 0;
+
   //Drivetrain Motorcontroller CAN Id's
   final int CAN_LEFT_FRONT = 1;
   final int CAN_LEFT_BACK = 2;

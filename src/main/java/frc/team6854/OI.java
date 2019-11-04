@@ -127,10 +127,10 @@ public class OI implements RobotMap {
       // Since the output buffer is 8 bytes and we usually only print 2 bytes, we must flush the buffer to send the line
       // The limitation of this is that we can only send up to 99,999,999
       arduino.flush();
-    }
 
-    // Read the current line of text in the Serial Channel
-    String dataReceived = arduino.readString();
+      // Read the current line of text in the Serial Channel
+      String dataReceived = arduino.readString();
+    }
   }
 
   public static OI getInstance () {

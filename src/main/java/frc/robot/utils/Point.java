@@ -2,8 +2,6 @@ package frc.robot.utils;
 
 /**
  * A Point class that allows the input of doubles.
- * 
- * @author Mahrus Kazi
  */
 public class Point {
 

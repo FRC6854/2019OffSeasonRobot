@@ -45,7 +45,6 @@ public class DriveAngle extends Command {
 
   @Override
   protected boolean isFinished() {
-    System.out.println(withinTolerance);
     return ((drivetrain.gyroPIDDone() && withinTolerance && timer > 25) || isTimedOut()) ;
   }
 
