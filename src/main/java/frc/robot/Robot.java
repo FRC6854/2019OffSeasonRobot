@@ -41,8 +41,6 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void robotPeriodic() {
-    arm.updateFaults();
-
     SmartDashboard.putNumber("Gyro Angle", drivetrain.getGyroAngle());
 
     gyroP = SmartDashboard.getNumber("Gyro P", Constants.pGyro);

@@ -15,8 +15,6 @@ public class DriveVisionTarget extends Command {
 
   private double desiredDistance = 0;
 
-  private final double tolerance = 1;
-
   private double tX = 0;
   private final double kP = 0.04;
   private final double maxCommand = 0.5;

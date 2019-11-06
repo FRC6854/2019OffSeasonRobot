@@ -267,8 +267,8 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 		driveRight((-output + angle) * speed);
   }
 
-  public void driveVisionTarget(double distance, double angle, double speed, double tolerance) {
-    double forwardOutput = driveTargetPID.calcPID(distance, getDistanceSensor(), tolerance);
+  public void driveVisionTarget(double distance, double angle, double speed) {
+    double forwardOutput = driveTargetPID.calcPID(distance, getDistanceSensor(), 1);
 
     arcadeDrive(forwardOutput * speed, angle);
   }
