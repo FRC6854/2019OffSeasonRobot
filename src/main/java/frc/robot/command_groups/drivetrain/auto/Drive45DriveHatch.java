@@ -9,11 +9,11 @@ import frc.robot.commands.gyro.ResetGyro;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.KitDrivetrain;
 
-public class Drive90DriveHatch extends CommandGroup {
+public class Drive45DriveHatch extends CommandGroup {
   private KitDrivetrain drivetrain = null;
   private Arm arm = null;
 
-  public Drive90DriveHatch(int stage) {
+  public Drive45DriveHatch(int stage) {
     drivetrain = KitDrivetrain.getInstance();
     arm = Arm.getInstance();
 
@@ -21,10 +21,11 @@ public class Drive90DriveHatch extends CommandGroup {
     requires(arm);
 
     addSequential(new ResetGyro());
-    addSequential(new DriveDistance(2));
-    addSequential(new DriveAngle(-90));
-    addSequential(new DriveDistance(2));
+    addSequential(new DriveDistance(1));
+    addSequential(new DriveAngle(-45));
+    addSequential(new DriveDistance(2.25));
     addSequential(new DriveAngle(0));
+
     switch (stage) {
       case 1:
         addSequential(new SetStage(1));
@@ -49,7 +50,6 @@ public class Drive90DriveHatch extends CommandGroup {
         addSequential(new WaitTime(0.1));
         addParallel(new DriveDistance(-1));
         break;
-    }
-    
+    } 
   }
 }

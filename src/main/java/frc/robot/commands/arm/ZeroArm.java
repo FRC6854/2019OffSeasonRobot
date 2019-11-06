@@ -5,12 +5,15 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.subsystems.Arm;
 
 public class ZeroArm extends Command {
+
   private Arm arm = null;
   private Scheduler scheduler = null;
 
   public ZeroArm() {
     arm = Arm.getInstance();
     scheduler = Scheduler.getInstance();
+
+    setTimeout(6.0);
 
     requires(arm);
   }
@@ -21,21 +24,18 @@ public class ZeroArm extends Command {
 
   @Override
   protected void execute() {
+    arm.updateFaults();
     arm.driveManual(-0.1);
   }
 
   @Override
   protected boolean isFinished() {
-    if (arm.getReverseLimitSwitch() == true){
-      arm.zeroSensor();
-      return true;
-    } else {
-      return false;
-    }
+    return arm.getReverseLimitSwitch() || isTimedOut();
   }
 
   @Override
   protected void end() {
+    arm.zeroSensor();
     scheduler.add(new OperateArm());
   }
 

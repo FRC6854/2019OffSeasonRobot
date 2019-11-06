@@ -11,7 +11,7 @@ public class OperateArm extends Command implements Constants {
   private Scheduler scheduler = null;
   private OI oi = null;
 
-  private static boolean manualControl = true;
+  private static boolean manualControl;
 
   public OperateArm() {
     arm = Arm.getInstance();
@@ -23,6 +23,7 @@ public class OperateArm extends Command implements Constants {
 
   @Override
   protected void initialize() {
+    manualControl = true;
   }
 
   @Override
@@ -35,7 +36,8 @@ public class OperateArm extends Command implements Constants {
     }
 
     if(oi.getDriverBButtonPressed()) {
-      scheduler.add(new ReleaseHatch());
+      manualControl = true;
+      scheduler.add(new DropHatch());
     }
 
     // If in manual mode and the stage switch buttons are pressed switch to stage mode

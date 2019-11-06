@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import frc.robot.commands.arm.OperateArm;
 import frc.robot.utils.MotorControllers;
 
 public class Arm extends Subsystem implements Constants {
@@ -176,5 +178,6 @@ public class Arm extends Subsystem implements Constants {
 
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new OperateArm());
   }
 }

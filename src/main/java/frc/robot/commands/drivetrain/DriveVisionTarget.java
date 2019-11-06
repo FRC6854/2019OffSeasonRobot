@@ -21,6 +21,16 @@ public class DriveVisionTarget extends Command {
   private final double kP = 0.04;
   private final double maxCommand = 0.5;
 
+  public DriveVisionTarget() {
+    drivetrain = KitDrivetrain.getInstance();
+    leds = LEDController.getInstance();
+    limelight = Limelight.getInstance();
+
+    setTimeout(5.0);
+
+    requires(drivetrain);
+  }
+
   public DriveVisionTarget(double distance) {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
@@ -35,6 +45,7 @@ public class DriveVisionTarget extends Command {
 
   @Override
   protected void initialize() {
+    drivetrain.arcadeDrive(0, 0);
   }
 
   @Override
@@ -47,16 +58,31 @@ public class DriveVisionTarget extends Command {
     limelight.setLEDMode(LightMode.ON);
 
     double steeringAdjust = kP * tX;
+
     if(steeringAdjust >= maxCommand) {
       steeringAdjust = maxCommand;
     }
 
-    drivetrain.arcadeDrive(0.3, steeringAdjust);
+    if (desiredDistance == 0) {
+      drivetrain.arcadeDrive(0.4, steeringAdjust);
+    }
+    else {
+
+    }
   }
 
   @Override
   protected boolean isFinished() {
-    return drivetrain.getFrontSensor() || isTimedOut();
+    if (drivetrain.getFrontSensor() == true) {
+      System.out.println("Front Sensor End");
+      return true;
+    }
+    if (isTimedOut() == true) {
+      System.out.println("Timed Out");
+      return true;
+    }
+
+    return false;
   }
   
   @Override

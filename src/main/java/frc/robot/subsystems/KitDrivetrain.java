@@ -278,8 +278,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 	}
 
 	public void turnDrive(double setAngle, double speed, double tolerance) {
-    double angle = gyroPID.calcPID(setAngle, getGyroAngle(), 1);
-    double min = 0.05;
+    double angle = gyroPID.calcPID(setAngle, getGyroAngle(), tolerance);
+    double min = 0.3;
+
 		if(Math.abs(setAngle-getGyroAngle()) < tolerance){ 
 			driveLeft(0); 
 			driveRight(0);
