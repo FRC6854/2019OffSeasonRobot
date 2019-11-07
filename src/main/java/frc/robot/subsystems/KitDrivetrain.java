@@ -75,22 +75,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     leftMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
     rightMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
 
-    leftMaster.setSelectedSensorPosition(0, 0, 0);
-    rightMaster.setSelectedSensorPosition(0, 0, 0);
-
-    /* Set the peak and nominal outputs */
-    leftMaster.configNominalOutputForward(0, dt_kTimeoutMs);
-    rightMaster.configNominalOutputForward(0, dt_kTimeoutMs);
-
-    leftMaster.configNominalOutputReverse(0, dt_kTimeoutMs);
-    rightMaster.configNominalOutputReverse(0, dt_kTimeoutMs);
-
-    leftMaster.configPeakOutputForward(1, dt_kTimeoutMs);
-    rightMaster.configPeakOutputForward(1, dt_kTimeoutMs);
-
-    leftMaster.configPeakOutputReverse(-1, dt_kTimeoutMs);
-    rightMaster.configPeakOutputReverse(-1, dt_kTimeoutMs);
-
     /* Set Motion Magic gains in slot0 - see documentation */
     leftMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
     rightMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
