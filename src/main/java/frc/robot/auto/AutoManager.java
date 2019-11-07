@@ -31,11 +31,11 @@ public class AutoManager {
         autoChooserHatch.addOption("Top", 3);
     }
 
-    public SendableChooser getAutoChooser() {
+    public SendableChooser<Integer> getAutoChooser() {
         return autoChooser;
     }
 
-    public SendableChooser getAutoHatch() {
+    public SendableChooser<Integer> getAutoHatch() {
         return autoChooserHatch;
     }
 

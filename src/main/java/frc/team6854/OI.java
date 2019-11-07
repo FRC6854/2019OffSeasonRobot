@@ -129,7 +129,7 @@ public class OI implements RobotMap {
       arduino.flush();
 
       // Read the current line of text in the Serial Channel
-      String dataReceived = arduino.readString();
+      arduino.readString();
     }
   }
 

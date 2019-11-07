@@ -2,12 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
 import frc.team6854.OI; 
-import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.arm.ZeroArm;
 
 public class Robot extends TimedRobot implements RobotMap {
