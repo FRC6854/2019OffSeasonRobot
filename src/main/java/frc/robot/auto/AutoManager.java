@@ -2,10 +2,8 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.command_groups.drivetrain.auto.*;
 import frc.robot.command_groups.testing.TestingDriveAngle;
-import frc.robot.commands.arm.*;
 import frc.robot.commands.drivetrain.*;
 
 public class AutoManager {
@@ -26,6 +24,7 @@ public class AutoManager {
         autoChooser.addOption("Drive 90 Drive Hatch", 4);
         autoChooser.addOption("Testing", 5);
         autoChooser.addOption("Drive Vision", 6);
+        autoChooser.addOption("Drive 45 Drive Hatch", 7);
 
         autoChooserHatch.setDefaultOption("Bottom Stage", 1);
         autoChooserHatch.addOption("Middle Stage", 2);
@@ -53,7 +52,9 @@ public class AutoManager {
             case 5:
               return (new TestingDriveAngle());
             case 6:
-              return (new DriveVisionTarget(0.0));
+              return (new DriveVisionTarget());
+            case 7:
+              return (new Drive45DriveHatch(autoChooserHatch.getSelected()));
         }
 
         return null;

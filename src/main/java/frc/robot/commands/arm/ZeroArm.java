@@ -36,7 +36,6 @@ public class ZeroArm extends Command {
   @Override
   protected void end() {
     arm.zeroSensor();
-    scheduler.add(new OperateArm());
   }
 
   @Override

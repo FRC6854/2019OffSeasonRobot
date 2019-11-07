@@ -62,7 +62,7 @@ public class DriveVisionTarget extends Command {
     }
 
     if (desiredDistance == 0) {
-      drivetrain.arcadeDrive(0.4, steeringAdjust);
+      drivetrain.arcadeDrive(0.5, steeringAdjust);
     }
     else {
 

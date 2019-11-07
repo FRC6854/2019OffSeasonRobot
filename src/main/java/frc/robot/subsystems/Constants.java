@@ -37,9 +37,9 @@ public interface Constants {
 	public final double iDriveTarget = 0.001;
 	public final double dDriveTarget = 0.0;
 
-	public final double pGyro = 0.0175;
+	public final double pGyro = 0.023;
 	public final double iGyro = 0.0;
-	public final double dGyro = 0.065;
+	public final double dGyro = 0.1;
 
 	//Drive Speed Scalar
 	public final double jukeSpeedScale = 0.85;

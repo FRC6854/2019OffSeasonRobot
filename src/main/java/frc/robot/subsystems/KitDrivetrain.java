@@ -108,11 +108,11 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     rightMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    leftMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
-    rightMaster.configMotionCruiseVelocity(1000, dt_kTimeoutMs);
+    leftMaster.configMotionCruiseVelocity(1250, dt_kTimeoutMs);
+    rightMaster.configMotionCruiseVelocity(1250, dt_kTimeoutMs);
 
-    leftMaster.configMotionAcceleration(1000, dt_kTimeoutMs);
-    rightMaster.configMotionAcceleration(1000, dt_kTimeoutMs);
+    leftMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
+    rightMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
 
     /* Zero the sensor */
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
@@ -279,20 +279,13 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
 	public void turnDrive(double setAngle, double speed, double tolerance) {
     double angle = gyroPID.calcPID(setAngle, getGyroAngle(), tolerance);
-    double min = 0.3;
+    double min = 0.14;
 
 		if(Math.abs(setAngle-getGyroAngle()) < tolerance){ 
 			driveLeft(0); 
 			driveRight(0);
 		}
-		else if(angle > -min && angle < 0){
-			driveLeft(min);
-			driveRight(-min);
-		} 
-		else if(angle < min && angle > 0){ 
-			driveLeft(min);
-			driveRight(-min); 
-		} else{ 
+		else{ 
 			driveLeft(angle * speed);
 			driveRight(-angle * speed); 
 		}

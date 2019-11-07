@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.commands.WaitTime;
 import frc.robot.commands.arm.DropHatch;
 import frc.robot.commands.arm.SetStage;
+import frc.robot.commands.arm.ZeroArm;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.gyro.ResetGyro;
 import frc.robot.subsystems.Arm;
@@ -20,10 +21,11 @@ public class Drive45DriveHatch extends CommandGroup {
     requires(drivetrain);
     requires(arm);
 
+    addParallel(new ZeroArm());
     addSequential(new ResetGyro());
     addSequential(new DriveDistance(1));
-    addSequential(new DriveAngle(-45));
-    addSequential(new DriveDistance(2.25));
+    addSequential(new DriveAngle(-60));
+    addSequential(new DriveDistance(2.5));
     addSequential(new DriveAngle(0));
 
     switch (stage) {

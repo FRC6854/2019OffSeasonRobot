@@ -61,14 +61,9 @@ public class Robot extends TimedRobot implements RobotMap {
   }
 
   @Override
-  public void disabledInit() {
+  public void autonomousInit() {
     scheduler.removeAll();
 
-    drivetrain.fullStop();
-  }
-
-  @Override
-  public void autonomousInit() {
     drivetrain.changeGyroGains(gyroP, gyroI, gyroD);
 
     scheduler.add(autoManager.getAutoChooerCommand());
@@ -77,5 +72,6 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
+    scheduler.add(new ZeroArm());
   }
 }

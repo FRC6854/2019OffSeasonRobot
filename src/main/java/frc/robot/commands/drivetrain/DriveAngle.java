@@ -10,7 +10,7 @@ public class DriveAngle extends Command {
   private LEDController leds = null;
 
   double angle = 0;
-  final double speed = 0.5;
+  final double speed = 0.6;
   final double toleranceDegrees = 1;
 
   
@@ -38,25 +38,31 @@ public class DriveAngle extends Command {
     drivetrain.turnDrive(angle, speed, toleranceDegrees);
     withinTolerance = (drivetrain.getGyroAngle() < (angle + toleranceDegrees) && drivetrain.getGyroAngle() > (angle - toleranceDegrees));
 
-    if (drivetrain.gyroPIDDone() && withinTolerance) {
+    if (withinTolerance) {
       timer++;
     }
   }
 
   @Override
   protected boolean isFinished() {
-    return ((drivetrain.gyroPIDDone() && withinTolerance && timer > 25) || isTimedOut()) ;
+    if (withinTolerance && timer > 15) {
+      System.out.println("Within Tolerance");
+      return true;
+    }
+    else if (isTimedOut()) {
+      System.out.println("Timed Out");
+      return true;
+    }
+    return false;
   }
 
   @Override
   protected void end() {
-    System.out.println("Finished setting angle to: " + angle);
     drivetrain.arcadeDrive(0, 0);
   }
   
   @Override
   protected void interrupted() {
-    System.out.println("Interrupted setting angle to: " + angle);
     end();
   }
 }
