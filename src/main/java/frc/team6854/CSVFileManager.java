@@ -80,28 +80,42 @@ public class CSVFileManager {
     return array;
   }
 
-  public static boolean writeCSVLog (String[][] log) throws IOException {
-    File file = new File(Filesystem.getDeployDirectory() + "/logs/log_" + LocalTime.now().toString());
+  public static void writeCSVLog (String[][] log) {
+    // Do some date time stuff for file name
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+		String fileDateTime = formatter.format(LocalDateTime.now());
+		
+		File file = new File(Filesystem.getDeployDirectory() + "//logs//log_" + fileDateTime + ".csv");
+    
+    // Create the file
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    
+    // Create a file writer
+    try {
+        FileWriter csvWriter = new FileWriter(file);
 
-    if (file.isFile()) {
-      FileWriter csvWriter = new FileWriter(file);
-
-      csvWriter.append("Class Name");
-      csvWriter.append(",");
-      csvWriter.append("Message");
-      csvWriter.append("\n");
-
-      for (String[] row : log) {
-        csvWriter.append(String.join(",", row));
+        // File Headers
+        csvWriter.append("Class Name");
+        csvWriter.append(",");
+        csvWriter.append("Message");
         csvWriter.append("\n");
-      }
 
-      csvWriter.flush();
-      csvWriter.close();
-      
-      return true;
+        // Loop through rows
+        for (String[] row : log) {
+          csvWriter.append(String.join(",", row));
+          csvWriter.append("\n");
+        }
+
+        // Close the writer
+        csvWriter.flush();
+        csvWriter.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+        System.out.println(e.getMessage());
     }
-
-    return false;
-  }
+	}
 }
