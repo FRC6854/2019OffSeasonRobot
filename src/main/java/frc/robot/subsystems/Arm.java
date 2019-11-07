@@ -44,12 +44,6 @@ public class Arm extends Subsystem implements Constants {
     /* Configure Sensor Source for Pirmary PID */
     arm.configSelectedFeedbackSensor(arm_kFeedbackDevice, 0, 0);
     
-    /* Set the peak and nominal outputs */
-    arm.configNominalOutputForward(0, arm_kTimeoutMs);
-		arm.configNominalOutputReverse(0, arm_kTimeoutMs);
-		arm.configPeakOutputForward(1, arm_kTimeoutMs);
-    arm.configPeakOutputReverse(-1, arm_kTimeoutMs);
-    
     /* Set Motion Magic gains in slot0 - see documentation */
     arm.selectProfileSlot(arm_kSlotIdx, arm_kPIDLoopIdx);
 		arm.config_kF(arm_kSlotIdx, arm_kF, arm_kTimeoutMs);
