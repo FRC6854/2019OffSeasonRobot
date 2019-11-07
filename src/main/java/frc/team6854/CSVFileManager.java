@@ -1,13 +1,18 @@
 package frc.team6854;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CSVFileReader {
-  public Double[][] pathLeft(String folder) {
+import edu.wpi.first.wpilibj.Filesystem;
+
+public class CSVFileManager {
+  public static Double[][] pathLeft(String folder) {
     List<List<Double>> table = new ArrayList<List<Double>>();
 
     BufferedReader reader;
@@ -41,7 +46,7 @@ public class CSVFileReader {
     return array;
   }
 
-  public Double[][] pathRight(String folder) {
+  public static Double[][] pathRight(String folder) {
     List<List<Double>> table = new ArrayList<List<Double>>();
 
     BufferedReader reader;
@@ -73,5 +78,30 @@ public class CSVFileReader {
       array[i] = row.toArray(new Double[row.size()]);
     }
     return array;
+  }
+
+  public static boolean writeCSVLog (String[][] log) throws IOException {
+    File file = new File(Filesystem.getDeployDirectory() + "/logs/log_" + LocalTime.now().toString());
+
+    if (file.isFile()) {
+      FileWriter csvWriter = new FileWriter(file);
+
+      csvWriter.append("Class Name");
+      csvWriter.append(",");
+      csvWriter.append("Message");
+      csvWriter.append("\n");
+
+      for (String[] row : log) {
+        csvWriter.append(String.join(",", row));
+        csvWriter.append("\n");
+      }
+
+      csvWriter.flush();
+      csvWriter.close();
+      
+      return true;
+    }
+
+    return false;
   }
 }
