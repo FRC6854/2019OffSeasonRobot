@@ -17,6 +17,6 @@ public class TestingDriveAngle extends CommandGroup {
     System.out.println("Testing");
 
     addSequential(new ResetGyro());
-    addSequential(new DriveAngle(-90));
+    addSequential(new DriveAngle(-90, 0.6));
   }
 }

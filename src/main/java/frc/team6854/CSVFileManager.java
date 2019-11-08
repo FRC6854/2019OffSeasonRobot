@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,11 +80,7 @@ public class CSVFileManager {
   }
 
   public static void writeCSVLog (String[][] log) {
-    // Do some date time stuff for file name
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
-		String fileDateTime = formatter.format(LocalDateTime.now());
-		
-		File file = new File(Filesystem.getDeployDirectory() + "//logs//log_" + fileDateTime + ".csv");
+    File file = new File(Filesystem.getDeployDirectory() + "//logs//log_" + OI.getCurrentSystemTimeDate(true) + ".csv");
     
     // Create the file
 		try {

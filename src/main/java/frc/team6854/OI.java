@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.RobotMap;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -131,6 +135,19 @@ public class OI implements RobotMap {
       // Read the current line of text in the Serial Channel
       arduino.readString();
     }
+  }
+
+  public static String getCurrentSystemTimeDate (boolean isFile) {
+    DateTimeFormatter formatter;
+
+    if (isFile) {
+      formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+    }
+    else {
+      formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm.ss");
+    }
+
+    return formatter.format(LocalDateTime.now());
   }
 
   public static OI getInstance () {

@@ -1,6 +1,7 @@
 package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.command_groups.drivetrain.auto.*;
 import frc.robot.command_groups.testing.TestingDriveAngle;
@@ -13,22 +14,24 @@ public class AutoManager {
     private static SendableChooser<Integer> autoChooser = new SendableChooser<Integer>();
     private static SendableChooser<Integer> autoChooserHatch = new SendableChooser<Integer>();
 
+    private static String path = "Insert Path Here";
+
     private AutoManager () {
         init();
     }
 
     private void init() {
-        autoChooser.setDefaultOption("Drive 90 Drive", 1);
-        autoChooser.addOption("Drive Around Trailer", 2);
-        autoChooser.addOption("Drive 45 Drive", 3);
-        autoChooser.addOption("Drive 90 Drive Hatch", 4);
-        autoChooser.addOption("Testing", 5);
-        autoChooser.addOption("Drive Vision", 6);
-        autoChooser.addOption("Drive 45 Drive Hatch", 7);
+        autoChooser.setDefaultOption("90 Hatch", 1);
+        autoChooser.addOption("Drive Vision", 2);
+        autoChooser.addOption("45 Hatch", 3);
+        autoChooser.addOption("Testing", 4);
+        autoChooser.addOption("Profile Follow", 5);
 
         autoChooserHatch.setDefaultOption("Bottom Stage", 1);
         autoChooserHatch.addOption("Middle Stage", 2);
         autoChooserHatch.addOption("Top", 3);
+
+        SmartDashboard.putString("Profile Path", path);
     }
 
     public SendableChooser<Integer> getAutoChooser() {
@@ -40,21 +43,20 @@ public class AutoManager {
     }
 
     public Command getAutoChooerCommand() {
+        String autoPath = SmartDashboard.getString("Profile Path", path);
+        System.out.println(autoPath);
+
         switch (autoChooser.getSelected()) {
             case 1:
-              return (new Drive90Drive());
-            case 2:
-              return (new DriveAroundTrailer());
-            case 3:
-              return (new Drive45Drive());
-            case 4:
               return (new Drive90DriveHatch(autoChooserHatch.getSelected()));
-            case 5:
-              return (new TestingDriveAngle());
-            case 6:
+            case 2:
               return (new DriveVisionTarget());
-            case 7:
+            case 3:
               return (new Drive45DriveHatch(autoChooserHatch.getSelected()));
+            case 4:
+              return (new TestingDriveAngle());
+            case 5:
+              return (new ProfileFollower("", ""));
         }
 
         return null;

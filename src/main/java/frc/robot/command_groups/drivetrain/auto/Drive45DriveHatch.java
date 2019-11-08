@@ -24,9 +24,9 @@ public class Drive45DriveHatch extends CommandGroup {
     addParallel(new ZeroArm());
     addSequential(new ResetGyro());
     addSequential(new DriveDistance(1));
-    addSequential(new DriveAngle(-60));
+    addSequential(new DriveAngle(-60, 0.5));
     addSequential(new DriveDistance(2.5));
-    addSequential(new DriveAngle(0));
+    addSequential(new DriveAngle(0, 0.5));
 
     switch (stage) {
       case 1:

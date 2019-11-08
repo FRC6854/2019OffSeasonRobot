@@ -10,15 +10,17 @@ public class DriveAngle extends Command {
   private LEDController leds = null;
 
   double angle = 0;
-  final double speed = 0.6;
-  final double toleranceDegrees = 1;
+  double speed = 0.6;
 
+  final double toleranceDegrees = 1;
   
   boolean withinTolerance = false;
 
   int timer = 0;
 
-  public DriveAngle(double angle) {
+  final int waitForTime = 15;
+
+  public DriveAngle(double angle, double speed) {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
 
@@ -26,6 +28,7 @@ public class DriveAngle extends Command {
     setTimeout(3);
 
     this.angle = angle;
+    this.speed = speed;
   }
 
   @Override
@@ -45,7 +48,7 @@ public class DriveAngle extends Command {
 
   @Override
   protected boolean isFinished() {
-    if (withinTolerance && timer > 15) {
+    if (withinTolerance && timer > waitForTime) {
       System.out.println("Within Tolerance");
       return true;
     }

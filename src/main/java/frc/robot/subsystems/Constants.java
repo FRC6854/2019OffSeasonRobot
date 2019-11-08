@@ -22,7 +22,9 @@ public interface Constants {
     public final double dt_kP = 1.0;
     public final double dt_kI = 0.0; 
     public final double dt_kD = 0.0;
-    public final double dt_kF = 0.5;
+	public final double dt_kF = 0.5;
+	
+	public final double dt_MetersPerRevolution = 2 * Math.PI * 0.0762;
 
     public final double dt_kDefaultDeadband = 0.02;
     public final double dt_kDefaultMaxOutput = 1.0;
@@ -37,9 +39,9 @@ public interface Constants {
 	public final double iDriveTarget = 0.001;
 	public final double dDriveTarget = 0.0;
 
-	public final double pGyro = 0.023;
+	public final double pGyro = 0.025;
 	public final double iGyro = 0.0;
-	public final double dGyro = 0.1;
+	public final double dGyro = 0.2;
 
 	//Drive Speed Scalar
 	public final double jukeSpeedScale = 0.85;

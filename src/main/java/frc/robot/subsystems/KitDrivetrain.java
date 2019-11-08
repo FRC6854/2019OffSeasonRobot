@@ -4,10 +4,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.SetValueMotionProfile;
+import com.ctre.phoenix.motion.TrajectoryPoint;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.utils.PIDController;
+import jaci.pathfinder.Trajectory;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -24,11 +28,13 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private TalonSRX rightMaster;
   private VictorSPX rightSlave;
 
+  private MotionProfileStatus leftMpStatus;
+  private MotionProfileStatus rightMpStatus;
+
   private AHRS gyro;
 
   private MotorControllers controllers;
 
-  private PIDController drivePID;
   private PIDController gyroPID;
   private PIDController driveTargetPID;
 
@@ -102,7 +108,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
     rightMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
 
-    drivePID = new PIDController(pDrive, iDrive, dDrive);
     gyroPID = new PIDController(pGyro, iGyro, dGyro);
     driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
   }
@@ -149,6 +154,137 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     driveLeft(limit(leftMotorOutput) * dt_kDefaultMaxOutput);
     driveRight(limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
   }
+
+      /**
+     * Getter for the left drivetrain motion profile status.
+     *
+     * @return Object representation of left motion profile status.
+     */
+    public MotionProfileStatus getLeftMpStatus() {
+      return leftMpStatus;
+  }
+
+  /**
+   * Getter for the right drivetrain motion profile status.
+   *
+   * @return Object representation of right motion profile status.
+   */
+  public MotionProfileStatus getRightMpStatus() {
+      return rightMpStatus;
+  }
+
+  /**
+     * Starts filling the motion profile buffer on the left drivetrain Talon SRX. Uses units of feet and feet/sec.
+     *
+     * @param profile The profile to fill the talon with. Should be a list of the form [[point_pos, point_vel, point_timestep], ...].
+     * @param size    The number of points in the profile.
+     */
+    public void startFillingLeft(double[][] profile, int size) {
+      leftMaster.clearMotionProfileTrajectories();
+      TrajectoryPoint point = new TrajectoryPoint();
+
+      leftMaster.configMotionProfileTrajectoryPeriod(50, 10);
+
+      for (int i = 0; i < size; i++) {
+          double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
+          double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
+          /* for each point, fill our structure and pass it to API */
+          point.position = positionRot * (4096 * 4.0); // Convert Revolutions to Units
+          point.velocity = velocityRPM * (4096 * 4.0) / 10.0; // Convert RPS to Units/100ms
+          point.headingDeg = 0; /* future feature - not used in this example*/
+          point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+          point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
+          point.zeroPos = i == 0;
+          point.isLastPoint = ((i + 1) == size);
+
+          leftMaster.pushMotionProfileTrajectory(point);
+      }
+      System.out.println(String.format("Pushed %d points to left.", size));
+  }
+
+  /**
+   * Starts filling the motion profile buffer on the right drivetrain Talon SRX. Uses units of feet and feet/sec.
+   *
+   * @param profile The profile to fill the talon with. Should be a list of the form [[point_pos, point_vel, point_timestep], ...].
+   * @param size    The number of points in the profile.
+   */
+  public void startFillingRight(double[][] profile, int size) {
+      rightMaster.clearMotionProfileTrajectories();
+      TrajectoryPoint point = new TrajectoryPoint();
+
+      rightMaster.configMotionProfileTrajectoryPeriod(50, 10);
+
+      for (int i = 0; i < size; i++) {
+          double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
+          double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
+          /* for each point, fill our structure and pass it to API */
+          point.position = positionRot * (4096 * 4.0); // Convert Revolutions to Units
+          point.velocity = velocityRPM * (4096 * 4.0) / 10.0; // Convert RPS to Units/100ms
+          point.headingDeg = 0; /* future feature - not used in this example*/
+          point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+          point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
+          point.zeroPos = i == 0;
+          point.isLastPoint = ((i + 1) == size);
+
+          rightMaster.pushMotionProfileTrajectory(point);
+      }
+      System.out.println(String.format("Pushed %d points to right.", size));
+  }
+
+  /**
+   * Control the drivetrain left side in MotionProfile mode.
+   *
+   * @param v The value to set the left drivetrain at.
+   */
+  public void leftMpControl(SetValueMotionProfile v) {
+    leftMaster.set(ControlMode.MotionProfile, v.value);
+  }
+
+  /**
+   * Control the drivetrain right side in MotionProfile mode.
+   *
+   * @param v The value to set the right drivetrain at.
+   */
+  public void rightMpControl(SetValueMotionProfile v) {
+    rightMaster.set(ControlMode.MotionProfile, v.value);
+  }
+
+  @Override
+  public void periodic() {
+    leftMaster.processMotionProfileBuffer();
+    rightMaster.processMotionProfileBuffer();
+
+    leftMaster.getMotionProfileStatus(leftMpStatus);
+    rightMaster.getMotionProfileStatus(rightMpStatus);
+  }
+
+  public int leftMpPointsFilled() {
+    return leftMpStatus.btmBufferCnt;
+  }
+
+  public int rightMpPointsFilled() {
+    return rightMpStatus.btmBufferCnt;
+  }
+
+  public boolean leftMpDone() {
+    return leftMpStatus.activePointValid && leftMpStatus.isLast;  
+  }
+
+  public boolean rightMpDone() {
+    return rightMpStatus.activePointValid && rightMpStatus.isLast;
+  }
+
+  public double[][] pathfinderFormatToTalon(Trajectory t) {
+    int i = 0;
+    double[][] list = new double[t.length()][3];
+    for (Trajectory.Segment s : t.segments) {
+        list[i][0] = s.position;
+        list[i][1] = s.velocity;
+        list[i][2] = s.dt;
+        i++;
+    }
+    return list;
+}
 
   public boolean getFrontSensor() {
     return frontSensor.get();
@@ -239,18 +375,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     }
   }
 
-  public void driveSetpoint(double setPoint, double speed, double setAngle) {
-		driveSetpoint(setPoint, speed, setAngle, 1);
-	}
-
-	public void driveSetpoint(double setPoint, double speed, double setAngle, double tolerance) {
-		double output = drivePID.calcPID(setPoint, getAverageDistance(), tolerance);
-    double angle = gyroPID.calcPID(setAngle, getGyroAngle(), tolerance);
-    
-		driveLeft((output + angle) * speed);
-		driveRight((-output + angle) * speed);
-  }
-
   public void driveVisionTarget(double distance, double angle, double speed) {
     double forwardOutput = driveTargetPID.calcPID(distance, getDistanceSensor(), 1);
 
@@ -273,10 +397,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 			driveRight(-angle * speed); 
 		}
 	}
-  
-  public boolean drivePIDDone() {
-		return drivePID.isDone() && (getAverageVelocity() == 0);
-  }
   
   public boolean gyroPIDDone() {
     return gyroPID.isDone();
@@ -345,10 +465,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     zeroSensors();
     resetGyro();
   }
-
-  public void changeDriveGains(double pDrive, double iDrive, double dDrive) {
-		drivePID.changePIDGains(pDrive, iDrive, dDrive);
-	}
 
 	public void changeGyroGains(double pGyro, double iGyro, double dGyro) {
 		gyroPID.changePIDGains(pGyro, iGyro, dGyro);

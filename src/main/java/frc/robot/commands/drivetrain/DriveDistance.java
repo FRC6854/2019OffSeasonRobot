@@ -13,8 +13,7 @@ public class DriveDistance extends Command {
 
   int timer = 0;
 
-  // execute() runs 50 times per second or every 20ms. So the command should run a minimum of half a second
-  static final int waitForTime = 25;
+  final int waitForTime = 15;
 
   public DriveDistance(double meters) {
     drivetrain = KitDrivetrain.getInstance();
