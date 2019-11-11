@@ -30,11 +30,14 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private TalonSRX rightMaster;
   private VictorSPX rightSlave;
 
-  private MotionProfileStatus leftMpStatus;
-  private MotionProfileStatus rightMpStatus;
-
   private BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
   private BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
+
+  private SetValueMotionProfile setValueLeft = SetValueMotionProfile.Disable;
+  private SetValueMotionProfile setValueRight = SetValueMotionProfile.Disable;
+
+  private MotionProfileStatus leftStatus = new MotionProfileStatus();
+	private MotionProfileStatus rightStatus = new MotionProfileStatus();
 
   private AHRS gyro;
 
@@ -50,8 +53,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private double leftOutput = 0;
   private double rightOutput = 0;
 
-  private SetValueMotionProfile setValueLeft = SetValueMotionProfile.Disable;
-  private SetValueMotionProfile setValueRight = SetValueMotionProfile.Disable;
 
   public KitDrivetrain() {
     controllers = MotorControllers.getInstance();
@@ -115,6 +116,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     /* Set timeout for motion profile - see documentation */
     leftMaster.configMotionProfileTrajectoryPeriod(5, dt_kTimeoutMs); 
     rightMaster.configMotionProfileTrajectoryPeriod(5, dt_kTimeoutMs);
+
+    leftMaster.changeMotionControlFramePeriod(5);
+    rightMaster.changeMotionControlFramePeriod(5);
 
     /* Zero the sensor */
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
@@ -195,8 +199,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
   private void initBufferLeft(Double[][] profile, int totalCnt) {
 
-    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
-                            // since you can use negative numbers in profile).
+    if (leftStatus.hasUnderrun) {
+      leftMaster.clearMotionProfileHasUnderrun(0);
+    }
 
     TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
                                                    // automatically, you can alloc just one
@@ -206,13 +211,13 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
       double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
       double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-      int durationMilliseconds = 50;
+      int durationMilliseconds = 10;
 
       /* for each point, fill our structure and pass it to API */
       point.timeDur = durationMilliseconds;
       point.position = positionRot * 4096; // Convert Revolutions to
                                                        // Units
-      point.velocity = velocityRPM * 4096 / 500.0; // Convert RPM to
+      point.velocity = velocityRPM * 4096 / 600.0; // Convert RPM to
                                                                // Units/100ms
       point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
       point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
@@ -222,12 +227,15 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
       _bufferedStreamLeft.Write(point);
     }
+
+    System.out.println("Done Writing Left");
   }
 
   private void initBufferRight(Double[][] profile, int totalCnt) {
 
-    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
-                            // since you can use negative numbers in profile).
+    if (rightStatus.hasUnderrun) {
+      rightMaster.clearMotionProfileHasUnderrun(0);
+    }
 
     TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
                                                    // automatically, you can alloc just one
@@ -237,13 +245,13 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
       double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
       double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-      int durationMilliseconds = 50;
+      int durationMilliseconds = 10;
 
       /* for each point, fill our structure and pass it to API */
       point.timeDur = durationMilliseconds;
       point.position = positionRot * 4096; // Convert Revolutions to
                                                        // Units
-      point.velocity = velocityRPM * 4096 / 500.0; // Convert RPM to
+      point.velocity = velocityRPM * 4096 / 600.0; // Convert RPM to
                                                                // Units/100ms
       point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
       point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
@@ -253,6 +261,8 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
       _bufferedStreamRight.Write(point);
     }
+
+    System.out.println("Done Writing Right");
   }
 
   public void resetMotionProfile() {
@@ -282,6 +292,20 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   public void driveRotations(double rotations) {
     leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
     rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+  }
+
+  public void updateMotionProfile() {
+    leftMaster.getMotionProfileStatus(leftStatus);
+    rightMaster.getMotionProfileStatus(rightStatus);
+
+    if (leftStatus.btmBufferCnt > 10 && rightStatus.btmBufferCnt > 10) {
+      setValueLeft = SetValueMotionProfile.Enable;
+      setValueRight = SetValueMotionProfile.Enable;
+    }
+    else {
+      setValueLeft = SetValueMotionProfile.Disable;
+      setValueRight = SetValueMotionProfile.Disable;
+    }
   }
 
   public void driveMotionProfile() {

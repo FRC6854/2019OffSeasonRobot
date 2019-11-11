@@ -24,7 +24,6 @@ public class ProfileFollower extends Command {
     System.out.println("Filling Talons...");
     drivetrain.loadMotionProfiles(path);
 
-    System.out.println("Talons filled!");
     System.out.println("Executing the Profile");
 
     drivetrain.motionProfile();
@@ -32,6 +31,8 @@ public class ProfileFollower extends Command {
 
   @Override
   protected void execute() {
+    drivetrain.updateMotionProfile();
+
     drivetrain.driveMotionProfile();
   }
 
