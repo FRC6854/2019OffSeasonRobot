@@ -2,6 +2,7 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.command_groups.drivetrain.auto.*;
 import frc.robot.command_groups.testing.TestingDriveAngle;
@@ -14,13 +15,9 @@ public class AutoManager {
     private static SendableChooser<Integer> autoChooser = new SendableChooser<Integer>();
     private static SendableChooser<Integer> autoChooserHatch = new SendableChooser<Integer>();
 
-    private static String path = "Insert Path Here";
+    private static String path = "testing";
 
     private AutoManager () {
-        init();
-    }
-
-    private void init() {
         autoChooser.setDefaultOption("90 Hatch", 1);
         autoChooser.addOption("Drive Vision", 2);
         autoChooser.addOption("45 Hatch", 3);
@@ -29,7 +26,7 @@ public class AutoManager {
 
         autoChooserHatch.setDefaultOption("Bottom Stage", 1);
         autoChooserHatch.addOption("Middle Stage", 2);
-        autoChooserHatch.addOption("Top", 3);
+        autoChooserHatch.addOption("Top Stage", 3);
 
         SmartDashboard.putString("Profile Path", path);
     }
@@ -56,7 +53,7 @@ public class AutoManager {
             case 4:
               return (new TestingDriveAngle());
             case 5:
-              return (new ProfileFollower("", ""));
+              return (new ProfileFollower(path));
         }
 
         return null;

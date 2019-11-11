@@ -3,66 +3,52 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.KitDrivetrain;
 
-import com.ctre.phoenix.motion.SetValueMotionProfile;
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.Trajectory;
-
-import java.io.File;
-import java.io.IOException;
-
 public class ProfileFollower extends Command {
 
-  private static final int min_points = 60;
-  private Trajectory trajectory_left = null;
-  private Trajectory trajectory_right = null;
-
   private KitDrivetrain drivetrain = null;
+  String path = null;
 
-  public ProfileFollower(String leftFile, String rightFile) {
+  public ProfileFollower(String path) {
     drivetrain = KitDrivetrain.getInstance();
     requires(drivetrain);
 
-    try {
-      this.trajectory_left = Pathfinder.readFromCSV(new File(leftFile));
-      this.trajectory_right = Pathfinder.readFromCSV(new File(rightFile));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    this.path = path;
+
+    setTimeout(15.0);
   }
 
   @Override
   protected void initialize() {
     drivetrain.zeroSensors();
+    drivetrain.resetMotionProfile();
     System.out.println("Filling Talons...");
-    drivetrain.startFillingLeft(drivetrain.pathfinderFormatToTalon(trajectory_left), trajectory_left.length());
-    drivetrain.startFillingRight(drivetrain.pathfinderFormatToTalon(trajectory_right), trajectory_right.length());
+    drivetrain.loadMotionProfiles(path);
 
-    while (drivetrain.getLeftMpStatus().btmBufferCnt < min_points || drivetrain.getRightMpStatus().btmBufferCnt < min_points) {
-      drivetrain.periodic();
-    }
+    System.out.println("Talons filled!");
+    System.out.println("Executing the Profile");
 
-    System.out.println("Talons filled (enough)!");
+    drivetrain.motionProfile();
   }
 
   @Override
   protected void execute() {
-    drivetrain.leftMpControl(SetValueMotionProfile.Enable);
-    drivetrain.rightMpControl(SetValueMotionProfile.Enable);
+    drivetrain.driveMotionProfile();
   }
 
   @Override
   protected boolean isFinished() {
-    return (drivetrain.leftMpDone() || drivetrain.rightMpDone());
+    return (drivetrain.isMotionProfileLeftFinished() || drivetrain.isMotionProfileRightFinished()) || isTimedOut();
   }
 
   @Override
   protected void end() {
     System.out.println("Done MP driving!");
-    drivetrain.leftMpControl(SetValueMotionProfile.Disable);
-    drivetrain.rightMpControl(SetValueMotionProfile.Disable);
+    drivetrain.resetMotionProfile();
+    drivetrain.arcadeDrive(0, 0);
   }
 
   @Override
   protected void interrupted() {
+    end();
   }
 }

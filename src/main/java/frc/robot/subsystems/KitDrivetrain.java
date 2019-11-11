@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -11,6 +12,7 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.utils.PIDController;
+import frc.team6854.CSVFileManager;
 import jaci.pathfinder.Trajectory;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -31,6 +33,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private MotionProfileStatus leftMpStatus;
   private MotionProfileStatus rightMpStatus;
 
+  private BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
+  private BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
+
   private AHRS gyro;
 
   private MotorControllers controllers;
@@ -44,6 +49,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   
   private double leftOutput = 0;
   private double rightOutput = 0;
+
+  private SetValueMotionProfile setValueLeft = SetValueMotionProfile.Disable;
+  private SetValueMotionProfile setValueRight = SetValueMotionProfile.Disable;
 
   public KitDrivetrain() {
     controllers = MotorControllers.getInstance();
@@ -104,6 +112,10 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     leftMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
     rightMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
 
+    /* Set timeout for motion profile - see documentation */
+    leftMaster.configMotionProfileTrajectoryPeriod(5, dt_kTimeoutMs); 
+    rightMaster.configMotionProfileTrajectoryPeriod(5, dt_kTimeoutMs);
+
     /* Zero the sensor */
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
     rightMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
@@ -155,136 +167,104 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     driveRight(limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
   }
 
-      /**
-     * Getter for the left drivetrain motion profile status.
-     *
-     * @return Object representation of left motion profile status.
-     */
-    public MotionProfileStatus getLeftMpStatus() {
-      return leftMpStatus;
+  public void loadMotionProfiles(String folderName) {
+    Double[][] leftPath = CSVFileManager.pathLeft("/home/lvuser/paths/" + folderName);
+    Double[][] rightPath = CSVFileManager.pathRight("/home/lvuser/paths/" + folderName);
+
+    initBufferLeft(leftPath, leftPath.length);
+    initBufferRight(rightPath, rightPath.length);
+
+    System.out.println("Finished Loading Motion Profiles");
   }
 
-  /**
-   * Getter for the right drivetrain motion profile status.
-   *
-   * @return Object representation of right motion profile status.
-   */
-  public MotionProfileStatus getRightMpStatus() {
-      return rightMpStatus;
+  public void motionProfile() {
+    setValueLeft = SetValueMotionProfile.Enable;
+    setValueRight = SetValueMotionProfile.Enable;
+
+    leftMaster.startMotionProfile(_bufferedStreamLeft, 10, ControlMode.MotionProfile);
+    rightMaster.startMotionProfile(_bufferedStreamRight, 10, ControlMode.MotionProfile);
   }
 
-  /**
-     * Starts filling the motion profile buffer on the left drivetrain Talon SRX. Uses units of feet and feet/sec.
-     *
-     * @param profile The profile to fill the talon with. Should be a list of the form [[point_pos, point_vel, point_timestep], ...].
-     * @param size    The number of points in the profile.
-     */
-    public void startFillingLeft(double[][] profile, int size) {
-      leftMaster.clearMotionProfileTrajectories();
-      TrajectoryPoint point = new TrajectoryPoint();
-
-      leftMaster.configMotionProfileTrajectoryPeriod(50, 10);
-
-      for (int i = 0; i < size; i++) {
-          double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
-          double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-          /* for each point, fill our structure and pass it to API */
-          point.position = positionRot * (4096 * 4.0); // Convert Revolutions to Units
-          point.velocity = velocityRPM * (4096 * 4.0) / 10.0; // Convert RPS to Units/100ms
-          point.headingDeg = 0; /* future feature - not used in this example*/
-          point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-          point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
-          point.zeroPos = i == 0;
-          point.isLastPoint = ((i + 1) == size);
-
-          leftMaster.pushMotionProfileTrajectory(point);
-      }
-      System.out.println(String.format("Pushed %d points to left.", size));
+  public boolean isMotionProfileLeftFinished() {
+    return leftMaster.isMotionProfileFinished();
   }
 
-  /**
-   * Starts filling the motion profile buffer on the right drivetrain Talon SRX. Uses units of feet and feet/sec.
-   *
-   * @param profile The profile to fill the talon with. Should be a list of the form [[point_pos, point_vel, point_timestep], ...].
-   * @param size    The number of points in the profile.
-   */
-  public void startFillingRight(double[][] profile, int size) {
-      rightMaster.clearMotionProfileTrajectories();
-      TrajectoryPoint point = new TrajectoryPoint();
-
-      rightMaster.configMotionProfileTrajectoryPeriod(50, 10);
-
-      for (int i = 0; i < size; i++) {
-          double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
-          double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-          /* for each point, fill our structure and pass it to API */
-          point.position = positionRot * (4096 * 4.0); // Convert Revolutions to Units
-          point.velocity = velocityRPM * (4096 * 4.0) / 10.0; // Convert RPS to Units/100ms
-          point.headingDeg = 0; /* future feature - not used in this example*/
-          point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-          point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
-          point.zeroPos = i == 0;
-          point.isLastPoint = ((i + 1) == size);
-
-          rightMaster.pushMotionProfileTrajectory(point);
-      }
-      System.out.println(String.format("Pushed %d points to right.", size));
+  public boolean isMotionProfileRightFinished() {
+    return rightMaster.isMotionProfileFinished();
   }
 
-  /**
-   * Control the drivetrain left side in MotionProfile mode.
-   *
-   * @param v The value to set the left drivetrain at.
-   */
-  public void leftMpControl(SetValueMotionProfile v) {
-    leftMaster.set(ControlMode.MotionProfile, v.value);
-  }
+  private void initBufferLeft(Double[][] profile, int totalCnt) {
 
-  /**
-   * Control the drivetrain right side in MotionProfile mode.
-   *
-   * @param v The value to set the right drivetrain at.
-   */
-  public void rightMpControl(SetValueMotionProfile v) {
-    rightMaster.set(ControlMode.MotionProfile, v.value);
-  }
+    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
+                            // since you can use negative numbers in profile).
 
-  @Override
-  public void periodic() {
-    leftMaster.processMotionProfileBuffer();
-    rightMaster.processMotionProfileBuffer();
+    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
+                                                   // automatically, you can alloc just one
 
-    leftMaster.getMotionProfileStatus(leftMpStatus);
-    rightMaster.getMotionProfileStatus(rightMpStatus);
-  }
+    /* Insert every point into buffer, no limit on size */
+    for (int i = 0; i < totalCnt; ++i) {
 
-  public int leftMpPointsFilled() {
-    return leftMpStatus.btmBufferCnt;
-  }
+      double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
+      double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
+      int durationMilliseconds = 50;
 
-  public int rightMpPointsFilled() {
-    return rightMpStatus.btmBufferCnt;
-  }
+      /* for each point, fill our structure and pass it to API */
+      point.timeDur = durationMilliseconds;
+      point.position = positionRot * 4096; // Convert Revolutions to
+                                                       // Units
+      point.velocity = velocityRPM * 4096 / 500.0; // Convert RPM to
+                                                               // Units/100ms
+      point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+      point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
+      point.zeroPos = (i == 0); /* set this to true on the first point */
+      point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
+      point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
 
-  public boolean leftMpDone() {
-    return leftMpStatus.activePointValid && leftMpStatus.isLast;  
-  }
-
-  public boolean rightMpDone() {
-    return rightMpStatus.activePointValid && rightMpStatus.isLast;
-  }
-
-  public double[][] pathfinderFormatToTalon(Trajectory t) {
-    int i = 0;
-    double[][] list = new double[t.length()][3];
-    for (Trajectory.Segment s : t.segments) {
-        list[i][0] = s.position;
-        list[i][1] = s.velocity;
-        list[i][2] = s.dt;
-        i++;
+      _bufferedStreamLeft.Write(point);
     }
-    return list;
-}
+  }
+
+  private void initBufferRight(Double[][] profile, int totalCnt) {
+
+    boolean forward = true; // set to false to drive in opposite direction of profile (not really needed
+                            // since you can use negative numbers in profile).
+
+    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
+                                                   // automatically, you can alloc just one
+
+    /* Insert every point into buffer, no limit on size */
+    for (int i = 0; i < totalCnt; ++i) {
+
+      double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
+      double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
+      int durationMilliseconds = 50;
+
+      /* for each point, fill our structure and pass it to API */
+      point.timeDur = durationMilliseconds;
+      point.position = positionRot * 4096; // Convert Revolutions to
+                                                       // Units
+      point.velocity = velocityRPM * 4096 / 500.0; // Convert RPM to
+                                                               // Units/100ms
+      point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+      point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
+      point.zeroPos = (i == 0); /* set this to true on the first point */
+      point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
+      point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
+
+      _bufferedStreamRight.Write(point);
+    }
+  }
+
+  public void resetMotionProfile() {
+    _bufferedStreamLeft.Clear();
+    _bufferedStreamRight.Clear();
+
+    leftMaster.clearMotionProfileTrajectories();
+    rightMaster.clearMotionProfileTrajectories();
+
+    setValueLeft = SetValueMotionProfile.Disable;
+    setValueRight = SetValueMotionProfile.Disable;
+  }
 
   public boolean getFrontSensor() {
     return frontSensor.get();
@@ -304,13 +284,20 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
   }
 
+  public void driveMotionProfile() {
+    leftMaster.set(ControlMode.MotionProfile, setValueLeft.value);
+    rightMaster.set(ControlMode.MotionProfile, setValueRight.value);
+  }
+
   public void driveLeft(double value) {
     leftOutput = value;
+    setValueLeft = SetValueMotionProfile.Disable;
     leftMaster.set(ControlMode.PercentOutput, value);
   }
 
   public void driveRight(double value) {
     rightOutput = value;
+    setValueRight = SetValueMotionProfile.Disable;
     rightMaster.set(ControlMode.PercentOutput, value);
   }
 
