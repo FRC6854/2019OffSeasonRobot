@@ -31,14 +31,13 @@ public class ProfileFollower extends Command {
 
   @Override
   protected void execute() {
-    drivetrain.updateMotionProfile();
 
-    drivetrain.driveMotionProfile();
   }
 
   @Override
   protected boolean isFinished() {
-    return (drivetrain.isMotionProfileLeftFinished() || drivetrain.isMotionProfileRightFinished()) || isTimedOut();
+    System.out.println(drivetrain.isMotionProfileLeftFinished() + " " + drivetrain.isMotionProfileRightFinished());
+    return (drivetrain.isMotionProfileLeftFinished() && drivetrain.isMotionProfileRightFinished()) || isTimedOut();
   }
 
   @Override

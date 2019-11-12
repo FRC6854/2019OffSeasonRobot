@@ -21,6 +21,9 @@ import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.utils.MotorControllers;
 import frc.robot.RobotMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private static KitDrivetrain instance = null;
 
@@ -32,12 +35,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
   private BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
   private BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
-
-  private SetValueMotionProfile setValueLeft = SetValueMotionProfile.Disable;
-  private SetValueMotionProfile setValueRight = SetValueMotionProfile.Disable;
-
-  private MotionProfileStatus leftStatus = new MotionProfileStatus();
-	private MotionProfileStatus rightStatus = new MotionProfileStatus();
 
   private AHRS gyro;
 
@@ -53,6 +50,7 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private double leftOutput = 0;
   private double rightOutput = 0;
 
+  private List<List<String>> table = new ArrayList<List<String>>();
 
   public KitDrivetrain() {
     controllers = MotorControllers.getInstance();
@@ -68,6 +66,19 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
 
     init();
+  }
+
+  public void writeTable() {
+    CSVFileManager.writeCSVLog(table);
+  }
+
+  public void updateTable() {
+    List<String> row = new ArrayList<String>();
+
+    row.add("Drivetrain");
+    row.add(leftOutput + " " + rightOutput);
+
+    table.add(row);
   }
 
   private void init() {
@@ -114,11 +125,11 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     rightMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
 
     /* Set timeout for motion profile - see documentation */
-    leftMaster.configMotionProfileTrajectoryPeriod(5, dt_kTimeoutMs); 
-    rightMaster.configMotionProfileTrajectoryPeriod(5, dt_kTimeoutMs);
+    leftMaster.configMotionProfileTrajectoryPeriod(25, dt_kTimeoutMs); 
+    rightMaster.configMotionProfileTrajectoryPeriod(25, dt_kTimeoutMs);
 
-    leftMaster.changeMotionControlFramePeriod(5);
-    rightMaster.changeMotionControlFramePeriod(5);
+    leftMaster.changeMotionControlFramePeriod(25);
+    rightMaster.changeMotionControlFramePeriod(25);
 
     /* Zero the sensor */
     leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
@@ -182,9 +193,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   }
 
   public void motionProfile() {
-    setValueLeft = SetValueMotionProfile.Enable;
-    setValueRight = SetValueMotionProfile.Enable;
-
     leftMaster.startMotionProfile(_bufferedStreamLeft, 10, ControlMode.MotionProfile);
     rightMaster.startMotionProfile(_bufferedStreamRight, 10, ControlMode.MotionProfile);
   }
@@ -198,11 +206,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   }
 
   private void initBufferLeft(Double[][] profile, int totalCnt) {
-
-    if (leftStatus.hasUnderrun) {
-      leftMaster.clearMotionProfileHasUnderrun(0);
-    }
-
     TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
                                                    // automatically, you can alloc just one
 
@@ -211,7 +214,7 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
       double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
       double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-      int durationMilliseconds = 10;
+      int durationMilliseconds = profile[i][2].intValue();
 
       /* for each point, fill our structure and pass it to API */
       point.timeDur = durationMilliseconds;
@@ -233,10 +236,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
   private void initBufferRight(Double[][] profile, int totalCnt) {
 
-    if (rightStatus.hasUnderrun) {
-      rightMaster.clearMotionProfileHasUnderrun(0);
-    }
-
     TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
                                                    // automatically, you can alloc just one
 
@@ -245,7 +244,7 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
       double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
       double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-      int durationMilliseconds = 10;
+      int durationMilliseconds = profile[i][2].intValue();
 
       /* for each point, fill our structure and pass it to API */
       point.timeDur = durationMilliseconds;
@@ -271,9 +270,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
     leftMaster.clearMotionProfileTrajectories();
     rightMaster.clearMotionProfileTrajectories();
-
-    setValueLeft = SetValueMotionProfile.Disable;
-    setValueRight = SetValueMotionProfile.Disable;
   }
 
   public boolean getFrontSensor() {
@@ -294,34 +290,13 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
   }
 
-  public void updateMotionProfile() {
-    leftMaster.getMotionProfileStatus(leftStatus);
-    rightMaster.getMotionProfileStatus(rightStatus);
-
-    if (leftStatus.btmBufferCnt > 10 && rightStatus.btmBufferCnt > 10) {
-      setValueLeft = SetValueMotionProfile.Enable;
-      setValueRight = SetValueMotionProfile.Enable;
-    }
-    else {
-      setValueLeft = SetValueMotionProfile.Disable;
-      setValueRight = SetValueMotionProfile.Disable;
-    }
-  }
-
-  public void driveMotionProfile() {
-    leftMaster.set(ControlMode.MotionProfile, setValueLeft.value);
-    rightMaster.set(ControlMode.MotionProfile, setValueRight.value);
-  }
-
   public void driveLeft(double value) {
     leftOutput = value;
-    setValueLeft = SetValueMotionProfile.Disable;
     leftMaster.set(ControlMode.PercentOutput, value);
   }
 
   public void driveRight(double value) {
     rightOutput = value;
-    setValueRight = SetValueMotionProfile.Disable;
     rightMaster.set(ControlMode.PercentOutput, value);
   }
 

@@ -18,13 +18,15 @@ public class CSVFileManager {
 
     try {
       reader = new BufferedReader(new FileReader(folder + "/path_left.csv"));
+      // Skip headers
+      reader.readLine();
       String line = reader.readLine();
       while (line != null) {
         List<Double> row = new ArrayList<>();
         String format = line.replace('\n', Character.MIN_VALUE);
         String[] values = format.split(",");
-        for (String value : values) {
-          row.add(Double.parseDouble(value));
+        for (int i = 0; i < 3; i++) {
+          row.add(Double.parseDouble(values[i]));
         }
         table.add(row);
         line = reader.readLine();
@@ -52,13 +54,15 @@ public class CSVFileManager {
 
     try {
       reader = new BufferedReader(new FileReader(folder + "/path_right.csv"));
+      // Skip headers
+      reader.readLine();
       String line = reader.readLine();
       while (line != null) {
         List<Double> row = new ArrayList<>();
         String format = line.replace('\n', Character.MIN_VALUE);
         String[] values = format.split(",");
-        for (String value : values) {
-          row.add(Double.parseDouble(value));
+        for (int i = 0; i < 3; i++) {
+          row.add(Double.parseDouble(values[i]));
         }
         table.add(row);
         line = reader.readLine();
@@ -79,7 +83,7 @@ public class CSVFileManager {
     return array;
   }
 
-  public static void writeCSVLog (String[][] log) {
+  public static void writeCSVLog (List<List<String>> log) {
     File file = new File(Filesystem.getDeployDirectory() + "//logs//log_" + OI.getCurrentSystemTimeDate(true) + ".csv");
     
     // Create the file
@@ -100,7 +104,7 @@ public class CSVFileManager {
         csvWriter.append("\n");
 
         // Loop through rows
-        for (String[] row : log) {
+        for (List<String> row : log) {
           csvWriter.append(String.join(",", row));
           csvWriter.append("\n");
         }

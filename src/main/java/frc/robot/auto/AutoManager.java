@@ -19,7 +19,7 @@ public class AutoManager {
 
     private AutoManager () {
         autoChooser.setDefaultOption("90 Hatch", 1);
-        autoChooser.addOption("Drive Vision", 2);
+        autoChooser.addOption("Drive Profile Hatch", 2);
         autoChooser.addOption("45 Hatch", 3);
         autoChooser.addOption("Testing", 4);
         autoChooser.addOption("Profile Follow", 5);
@@ -47,7 +47,7 @@ public class AutoManager {
             case 1:
               return (new Drive90DriveHatch(autoChooserHatch.getSelected()));
             case 2:
-              return (new DriveVisionTarget());
+              return (new DriveProfileHatch(autoChooserHatch.getSelected(), path));
             case 3:
               return (new Drive45DriveHatch(autoChooserHatch.getSelected()));
             case 4:

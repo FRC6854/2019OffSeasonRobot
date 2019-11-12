@@ -72,4 +72,14 @@ public class Robot extends TimedRobot implements RobotMap {
     scheduler.removeAll();
     scheduler.add(new ZeroArm());
   }
+
+  @Override
+  public void teleopPeriodic() {
+    drivetrain.updateTable();
+  }
+
+  @Override
+  public void disabledInit() {
+    drivetrain.writeTable();
+  }
 }
