@@ -11,14 +11,16 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import frc.robot.utils.PIDController;
+import frc.team6854.PIDController;
 import frc.team6854.CSVFileManager;
+import frc.team6854.VikingSPXSlave;
+import frc.team6854.VikingSRX;
 import jaci.pathfinder.Trajectory;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.drivetrain.ArcadeDrive;
-import frc.robot.utils.MotorControllers;
 import frc.robot.RobotMap;
 
 import java.util.ArrayList;
@@ -27,18 +29,13 @@ import java.util.List;
 public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private static KitDrivetrain instance = null;
 
-  private TalonSRX leftMaster;
-  private VictorSPX leftSlave;
+  private VikingSRX leftMaster;
+  private VikingSPXSlave leftSlave;
 
-  private TalonSRX rightMaster;
-  private VictorSPX rightSlave;
-
-  private BufferedTrajectoryPointStream _bufferedStreamLeft = new BufferedTrajectoryPointStream();
-  private BufferedTrajectoryPointStream _bufferedStreamRight = new BufferedTrajectoryPointStream();
+  private VikingSRX rightMaster;
+  private VikingSPXSlave rightSlave;
 
   private AHRS gyro;
-
-  private MotorControllers controllers;
 
   private PIDController gyroPID;
   private PIDController driveTargetPID;
@@ -53,19 +50,19 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private List<List<String>> table = new ArrayList<List<String>>();
 
   public KitDrivetrain() {
-    controllers = MotorControllers.getInstance();
+    leftMaster = new VikingSRX(CAN_LEFT_FRONT, false, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250);
+    leftSlave = new VikingSPXSlave(CAN_LEFT_BACK, leftMaster, false);
+    rightMaster = new VikingSRX(CAN_RIGHT_FRONT, true, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250);
+    rightSlave = new VikingSPXSlave(CAN_RIGHT_BACK, rightMaster, true);
 
-    leftMaster = controllers.getLeftMaster();
-    leftSlave = controllers.getLeftSlave();
-    rightMaster = controllers.getRightMaster();
-    rightSlave = controllers.getRightSlave();
-    gyro = controllers.getGyro();
+    gyro = new AHRS(Port.kMXP);
 
     frontSensor = new DigitalInput(DIGITAL_DISTANCE);
 
     distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
 
-    init();
+    gyroPID = new PIDController(pGyro, iGyro, dGyro);
+    driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
   }
 
   public void writeTable() {
@@ -79,64 +76,6 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     row.add(leftOutput + " " + rightOutput);
 
     table.add(row);
-  }
-
-  private void init() {
-    leftSlave.follow(leftMaster);
-    rightSlave.follow(rightMaster);
-
-    leftMaster.configFactoryDefault();
-    rightMaster.configFactoryDefault();
-
-    leftMaster.setInverted(false);
-    rightMaster.setInverted(true);
-
-    leftSlave.setInverted(false);
-    rightSlave.setInverted(true);
-
-    leftMaster.setSensorPhase(true);
-    rightMaster.setSensorPhase(true);
-
-    /* Configure Sensor Source for Pirmary PID */
-    leftMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
-    rightMaster.configSelectedFeedbackSensor(dt_kFeedbackDevice, 0, 0);
-
-    /* Set Motion Magic gains in slot0 - see documentation */
-    leftMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
-    rightMaster.selectProfileSlot(dt_kSlotIdx, dt_kPIDLoopIdx);
-
-    leftMaster.config_kF(dt_kSlotIdx, dt_kF, dt_kTimeoutMs);
-    rightMaster.config_kF(dt_kSlotIdx, dt_kF, dt_kTimeoutMs);
-
-    leftMaster.config_kP(dt_kSlotIdx, dt_kP, dt_kTimeoutMs);
-    rightMaster.config_kP(dt_kSlotIdx, dt_kP, dt_kTimeoutMs);
-
-    leftMaster.config_kI(dt_kSlotIdx, dt_kI, dt_kTimeoutMs);
-    rightMaster.config_kI(dt_kSlotIdx, dt_kI, dt_kTimeoutMs);
-
-    leftMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
-    rightMaster.config_kD(dt_kSlotIdx, dt_kD, dt_kTimeoutMs);
-
-    /* Set acceleration and vcruise velocity - see documentation */
-    leftMaster.configMotionCruiseVelocity(1250, dt_kTimeoutMs);
-    rightMaster.configMotionCruiseVelocity(1250, dt_kTimeoutMs);
-
-    leftMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
-    rightMaster.configMotionAcceleration(1500, dt_kTimeoutMs);
-
-    /* Set timeout for motion profile - see documentation */
-    leftMaster.configMotionProfileTrajectoryPeriod(25, dt_kTimeoutMs); 
-    rightMaster.configMotionProfileTrajectoryPeriod(25, dt_kTimeoutMs);
-
-    leftMaster.changeMotionControlFramePeriod(25);
-    rightMaster.changeMotionControlFramePeriod(25);
-
-    /* Zero the sensor */
-    leftMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
-    rightMaster.setSelectedSensorPosition(0, dt_kPIDLoopIdx, dt_kTimeoutMs);
-
-    gyroPID = new PIDController(pGyro, iGyro, dGyro);
-    driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
   }
 
   // Copied from the WPILib Differential Drive Class with some minor alterations
@@ -182,94 +121,30 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     driveRight(limit(rightMotorOutput) * dt_kDefaultMaxOutput * dt_rightSideInvertMultiplier);
   }
 
+  public VikingSRX getLeftMaster() {
+    return leftMaster;
+  }
+
+  public VikingSRX getRightMaster() {
+    return rightMaster;
+  }
+
   public void loadMotionProfiles(String folderName) {
     Double[][] leftPath = CSVFileManager.pathLeft("/home/lvuser/paths/" + folderName);
     Double[][] rightPath = CSVFileManager.pathRight("/home/lvuser/paths/" + folderName);
 
-    initBufferLeft(leftPath, leftPath.length);
-    initBufferRight(rightPath, rightPath.length);
-
-    System.out.println("Finished Loading Motion Profiles");
+    leftMaster.initMotionBuffer(leftPath, leftPath.length);
+    rightMaster.initMotionBuffer(rightPath, rightPath.length);
   }
 
   public void motionProfile() {
-    leftMaster.startMotionProfile(_bufferedStreamLeft, 10, ControlMode.MotionProfile);
-    rightMaster.startMotionProfile(_bufferedStreamRight, 10, ControlMode.MotionProfile);
-  }
-
-  public boolean isMotionProfileLeftFinished() {
-    return leftMaster.isMotionProfileFinished();
-  }
-
-  public boolean isMotionProfileRightFinished() {
-    return rightMaster.isMotionProfileFinished();
-  }
-
-  private void initBufferLeft(Double[][] profile, int totalCnt) {
-    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
-                                                   // automatically, you can alloc just one
-
-    /* Insert every point into buffer, no limit on size */
-    for (int i = 0; i < totalCnt; ++i) {
-
-      double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
-      double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-      int durationMilliseconds = profile[i][2].intValue();
-
-      /* for each point, fill our structure and pass it to API */
-      point.timeDur = durationMilliseconds;
-      point.position = positionRot * 4096; // Convert Revolutions to
-                                                       // Units
-      point.velocity = velocityRPM * 4096 / 600.0; // Convert RPM to
-                                                               // Units/100ms
-      point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-      point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
-      point.zeroPos = (i == 0); /* set this to true on the first point */
-      point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
-      point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
-
-      _bufferedStreamLeft.Write(point);
-    }
-
-    System.out.println("Done Writing Left");
-  }
-
-  private void initBufferRight(Double[][] profile, int totalCnt) {
-
-    TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
-                                                   // automatically, you can alloc just one
-
-    /* Insert every point into buffer, no limit on size */
-    for (int i = 0; i < totalCnt; ++i) {
-
-      double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
-      double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
-      int durationMilliseconds = profile[i][2].intValue();
-
-      /* for each point, fill our structure and pass it to API */
-      point.timeDur = durationMilliseconds;
-      point.position = positionRot * 4096; // Convert Revolutions to
-                                                       // Units
-      point.velocity = velocityRPM * 4096 / 600.0; // Convert RPM to
-                                                               // Units/100ms
-      point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-      point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
-      point.zeroPos = (i == 0); /* set this to true on the first point */
-      point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
-      point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
-
-      _bufferedStreamRight.Write(point);
-    }
-
-    System.out.println("Done Writing Right");
+    leftMaster.motionProfileStart();
+    rightMaster.motionProfileStart();
   }
 
   public void resetMotionProfile() {
-    _bufferedStreamLeft.Clear();
-    _bufferedStreamRight.Clear();
-
-    leftMaster.clearMotionProfileTrajectories();
-    rightMaster.clearMotionProfileTrajectories();
+    leftMaster.resetMotionProfile();
+    rightMaster.resetMotionProfile();
   }
 
   public boolean getFrontSensor() {
@@ -281,28 +156,23 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   }
 
   public void driveMeters(double meters) {
-    leftMaster.set(ControlMode.MotionMagic, metersToTicks(meters));
-    rightMaster.set(ControlMode.MotionMagic, metersToTicks(meters));
+    leftMaster.motionMagic(metersToTicks(meters));
+    rightMaster.motionMagic(metersToTicks(meters));
   }
 
   public void driveRotations(double rotations) {
-    leftMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
-    rightMaster.set(ControlMode.MotionMagic, rotationsToTicks(rotations));
+    leftMaster.motionMagic(rotationsToTicks(rotations));
+    rightMaster.motionMagic(rotationsToTicks(rotations));
   }
 
   public void driveLeft(double value) {
     leftOutput = value;
-    leftMaster.set(ControlMode.PercentOutput, value);
+    leftMaster.percentOutput(value);
   }
 
   public void driveRight(double value) {
     rightOutput = value;
-    rightMaster.set(ControlMode.PercentOutput, value);
-  }
-
-  public void driveTicks(int ticks) {
-    leftMaster.set(ControlMode.MotionMagic, ticks);
-    rightMaster.set(ControlMode.MotionMagic, ticks);
+    rightMaster.percentOutput(value);;
   }
 
   public void tankDrive(double left, double right) {
@@ -310,21 +180,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     driveRight(right);
   }
 
-  public void fullStop() {
-    driveLeft(0);
-    driveRight(0);
-    leftMaster.setNeutralMode(NeutralMode.Brake);
-    rightMaster.setNeutralMode(NeutralMode.Brake);
-  }
-
-  public void coast() {
-    leftMaster.setNeutralMode(NeutralMode.Coast);
-    rightMaster.setNeutralMode(NeutralMode.Coast);
-  }
-
   public void zeroSensors() {
-    leftMaster.setSelectedSensorPosition(0);
-    rightMaster.setSelectedSensorPosition(0);
+    leftMaster.zeroSensor();
+    rightMaster.zeroSensor();
   }
 
   public int rotationsToTicks(double rotations) {
@@ -389,11 +247,11 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   }
 
   public int getLeftVelocity() {
-    return leftMaster.getSelectedSensorVelocity();
+    return leftMaster.getVelocity();
   }
 
   public int getRightVelocity() {
-    return rightMaster.getSelectedSensorVelocity();
+    return rightMaster.getVelocity();
   }
 
   public double getLeftOutput() {
@@ -408,28 +266,12 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     return (leftOutput + rightOutput) / 2;
   }
 
-  public int getAverageVelocity() {
-    return (getRightVelocity() + getLeftVelocity()) / 2;
-  }
-
   public int getLeftTicks() {
-    return leftMaster.getSelectedSensorPosition();
+    return leftMaster.getTicks();
   }
 
   public int getRightTicks() {
-    return rightMaster.getSelectedSensorPosition();
-  }
-
-  public double getLeftTicksDistance() {
-    return getLeftTicks() * (1/350);
-  }
-
-  public double getRightTicksDistance() {
-    return getRightTicks() * (1/350);
-  }
-
-  public double getAverageDistance() {
-    return (getLeftTicksDistance() + getRightTicksDistance()) / 2;
+    return rightMaster.getTicks();
   }
 
   public static KitDrivetrain getInstance() {

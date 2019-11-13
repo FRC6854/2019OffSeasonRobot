@@ -5,17 +5,15 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-
+import frc.robot.RobotMap;
 import frc.robot.commands.arm.OperateArm;
-import frc.robot.utils.MotorControllers;
+import frc.team6854.VikingSRX;
 
-public class Arm extends Subsystem implements Constants {
+public class Arm extends Subsystem implements Constants, RobotMap {
   private static Arm instance = null;
 
-  private TalonSRX arm;
+  private VikingSRX arm;
   private Faults faults;
-
-  private MotorControllers controllers;
 
   public int selectedStage = 1; 
   public int numStages = 3;
@@ -29,46 +27,20 @@ public class Arm extends Subsystem implements Constants {
 	public static int STAGE_TOP = 5800;
 
   public Arm() {
-    controllers = MotorControllers.getInstance();
-    arm = controllers.getArm();
-    faults = controllers.getArmFaults();
-    init();
-  }
-
-  private void init() {
-    arm.configFactoryDefault();
-
-    arm.setInverted(false);
-    arm.setSensorPhase(true);
-
-    /* Configure Sensor Source for Pirmary PID */
-    arm.configSelectedFeedbackSensor(arm_kFeedbackDevice, 0, 0);
-    
-    /* Set Motion Magic gains in slot0 - see documentation */
-    arm.selectProfileSlot(arm_kSlotIdx, arm_kPIDLoopIdx);
-		arm.config_kF(arm_kSlotIdx, arm_kF, arm_kTimeoutMs);
-		arm.config_kP(arm_kSlotIdx, arm_kP, arm_kTimeoutMs);
-		arm.config_kI(arm_kSlotIdx, arm_kI, arm_kTimeoutMs);
-    arm.config_kD(arm_kSlotIdx, arm_kD, arm_kTimeoutMs);
-    
-    /* Set acceleration and vcruise velocity - see documentation */
-		arm.configMotionCruiseVelocity(1000, arm_kTimeoutMs);
-		arm.configMotionAcceleration(500, arm_kTimeoutMs);
-
-    /* Zero the sensor */
-    arm.setSelectedSensorPosition(0, arm_kPIDLoopIdx, arm_kTimeoutMs);
+    arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 1000, 500);
+    faults = new Faults();
   }
 
   public void driveManual(double output) {
-    arm.set(ControlMode.PercentOutput, output);
+    arm.percentOutput(output);
   }
 
   public void driveTicks(int ticks) {
-    arm.set(ControlMode.MotionMagic, ticks);
+    arm.motionMagic(ticks);
   }
 
   public void driveAngle(int angle) {
-    arm.set(ControlMode.MotionMagic, angleToTicks(angle));
+    arm.motionMagic(angleToTicks(angle));
   }
 
   public void dropStage() {
@@ -120,19 +92,15 @@ public class Arm extends Subsystem implements Constants {
   }
 
   public void zeroSensor() {
-    arm.setSelectedSensorPosition(angleToTicks(-5));
+    arm.zeroSensor();
   }
 
   public void updateFaults() {
-    arm.getFaults(faults);
+    arm.getTalonSRX().getFaults(faults);
   }
 
   public int getAngle() {
-    return ticksToAngle(arm.getSelectedSensorPosition());
-  }
-
-  public int getTicks() {
-    return arm.getSelectedSensorPosition();
+    return ticksToAngle(arm.getTicks());
   }
 
   public boolean getReverseLimitSwitch() {
@@ -148,11 +116,11 @@ public class Arm extends Subsystem implements Constants {
   }
 
   public double getArmVelocity() {
-    return arm.getSelectedSensorVelocity();
+    return arm.getVelocity();
   }
 
   public boolean getErrorMargin (int goal, int tickError) {
-    if(getTicks() > goal - tickError && getTicks() < goal + tickError) {
+    if(arm.getTicks() > goal - tickError && arm.getTicks() < goal + tickError) {
       return true;
     }
 

@@ -36,8 +36,7 @@ public class ProfileFollower extends Command {
 
   @Override
   protected boolean isFinished() {
-    System.out.println(drivetrain.isMotionProfileLeftFinished() + " " + drivetrain.isMotionProfileRightFinished());
-    return (drivetrain.isMotionProfileLeftFinished() && drivetrain.isMotionProfileRightFinished()) || isTimedOut();
+    return (drivetrain.getLeftMaster().isMotionProfileFinished() && drivetrain.getRightMaster().isMotionProfileFinished()) || isTimedOut();
   }
 
   @Override
