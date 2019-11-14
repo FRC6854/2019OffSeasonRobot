@@ -81,5 +81,6 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void disabledInit() {
     drivetrain.writeTable();
+    drivetrain.clearTable();
   }
 }

@@ -73,9 +73,13 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     List<String> row = new ArrayList<String>();
 
     row.add("Drivetrain");
-    row.add(leftOutput + " " + rightOutput);
+    row.add(leftOutput + " " + rightOutput);  
 
     table.add(row);
+  }
+
+  public void clearTable() {
+    table.clear();
   }
 
   // Copied from the WPILib Differential Drive Class with some minor alterations
