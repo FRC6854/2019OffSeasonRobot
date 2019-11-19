@@ -15,6 +15,8 @@ public class AutoManager {
     private static SendableChooser<Integer> autoChooser = new SendableChooser<Integer>();
     private static SendableChooser<Integer> autoChooserHatch = new SendableChooser<Integer>();
 
+    private static SendableChooser<Integer> slowModeChooser = new SendableChooser<Integer>();
+    
     private static String path = "drive_retrieve";
 
     private AutoManager () {
@@ -27,6 +29,9 @@ public class AutoManager {
         autoChooserHatch.setDefaultOption("Bottom Stage", 1);
         autoChooserHatch.addOption("Middle Stage", 2);
         autoChooserHatch.addOption("Top Stage", 3);
+
+        slowModeChooser.setDefaultOption("Disabled", 0);
+        slowModeChooser.addOption("50% MAX", 1);
 
         SmartDashboard.putString("Profile Path", path);
     }
@@ -57,6 +62,17 @@ public class AutoManager {
         }
 
         return null;
+    }
+
+    public double getSpeedMultiplier() {
+        switch(slowModeChooser.getSelected()) {
+            case 0:
+                return 1.0;
+            case 1:
+                return 0.5;
+        }
+
+        return 1.0;
     }
 
     public static AutoManager getInstance() {

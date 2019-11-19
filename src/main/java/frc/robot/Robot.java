@@ -21,6 +21,7 @@ public class Robot extends TimedRobot implements RobotMap {
   private double gyroP = 0;
   private double gyroI = 0;
   private double gyroD = 0;
+
   
   @Override
   public void robotInit() {
@@ -59,6 +60,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void teleopInit() {
     scheduler.removeAll();
+    drivetrain.setSpeedMultiplier(autoManager.getSpeedMultiplier());
     scheduler.add(new ZeroArm());
   }
 
