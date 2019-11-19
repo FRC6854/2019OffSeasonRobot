@@ -32,18 +32,18 @@ public class Robot extends TimedRobot implements RobotMap {
     // Create Instance of OI to make sure LEDs work
     OI.getInstance();
 
-    SmartDashboard.putNumber("Gyro P", Constants.pGyro);
-    SmartDashboard.putNumber("Gyro I", Constants.iGyro);
-    SmartDashboard.putNumber("Gyro D", Constants.dGyro);
+    SmartDashboard.putNumber("Gyro P", Constants.pGyro0);
+    SmartDashboard.putNumber("Gyro I", Constants.iGyro0);
+    SmartDashboard.putNumber("Gyro D", Constants.dGyro0);
   }
 
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Gyro Angle", drivetrain.getGyroAngle());
 
-    gyroP = SmartDashboard.getNumber("Gyro P", Constants.pGyro);
-    gyroI = SmartDashboard.getNumber("Gyro I", Constants.iGyro);
-    gyroD = SmartDashboard.getNumber("Gyro D", Constants.dGyro);
+    gyroP = SmartDashboard.getNumber("Gyro P", Constants.pGyro0);
+    gyroI = SmartDashboard.getNumber("Gyro I", Constants.iGyro0);
+    gyroD = SmartDashboard.getNumber("Gyro D", Constants.dGyro0);
 
     SmartDashboard.putBoolean("Front Sensor", drivetrain.getFrontSensor());
     SmartDashboard.putNumber("Distance", (int) drivetrain.getDistanceSensor());

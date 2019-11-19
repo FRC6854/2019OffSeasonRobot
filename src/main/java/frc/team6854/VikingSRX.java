@@ -14,6 +14,10 @@ public class VikingSRX implements Constants {
     private TalonSRX motor;
     private BufferedTrajectoryPointStream bufferedStream = new BufferedTrajectoryPointStream();
 
+    /*public VikingSRX(int id, boolean inverted, boolean sensorPhase, FeedbackDevice device) {
+        VikingSRX(id, inverted, sensorPhase, device, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    }*/
+
     /**
      * @param id
      * @param inverted

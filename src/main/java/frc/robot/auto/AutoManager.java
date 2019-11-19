@@ -15,7 +15,7 @@ public class AutoManager {
     private static SendableChooser<Integer> autoChooser = new SendableChooser<Integer>();
     private static SendableChooser<Integer> autoChooserHatch = new SendableChooser<Integer>();
 
-    private static String path = "testing";
+    private static String path = "drive_retrieve";
 
     private AutoManager () {
         autoChooser.setDefaultOption("90 Hatch", 1);
@@ -47,7 +47,7 @@ public class AutoManager {
             case 1:
               return (new Drive90DriveHatch(autoChooserHatch.getSelected()));
             case 2:
-              return (new DriveProfileHatch(autoChooserHatch.getSelected(), path));
+              return (new DriveProfileHatch());
             case 3:
               return (new Drive45DriveHatch(autoChooserHatch.getSelected()));
             case 4:

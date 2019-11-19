@@ -1,22 +1,36 @@
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.KitDrivetrain;
 import frc.team6854.LEDController;
 import frc.team6854.LEDController.LEDMode;
 
-public class ProfileFollower extends Command {
+public class DriveProfileWithArm extends Command {
 
   private KitDrivetrain drivetrain = null;
+  private Arm arm = null;
   private LEDController leds = null;
-  String path = null;
 
-  public ProfileFollower(String path) {
+  String path;
+  Timer timer;
+
+  boolean movedArm = false;
+  double driveAtTime = 0.0;
+
+  public DriveProfileWithArm(String path, double time) {
     drivetrain = KitDrivetrain.getInstance();
+    arm = Arm.getInstance();
     leds = LEDController.getInstance();
-    requires(drivetrain);
+    timer = new Timer();
 
     this.path = path;
+    this.driveAtTime = time;
+
+    requires(drivetrain);
+    requires(arm);
 
     setTimeout(15.0);
   }
@@ -26,17 +40,19 @@ public class ProfileFollower extends Command {
     leds.setMode(LEDMode.AUTO);
     drivetrain.zeroSensors();
     drivetrain.resetMotionProfile();
-    System.out.println("Filling Talons...");
     drivetrain.loadMotionProfiles(path);
 
-    System.out.println("Executing the Profile");
-
     drivetrain.motionProfile();
+
+    timer.start();
   }
 
   @Override
   protected void execute() {
-
+    if(timer.get() >= driveAtTime && movedArm == false) {
+      arm.setStage(1);
+      movedArm = true;
+    }
   }
 
   @Override
@@ -46,12 +62,12 @@ public class ProfileFollower extends Command {
 
   @Override
   protected void end() {
-    System.out.println("Done MP driving!");
+    timer.stop();
     drivetrain.resetMotionProfile();
   }
 
   @Override
   protected void interrupted() {
-    end();
+      end();
   }
 }

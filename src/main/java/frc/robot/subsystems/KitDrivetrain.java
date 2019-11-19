@@ -61,7 +61,7 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
     distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
 
-    gyroPID = new PIDController(pGyro, iGyro, dGyro);
+    gyroPID = new PIDController(pGyro0, iGyro0, dGyro0);
     driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
   }
 
@@ -72,8 +72,11 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   public void updateTable() {
     List<String> row = new ArrayList<String>();
 
+    String left = String.format("%1.3f", leftOutput);
+    String right = String.format("%1.3f", rightOutput);
+
     row.add("Drivetrain");
-    row.add(leftOutput + " " + rightOutput);  
+    row.add(left + " " + right);  
 
     table.add(row);
   }
