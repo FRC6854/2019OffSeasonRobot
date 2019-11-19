@@ -25,20 +25,20 @@ public class DriveProfileHatch extends CommandGroup {
     addParallel(new ZeroArm());
     addSequential(new ResetGyro());
 
-    addSequential(new DriveProfileWithArm("drive_rocket", 2.0));
+    addSequential(new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }));
     addSequential(new DriveVisionTarget());
     addParallel(new DropHatch());
     addSequential(new WaitTime(0.2));
 
     addSequential(new ProfileFollower("drive_retrieve"));
     addSequential(new DriveAngle(90));
-    addSequential(new DriveDistance(0.2));
+    addSequential(new DriveDistance(0.4));
     addSequential(new SetStage(1));
-    addParallel(new DriveDistance(-0.2));
+    addSequential(new DriveDistance(-0.4));
     addSequential(new ZeroArm());
     addSequential(new DriveAngle(-90));
 
-    addSequential(new DriveProfileWithArm("drive_back", 0.25));
+    addSequential(new DriveProfileWithArm("drive_back", new double[] { 0.0 }, new int[] { 3 }));
     addSequential(new DriveVisionTarget());
     addParallel(new DropHatch());
     addSequential(new WaitTime(0.2));

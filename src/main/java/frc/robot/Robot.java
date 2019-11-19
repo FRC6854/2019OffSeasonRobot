@@ -54,17 +54,6 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putData("Auto Chooser", autoManager.getAutoChooser());
     SmartDashboard.putData("Auto Rocket Level", autoManager.getAutoHatch());
     SmartDashboard.putData("Scheduler", scheduler);
-
-    scheduler.run();
-  }
-
-  @Override
-  public void autonomousInit() {
-    scheduler.removeAll();
-
-    drivetrain.changeGyroGains(gyroP, gyroI, gyroD);
-
-    scheduler.add(autoManager.getAutoChooerCommand());
   }
 
   @Override
@@ -74,8 +63,23 @@ public class Robot extends TimedRobot implements RobotMap {
   }
 
   @Override
+  public void autonomousInit() {
+    scheduler.removeAll();
+
+    drivetrain.changeGyroGains(gyroP, gyroI, gyroD);
+
+    scheduler.add(autoManager.getAutoChooserCommand());
+  }
+
+  @Override
   public void teleopPeriodic() {
+    scheduler.run();
     drivetrain.updateTable();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    scheduler.run();
   }
 
   @Override

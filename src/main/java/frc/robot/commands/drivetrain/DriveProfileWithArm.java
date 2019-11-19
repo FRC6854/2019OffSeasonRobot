@@ -17,17 +17,18 @@ public class DriveProfileWithArm extends Command {
   String path;
   Timer timer;
 
-  boolean movedArm = false;
-  double driveAtTime = 0.0;
+  double[] driveAtTimes;
+  int[] stages;
 
-  public DriveProfileWithArm(String path, double time) {
+  public DriveProfileWithArm(String path, double[] time, int[] stages) {
     drivetrain = KitDrivetrain.getInstance();
     arm = Arm.getInstance();
     leds = LEDController.getInstance();
     timer = new Timer();
 
     this.path = path;
-    this.driveAtTime = time;
+    this.driveAtTimes = time;
+    this.stages = stages;
 
     requires(drivetrain);
     requires(arm);
@@ -49,9 +50,10 @@ public class DriveProfileWithArm extends Command {
 
   @Override
   protected void execute() {
-    if(timer.get() >= driveAtTime && movedArm == false) {
-      arm.setStage(1);
-      movedArm = true;
+    for (int i = 0; i < driveAtTimes.length; i++) {
+      if(timer.get() >= driveAtTimes[i]) {
+        arm.setStage(stages[i]);
+      }
     }
   }
 

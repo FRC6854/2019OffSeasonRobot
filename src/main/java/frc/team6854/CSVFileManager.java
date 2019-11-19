@@ -3,16 +3,11 @@ package frc.team6854;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.wpi.first.wpilibj.Filesystem;
 
 public class CSVFileManager {
   public static Double[][] pathLeft(String folder) {
@@ -89,7 +84,7 @@ public class CSVFileManager {
     // Create a file writer
     try {
         FileWriter csvWriter = new FileWriter(file.toFile());
-        csvWriter.append("Call");
+        csvWriter.append("Method");
         csvWriter.append(",");
         csvWriter.append("Message");
         csvWriter.append("\n");

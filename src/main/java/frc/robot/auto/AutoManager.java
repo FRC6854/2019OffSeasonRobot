@@ -39,7 +39,7 @@ public class AutoManager {
         return autoChooserHatch;
     }
 
-    public Command getAutoChooerCommand() {
+    public Command getAutoChooserCommand() {
         String autoPath = SmartDashboard.getString("Profile Path", path);
         System.out.println(autoPath);
 
