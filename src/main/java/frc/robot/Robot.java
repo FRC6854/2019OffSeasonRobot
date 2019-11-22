@@ -54,6 +54,7 @@ public class Robot extends TimedRobot implements RobotMap {
     
     SmartDashboard.putData("Auto Chooser", autoManager.getAutoChooser());
     SmartDashboard.putData("Auto Rocket Level", autoManager.getAutoHatch());
+    SmartDashboard.putData("Slow Mode", autoManager.getSlowModeChooser());
     SmartDashboard.putData("Scheduler", scheduler);
   }
 

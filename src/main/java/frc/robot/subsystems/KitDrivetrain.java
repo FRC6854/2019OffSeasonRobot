@@ -47,6 +47,8 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private double leftOutput = 0;
   private double rightOutput = 0;
 
+  private double speedMultiplier = 1;
+
   private List<List<String>> table = new ArrayList<List<String>>();
 
   public KitDrivetrain() {
@@ -136,6 +138,10 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
     return rightMaster;
   }
 
+  public void setSpeedMultiplier(double speed) {
+    speedMultiplier = speed;
+  }
+
   public void loadMotionProfiles(String folderName) {
     Double[][] leftPath = CSVFileManager.pathLeft("/home/lvuser/paths/" + folderName);
     Double[][] rightPath = CSVFileManager.pathRight("/home/lvuser/paths/" + folderName);
@@ -174,12 +180,12 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
   public void driveLeft(double value) {
     leftOutput = value;
-    leftMaster.percentOutput(value);
+    leftMaster.percentOutput(value * speedMultiplier);
   }
 
   public void driveRight(double value) {
     rightOutput = value;
-    rightMaster.percentOutput(value);;
+    rightMaster.percentOutput(value * speedMultiplier);
   }
 
   public void tankDrive(double left, double right) {
