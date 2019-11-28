@@ -24,6 +24,7 @@ public class Robot extends TimedRobot implements RobotMap {
   private double gyroP = 0;
   private double gyroI = 0;
   private double gyroD = 0;
+
   
   @Override
   public void robotInit() {
@@ -37,18 +38,18 @@ public class Robot extends TimedRobot implements RobotMap {
     // Create Instance of OI to make sure LEDs work
     OI.getInstance();
 
-    SmartDashboard.putNumber("Gyro P", Constants.pGyro);
-    SmartDashboard.putNumber("Gyro I", Constants.iGyro);
-    SmartDashboard.putNumber("Gyro D", Constants.dGyro);
+    SmartDashboard.putNumber("Gyro P", Constants.pGyro0);
+    SmartDashboard.putNumber("Gyro I", Constants.iGyro0);
+    SmartDashboard.putNumber("Gyro D", Constants.dGyro0);
   }
 
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Gyro Angle", drivetrain.getGyroAngle());
 
-    gyroP = SmartDashboard.getNumber("Gyro P", Constants.pGyro);
-    gyroI = SmartDashboard.getNumber("Gyro I", Constants.iGyro);
-    gyroD = SmartDashboard.getNumber("Gyro D", Constants.dGyro);
+    gyroP = SmartDashboard.getNumber("Gyro P", Constants.pGyro0);
+    gyroI = SmartDashboard.getNumber("Gyro I", Constants.iGyro0);
+    gyroD = SmartDashboard.getNumber("Gyro D", Constants.dGyro0);
 
     SmartDashboard.putBoolean("Front Sensor", drivetrain.getFrontSensor());
     SmartDashboard.putNumber("Distance", (int) drivetrain.getDistanceSensor());
@@ -58,9 +59,15 @@ public class Robot extends TimedRobot implements RobotMap {
     
     SmartDashboard.putData("Auto Chooser", autoManager.getAutoChooser());
     SmartDashboard.putData("Auto Rocket Level", autoManager.getAutoHatch());
+    SmartDashboard.putData("Slow Mode", autoManager.getSlowModeChooser());
     SmartDashboard.putData("Scheduler", scheduler);
+  }
 
-    scheduler.run();
+  @Override
+  public void teleopInit() {
+    scheduler.removeAll();
+    drivetrain.setSpeedMultiplier(autoManager.getSpeedMultiplier());
+    scheduler.add(new ZeroArm());
   }
 
   @Override
@@ -69,18 +76,18 @@ public class Robot extends TimedRobot implements RobotMap {
 
     drivetrain.changeGyroGains(gyroP, gyroI, gyroD);
 
-    scheduler.add(autoManager.getAutoChooerCommand());
-  }
-
-  @Override
-  public void teleopInit() {
-    scheduler.removeAll();
-    scheduler.add(new ZeroArm());
+    scheduler.add(autoManager.getAutoChooserCommand());
   }
 
   @Override
   public void teleopPeriodic() {
+    scheduler.run();
     drivetrain.updateTable();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    scheduler.run();
   }
 
   @Override

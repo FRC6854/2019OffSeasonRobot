@@ -13,6 +13,10 @@ public class VikingSRX {
     private BufferedTrajectoryPointStream bufferedStream = new BufferedTrajectoryPointStream();
     private double metersPerRevolution = 0;
 
+    /*public VikingSRX(int id, boolean inverted, boolean sensorPhase, FeedbackDevice device) {
+        VikingSRX(id, inverted, sensorPhase, device, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    }*/
+
     /**
      * @param id
      * @param inverted

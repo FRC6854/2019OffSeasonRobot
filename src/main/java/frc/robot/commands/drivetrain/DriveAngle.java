@@ -1,34 +1,42 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.subsystems.Constants;
 import frc.robot.subsystems.KitDrivetrain;
 import frc.team6854.led.LEDController;
 import frc.team6854.led.LEDController.LEDMode;
 
-public class DriveAngle extends Command {
+public class DriveAngle extends Command implements Constants {
   private KitDrivetrain drivetrain = null;
   private LEDController leds = null;
 
-  double angle = 0;
-  double speed = 0.6;
-
-  final double toleranceDegrees = 1;
+  final double toleranceDegrees = 1.5;
+  final int waitForTime = 15;
   
+  double angle;
+  double speed;
   boolean withinTolerance = false;
 
   int timer = 0;
 
-  final int waitForTime = 15;
-
-  public DriveAngle(double angle, double speed) {
+  public DriveAngle(double angle) {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
 
     requires(drivetrain);
-    setTimeout(3);
 
     this.angle = angle;
-    this.speed = speed;
+
+    if (Math.abs(angle) - drivetrain.getGyroAngle() >= 135) {
+      drivetrain.changeGyroGains(pGyro1, iGyro1, dGyro1);
+      this.speed = 0.5;
+      setTimeout(2);
+    }
+    else {
+      drivetrain.changeGyroGains(pGyro0, iGyro0, dGyro0);
+      this.speed = 0.6;
+      setTimeout(1.5);
+    }
   }
 
   @Override

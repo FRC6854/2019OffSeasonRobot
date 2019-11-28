@@ -84,7 +84,7 @@ public class CSVFileManager {
     // Create a file writer
     try {
         FileWriter csvWriter = new FileWriter(file.toFile());
-        csvWriter.append("Call");
+        csvWriter.append("Method");
         csvWriter.append(",");
         csvWriter.append("Message");
         csvWriter.append("\n");

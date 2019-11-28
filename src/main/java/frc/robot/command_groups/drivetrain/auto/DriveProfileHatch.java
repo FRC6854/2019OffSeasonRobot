@@ -11,10 +11,11 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.KitDrivetrain;
 
 public class DriveProfileHatch extends CommandGroup {
+
   private KitDrivetrain drivetrain = null;
   private Arm arm = null;
 
-  public DriveProfileHatch(int stage, String path) {
+  public DriveProfileHatch() {
     drivetrain = KitDrivetrain.getInstance();
     arm = Arm.getInstance();
 
@@ -23,31 +24,24 @@ public class DriveProfileHatch extends CommandGroup {
 
     addParallel(new ZeroArm());
     addSequential(new ResetGyro());
-    addSequential(new ProfileFollower(path));
-    switch (stage) {
-      case 1:
-        addSequential(new SetStage(1));
-        addSequential(new DriveVisionTarget());
-        addParallel(new DropHatch());
-        addSequential(new WaitTime(0.2));
-        addSequential(new DriveDistance(-2));
-        break;
 
-      case 2:
-        addSequential(new SetStage(2));
-        addSequential(new DriveDistance(0.929));
-        addParallel(new DropHatch());
-        addSequential(new WaitTime(0.1));
-        addParallel(new DriveDistance(-1));
-        break;
+    addSequential(new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }));
+    addSequential(new DriveVisionTarget());
+    addParallel(new DropHatch());
+    addSequential(new WaitTime(0.2));
 
-      case 3:
-        addSequential(new SetStage(3));
-        addSequential(new DriveVisionTarget());
-        addParallel(new DropHatch());
-        addSequential(new WaitTime(0.1));
-        addParallel(new DriveDistance(-1));
-        break;
-    }
+    addSequential(new ProfileFollower("drive_retrieve"));
+    addSequential(new DriveAngle(90));
+    addSequential(new DriveDistance(0.4));
+    addSequential(new SetStage(1));
+    addSequential(new DriveDistance(-0.4));
+    addSequential(new ZeroArm());
+    addSequential(new DriveAngle(-90));
+
+    addSequential(new DriveProfileWithArm("drive_back", new double[] { 0.0 }, new int[] { 3 }));
+    addSequential(new DriveVisionTarget());
+    addParallel(new DropHatch());
+    addSequential(new WaitTime(0.2));
+    addSequential(new DriveDistance(-0.5));
   }
 }

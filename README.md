@@ -5,6 +5,7 @@
 - Overview
 - How it is organized
 - Building
+- Example CommandGroup Template
 
 ## Overview
 
@@ -19,3 +20,36 @@ This project uses a Command Based approach to FRC programming. There are subsyst
 ## Building
 
 To build this project you should have followed the VS Code basic setup on the FRC Programming website. If you have followed the steps, you should be able to run the WPILib Build command.
+
+## Example CommandGroup Template
+
+Copy and paste this and replace Template to your CommandGroup name.
+
+```java
+package frc.robot.command_groups.drivetrain.auto;
+
+import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import frc.robot.commands.arm.*;
+import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.gyro.*;
+
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.KitDrivetrain;
+
+import frc.robot.commands.WaitTime;
+
+public class Template extends CommandGroup {
+
+  private KitDrivetrain drivetrain = null;
+  private Arm arm = null;
+
+  public Template() {
+    drivetrain = KitDrivetrain.getInstance();
+    arm = Arm.getInstance();
+
+    requires(drivetrain);
+    requires(arm);
+  }
+}
+```

@@ -30,18 +30,18 @@ public interface Constants {
     public final double dt_kDefaultMaxOutput = 1.0;
 
 	public final double dt_rightSideInvertMultiplier = -1.0;
-	
-	public final double pDrive = 0.0013;
-	public final double iDrive = 0.001;
-	public final double dDrive = 0.0;
 
 	public final double pDriveTarget = 0.0013;
 	public final double iDriveTarget = 0.001;
 	public final double dDriveTarget = 0.0;
 
-	public final double pGyro = 0.025;
-	public final double iGyro = 0.0;
-	public final double dGyro = 0.2;
+	public final double pGyro0 = 0.025;
+	public final double iGyro0 = 0.0;
+	public final double dGyro0 = 0.2;
+
+	public final double pGyro1 = 0.0275;
+	public final double iGyro1 = 0.0;
+	public final double dGyro1 = 0.21;
 
 	//Drive Speed Scalar
 	public final double jukeSpeedScale = 0.85;
