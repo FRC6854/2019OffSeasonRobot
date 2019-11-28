@@ -5,10 +5,13 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
+import frc.team6854.Controller;
 import frc.team6854.OI; 
 import frc.robot.commands.arm.ZeroArm;
 
 public class Robot extends TimedRobot implements RobotMap {
+
+  public static Controller driver;
 
   private static KitDrivetrain drivetrain;
 
@@ -28,6 +31,8 @@ public class Robot extends TimedRobot implements RobotMap {
     scheduler = Scheduler.getInstance();
     arm = Arm.getInstance();
     autoManager = AutoManager.getInstance();
+
+    driver = new Controller(CONTROLLER_DRIVER);
     
     // Create Instance of OI to make sure LEDs work
     OI.getInstance();

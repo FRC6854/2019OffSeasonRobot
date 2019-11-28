@@ -1,4 +1,4 @@
-package frc.team6854;
+package frc.team6854.controllers;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 

@@ -1,4 +1,4 @@
-package frc.team6854;
+package frc.team6854.controllers;
 
 import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -7,12 +7,11 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import frc.robot.subsystems.Constants;
-
-public class VikingSRX implements Constants {
+public class VikingSRX {
 
     private TalonSRX motor;
     private BufferedTrajectoryPointStream bufferedStream = new BufferedTrajectoryPointStream();
+    private double metersPerRevolution = 0;
 
     /**
      * @param id
@@ -28,7 +27,8 @@ public class VikingSRX implements Constants {
      */
     public VikingSRX(int id, boolean inverted, boolean sensorPhase, 
                             FeedbackDevice device, double kF, double kP, double kI, 
-                            double kD, double velocity, double acceleration) {
+                            double kD, double velocity, double acceleration,
+                            double metersPerRevolution) {
 
         motor = new TalonSRX(id);
 
@@ -74,8 +74,8 @@ public class VikingSRX implements Constants {
         /* Insert every point into buffer, no limit on size */
         for (int i = 0; i < totalCnt; ++i) {
 
-            double positionRot = profile[i][0] * (1 / dt_MetersPerRevolution);
-            double velocityRPM = profile[i][1] * (1 / dt_MetersPerRevolution);
+            double positionRot = profile[i][0] * (1 / metersPerRevolution);
+            double velocityRPM = profile[i][1] * (1 / metersPerRevolution);
             int durationMilliseconds = profile[i][2].intValue();
 
             /* for each point, fill our structure and pass it to API */

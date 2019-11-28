@@ -1,17 +1,16 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.KitDrivetrain;
-import frc.team6854.LEDController;
+import frc.team6854.led.LEDController;
 import frc.team6854.Limelight;
-import frc.team6854.OI;
-import frc.team6854.LEDController.LEDMode;
+import frc.team6854.led.LEDController.LEDMode;
 import frc.team6854.Limelight.LightMode;
 
 public class ArcadeDrive extends Command {
   private KitDrivetrain drivetrain = null;
   private Limelight limelight = null;
-  private OI oi = null;
   private LEDController leds = null;
 
   double tX = 0;
@@ -21,7 +20,6 @@ public class ArcadeDrive extends Command {
   public ArcadeDrive() {
     drivetrain = KitDrivetrain.getInstance();
     limelight = Limelight.getInstance();
-    oi = OI.getInstance();
     leds = LEDController.getInstance();
 
     requires(drivetrain);
@@ -36,7 +34,7 @@ public class ArcadeDrive extends Command {
     tX = limelight.targetX();
 
     // A button to vision aim using vision
-    if (oi.getDriverAButton() == true) {
+    if (Robot.driver.getDriverAButton() == true) {
       leds.setMode(LEDMode.VISION);
 
       limelight.setDriverMode(false);
@@ -46,7 +44,7 @@ public class ArcadeDrive extends Command {
       if(steeringAdjust >= maxCommand) {
         steeringAdjust = maxCommand;
       }
-      double operatorThrottle = oi.getDriverLeftStickY();
+      double operatorThrottle = Robot.driver.getDriverLeftStickY();
 
       drivetrain.arcadeDrive(operatorThrottle, steeringAdjust);
     } 
@@ -57,7 +55,7 @@ public class ArcadeDrive extends Command {
       limelight.setLEDMode(LightMode.OFF);
       limelight.setDriverMode(true);
 
-      drivetrain.arcadeDrive(oi.getDriverLeftStickY(), oi.getDriverRightStickX());
+      drivetrain.arcadeDrive(Robot.driver.getDriverLeftStickY(), Robot.driver.getDriverRightStickX());
     }
   }
 

@@ -1,10 +1,10 @@
-package frc.team6854;
+package frc.team6854.led;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.RobotMap;
+import frc.team6854.OI;
 
-public class LEDController extends Subsystem implements RobotMap {
+public class LEDController extends Subsystem implements LEDMappings {
     private static LEDController instance;
     private static OI oi;
 

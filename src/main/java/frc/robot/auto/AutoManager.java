@@ -2,7 +2,6 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.command_groups.drivetrain.auto.*;
 import frc.robot.command_groups.testing.TestingDriveAngle;

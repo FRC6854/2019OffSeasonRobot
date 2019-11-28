@@ -2,12 +2,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.commands.arm.OperateArm;
-import frc.team6854.VikingSRX;
+import frc.team6854.controllers.VikingSRX;
 
 public class Arm extends Subsystem implements Constants, RobotMap {
   private static Arm instance = null;
@@ -27,7 +26,7 @@ public class Arm extends Subsystem implements Constants, RobotMap {
 	public static int STAGE_TOP = 5800;
 
   public Arm() {
-    arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 1000, 500);
+    arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 1000, 500, 0);
     faults = new Faults();
   }
 

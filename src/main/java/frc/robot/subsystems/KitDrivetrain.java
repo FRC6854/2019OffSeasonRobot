@@ -1,21 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.ctre.phoenix.motion.SetValueMotionProfile;
-import com.ctre.phoenix.motion.TrajectoryPoint;
-
 import com.kauailabs.navx.frc.AHRS;
 
-import frc.team6854.PIDController;
+import frc.team6854.controllers.PIDController;
 import frc.team6854.CSVFileManager;
-import frc.team6854.VikingSPXSlave;
-import frc.team6854.VikingSRX;
-import jaci.pathfinder.Trajectory;
+import frc.team6854.controllers.VikingSPXSlave;
+import frc.team6854.controllers.VikingSRX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -50,9 +40,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private List<List<String>> table = new ArrayList<List<String>>();
 
   public KitDrivetrain() {
-    leftMaster = new VikingSRX(CAN_LEFT_FRONT, false, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250);
+    leftMaster = new VikingSRX(CAN_LEFT_FRONT, false, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250, dt_MetersPerRevolution);
     leftSlave = new VikingSPXSlave(CAN_LEFT_BACK, leftMaster, false);
-    rightMaster = new VikingSRX(CAN_RIGHT_FRONT, true, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250);
+    rightMaster = new VikingSRX(CAN_RIGHT_FRONT, true, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250, dt_MetersPerRevolution);
     rightSlave = new VikingSPXSlave(CAN_RIGHT_BACK, rightMaster, true);
 
     gyro = new AHRS(Port.kMXP);

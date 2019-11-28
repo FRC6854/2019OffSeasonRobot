@@ -1,14 +1,13 @@
-package frc.team6854;
+package frc.team6854.controllers;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.Constants;
 
 /**
  * Simple PID Controller that assumes regular loop intervals .
  *
  * @author Team 1241
  */
-public class PIDController implements Constants {
+public class PIDController {
 
 		/** The p gain. */
 		double pGain;
@@ -136,49 +135,6 @@ public class PIDController implements Constants {
 			if (output != 0.0)
 				output = output / Math.abs(output) * (1.0 - Math.pow(0.1, (Math.abs(output))));
 
-			return output;
-		}
-
-		/**
-		 * Calc PID drive.
-		 *
-		 * @param setPoint
-		 *            the set point
-		 * @param currentValue
-		 *            the current value
-		 * @param epsilon
-		 *            the epsilon
-		 * @return the double
-		 */
-		public double calcPIDDrive(double setPoint, double currentValue, double epsilon) {
-			error = setPoint - currentValue;
-
-			if (Math.abs(error) <= epsilon) {
-				atTarget = true;
-			} else {
-				atTarget = false;
-			}
-
-			// P
-			pOut = pGain * error;
-
-			// I
-			errorSum += error;
-			iOut = iGain * errorSum;
-
-			// D
-			dProcessVar = (error - lastError);
-			dOut = dGain * dProcessVar;
-
-			lastError = error;
-
-			// PID Output
-			output = pOut + iOut + dOut;
-
-			// Scale output to be between 1 and -1
-			if (output != 0.0)
-				output = output / Math.abs(output) * (1.0 - Math.pow(speedScale, (Math.abs(output))));
-			
 			return output;
 		}
 
