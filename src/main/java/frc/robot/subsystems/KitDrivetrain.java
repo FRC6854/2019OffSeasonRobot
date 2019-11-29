@@ -4,7 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import frc.team6854.controllers.PIDController;
 import frc.team6854.CSVFileManager;
-import frc.team6854.controllers.VikingSPXSlave;
+import frc.team6854.controllers.VikingSPX;
 import frc.team6854.controllers.VikingSRX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -20,10 +20,10 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
   private static KitDrivetrain instance = null;
 
   private VikingSRX leftMaster;
-  private VikingSPXSlave leftSlave;
+  private VikingSPX leftSlave;
 
   private VikingSRX rightMaster;
-  private VikingSPXSlave rightSlave;
+  private VikingSPX rightSlave;
 
   private AHRS gyro;
 
@@ -43,9 +43,9 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
   public KitDrivetrain() {
     leftMaster = new VikingSRX(CAN_LEFT_FRONT, false, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250, dt_MetersPerRevolution);
-    leftSlave = new VikingSPXSlave(CAN_LEFT_BACK, leftMaster, false);
+    leftSlave = new VikingSPX(CAN_LEFT_BACK, leftMaster, false);
     rightMaster = new VikingSRX(CAN_RIGHT_FRONT, true, true, dt_kFeedbackDevice, dt_kF, dt_kP, dt_kI, dt_kD, 1250, 1250, dt_MetersPerRevolution);
-    rightSlave = new VikingSPXSlave(CAN_RIGHT_BACK, rightMaster, true);
+    rightSlave = new VikingSPX(CAN_RIGHT_BACK, rightMaster, true);
 
     gyro = new AHRS(Port.kMXP);
 

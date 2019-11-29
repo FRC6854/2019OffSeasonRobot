@@ -19,6 +19,15 @@ public class VikingSRX {
     /**
      * @param id the CAN ID for the Talon SRX
      * @param inverted is the motor inverted
+     */
+    public VikingSRX(int id, boolean inverted) {
+        this(id, inverted, false, null, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        closedLoop = false;
+    }
+
+    /**
+     * @param id the CAN ID for the Talon SRX
+     * @param inverted is the motor inverted
      * @param sensorPhase should the encoder be inverted
      * @param device the type of encoder
      */

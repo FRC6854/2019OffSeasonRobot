@@ -5,19 +5,16 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Constants;
-import frc.team6854.OI;
 
 public class OperateArm extends Command implements Constants {
   private Arm arm = null;
   private Scheduler scheduler = null;
-  private OI oi = null;
 
   private static boolean manualControl;
 
   public OperateArm() {
     arm = Arm.getInstance();
     scheduler = Scheduler.getInstance();
-    oi = OI.getInstance();
     
     requires(arm);
   }
