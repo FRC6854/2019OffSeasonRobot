@@ -11,30 +11,8 @@ public class VikingSRX {
 
     private TalonSRX motor;
     private BufferedTrajectoryPointStream bufferedStream = new BufferedTrajectoryPointStream();
-    
-    private boolean closedLoop = true;
 
     private double metersPerRevolution = 0;
-
-    /**
-     * @param id the CAN ID for the Talon SRX
-     * @param inverted is the motor inverted
-     */
-    public VikingSRX(int id, boolean inverted) {
-        this(id, inverted, false, null, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-        closedLoop = false;
-    }
-
-    /**
-     * @param id the CAN ID for the Talon SRX
-     * @param inverted is the motor inverted
-     * @param sensorPhase should the encoder be inverted
-     * @param device the type of encoder
-     */
-    public VikingSRX(int id, boolean inverted, boolean sensorPhase, FeedbackDevice device) {
-        this(id, inverted, sensorPhase, device, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-        closedLoop = false;
-    }
 
     /**
      * @param id the CAN ID for the Talon SRX
@@ -53,9 +31,10 @@ public class VikingSRX {
                             FeedbackDevice device, double kF, double kP, double kI, 
                             double kD, double velocity, double acceleration,
                             double metersPerRevolution) {
-        closedLoop = true;
 
-        motor = new TalonSRX(id);
+        this.motor = new TalonSRX(id);
+
+        this.metersPerRevolution = metersPerRevolution;
 
         motor.configFactoryDefault();
 
@@ -93,31 +72,29 @@ public class VikingSRX {
     }
 
     public void initMotionBuffer(Double[][] profile, int totalCnt) {
-        if (closedLoop == true) {
-            TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
-                                                       // automatically, you can alloc just one
+        TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
+                                                    // automatically, you can alloc just one
 
-            /* Insert every point into buffer, no limit on size */
-            for (int i = 0; i < totalCnt; ++i) {
+        /* Insert every point into buffer, no limit on size */
+        for (int i = 0; i < totalCnt; ++i) {
 
-                double positionRot = profile[i][0] * (1 / metersPerRevolution);
-                double velocityRPM = profile[i][1] * (1 / metersPerRevolution);
-                int durationMilliseconds = profile[i][2].intValue();
+            double positionRot = profile[i][0] * (1 / metersPerRevolution);
+            double velocityRPM = profile[i][1] * (1 / metersPerRevolution);
+            int durationMilliseconds = profile[i][2].intValue();
 
-                /* for each point, fill our structure and pass it to API */
-                point.timeDur = durationMilliseconds;
-                point.position = positionRot * 4096; // Convert Revolutions to
-                                                                // Units
-                point.velocity = velocityRPM * 4096 / 600.0; // Convert RPM to
-                                                                        // Units/100ms
-                point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
-                point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
-                point.zeroPos = (i == 0); /* set this to true on the first point */
-                point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
-                point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
+            /* for each point, fill our structure and pass it to API */
+            point.timeDur = durationMilliseconds;
+            point.position = positionRot * 4096; // Convert Revolutions to
+                                                            // Units
+            point.velocity = velocityRPM * 4096 / 600.0; // Convert RPM to
+                                                                    // Units/100ms
+            point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+            point.profileSlotSelect1 = 0; /* auxiliary PID [0,1], leave zero */
+            point.zeroPos = (i == 0); /* set this to true on the first point */
+            point.isLastPoint = ((i + 1) == totalCnt); /* set this to true on the last point */
+            point.arbFeedFwd = 0; /* you can add a constant offset to add to PID[0] output here */
 
-                bufferedStream.Write(point);
-            }
+            bufferedStream.Write(point);
         }
     }
 
@@ -131,27 +108,19 @@ public class VikingSRX {
     }
 
     public void positionControl(double ticks) {
-        if (closedLoop == true) {
-            motor.set(ControlMode.Position, ticks);
-        }
+        motor.set(ControlMode.Position, ticks);
     }
 
     public void velocityControl(int velocity) {
-        if (closedLoop == true) {
-            motor.set(ControlMode.Velocity, velocity);
-        }
+        motor.set(ControlMode.Velocity, velocity);
     }
 
     public void motionMagic(double ticks) {
-        if (closedLoop == true) {
-            motor.set(ControlMode.MotionMagic, ticks);
-        }
+        motor.set(ControlMode.MotionMagic, ticks);
     }
 
     public void motionProfileStart() {
-        if (closedLoop == true ) {
-            motor.startMotionProfile(bufferedStream, 10, ControlMode.MotionProfile);
-        }
+        motor.startMotionProfile(bufferedStream, 10, ControlMode.MotionProfile);
     }
 
     public void setNeutralMode(NeutralMode mode) {
@@ -171,11 +140,7 @@ public class VikingSRX {
     }
 
     public boolean isMotionProfileFinished() {
-        if (closedLoop == true) {
-            return motor.isMotionProfileFinished();
-        }
-
-        return false;
+        return motor.isMotionProfileFinished();
     }
 
     public void zeroSensor() {

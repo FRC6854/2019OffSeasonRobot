@@ -16,7 +16,7 @@ public class AutoManager {
 
     private static SendableChooser<Integer> slowModeChooser = new SendableChooser<Integer>();
     
-    private static String path = "drive_retrieve";
+    private static String path = "testing";
 
     private AutoManager () {
         autoChooser.setDefaultOption("90 Hatch", 1);
