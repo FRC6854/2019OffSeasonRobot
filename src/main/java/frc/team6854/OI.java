@@ -1,6 +1,7 @@
 package frc.team6854;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.team6854.led.LEDMappings;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +15,7 @@ public class OI {
   private DriverStation ds;
   private SerialPort arduino;
 
-  private static int lastCommandArduino = 0;
+  private static char lastCommandArduino = ' ';
   private boolean connected = false;
 
   public OI() {
@@ -23,10 +24,6 @@ public class OI {
     try {
       // Init the SerialPort on baud 9600
       arduino = new SerialPort(9600, SerialPort.Port.kUSB1);
-
-      // Whenever the readString function recieves a \n it will return
-      // less bytes than it requested from the arduino
-      //arduino.enableTermination();
 
       // Set connected to be false
       connected = true;
@@ -41,16 +38,13 @@ public class OI {
     return ds.getAlliance();
   }
 
-  public void ledDataSerialPort(int number) {
-    // Set a string variable to the number
-    String dataWrite = Integer.toString(number);
-
-    if ((lastCommandArduino != number) && (connected == true)) {
+  public void ledDataSerialPort(char data) {
+    if ((lastCommandArduino != data) && (connected == true)) {
       // Set the last command to the command about to be sent
-      lastCommandArduino = number;
+      lastCommandArduino = data;
 
       // Write the number to the Serial Channel
-      arduino.writeString(dataWrite);
+      arduino.writeString(Character.toString(data));
 
       // Since the output buffer is 8 bytes and we usually only print 2 bytes, we must flush the buffer to send the line
       // The limitation of this is that we can only send up to 99,999,999

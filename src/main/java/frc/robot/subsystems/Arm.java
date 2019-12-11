@@ -26,7 +26,7 @@ public class Arm extends Subsystem implements Constants, RobotMap {
 	public static int STAGE_TOP = 5800;
 
   public Arm() {
-    arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 1000, 500, 0);
+    arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 2000, 1000, 0);
     faults = new Faults();
   }
 

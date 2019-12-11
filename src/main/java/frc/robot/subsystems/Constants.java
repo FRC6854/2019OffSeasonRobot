@@ -67,7 +67,7 @@ public interface Constants {
 	static final FeedbackDevice arm_kFeedbackDevice = FeedbackDevice.CTRE_MagEncoder_Relative;
 	final int arm_encoderTicksPerRev = 4096;
 	
-    public final double arm_kP = 1.0;
+    public final double arm_kP = 2.0;
     public final double arm_kI = 0.0; 
     public final double arm_kD = 0.0;
 	public final double arm_kF = 0.2;

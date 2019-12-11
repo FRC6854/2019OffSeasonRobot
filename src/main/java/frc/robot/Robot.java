@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
 import frc.team6854.Controller;
-import frc.team6854.OI; 
+import frc.team6854.OI;
+import frc.team6854.led.LEDController;
+import frc.team6854.led.LEDController.LEDMode;
 import frc.robot.commands.arm.ZeroArm;
 
 public class Robot extends TimedRobot implements RobotMap {
@@ -14,6 +16,8 @@ public class Robot extends TimedRobot implements RobotMap {
   public static Controller driver;
 
   private static KitDrivetrain drivetrain;
+
+  private static LEDController leds;
 
   private static Scheduler scheduler;
 
@@ -32,6 +36,7 @@ public class Robot extends TimedRobot implements RobotMap {
     scheduler = Scheduler.getInstance();
     arm = Arm.getInstance();
     autoManager = AutoManager.getInstance();
+    leds = LEDController.getInstance();
 
     driver = new Controller(CONTROLLER_DRIVER);
     
@@ -92,6 +97,7 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void disabledInit() {
+    leds.setMode(LEDMode.DEFAULT);
     drivetrain.writeTable();
     drivetrain.clearTable();
   }

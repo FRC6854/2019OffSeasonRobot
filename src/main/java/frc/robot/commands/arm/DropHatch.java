@@ -3,8 +3,12 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Arm;
 
+import frc.team6854.led.LEDController;
+import frc.team6854.led.LEDController.LEDMode;
+
 public class DropHatch extends Command {
   private Arm arm = null;
+  private LEDController leds = null;
  
   boolean finished = false;
 
@@ -16,8 +20,10 @@ public class DropHatch extends Command {
 
   public DropHatch() {
     arm = Arm.getInstance();
+    leds = LEDController.getInstance();
 
     requires(arm);
+    setTimeout(1.0);
   }
 
   @Override
@@ -34,6 +40,11 @@ public class DropHatch extends Command {
 
   @Override
   protected boolean isFinished() {
+    if (isTimedOut()) {
+      leds.setMode(LEDMode.ERROR);
+      return true;
+    }
+
     return finished;
   }
 

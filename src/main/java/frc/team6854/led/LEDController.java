@@ -16,11 +16,15 @@ public class LEDController extends Subsystem implements LEDMappings {
         ERROR
     };
 
+    private LEDMode currentMode = LEDMode.DEFAULT;
+
     public LEDController () {
         oi = OI.getInstance();
     }
 
     public void setMode(LEDMode mode) {
+        currentMode = mode;
+
         switch (mode) {
             case TELEOP:
                 setTeleop();
@@ -45,49 +49,49 @@ public class LEDController extends Subsystem implements LEDMappings {
 
     private void setTeleop() {
         if(oi.getAlliance() == Alliance.Blue) {
-            oi.ledDataSerialPort(BLUE_TELEOP);
+            oi.ledDataSerialPort(Character.toUpperCase(TELEOP));
         }
         else if(oi.getAlliance() == Alliance.Red) {
-            oi.ledDataSerialPort(RED_TELEOP);
+            oi.ledDataSerialPort(TELEOP);
         }
         else {
-            oi.ledDataSerialPort(BLUE_TELEOP);
+            oi.ledDataSerialPort(TELEOP);
         }
     }
 
     private void setAuto() {
         if(oi.getAlliance() == Alliance.Blue) {
-            oi.ledDataSerialPort(BLUE_AUTO);
+            oi.ledDataSerialPort(Character.toUpperCase(AUTO));
         }
         else if(oi.getAlliance() == Alliance.Red) {
-            oi.ledDataSerialPort(RED_AUTO);
+            oi.ledDataSerialPort(AUTO);
         }
         else {
-            oi.ledDataSerialPort(BLUE_AUTO);
+            oi.ledDataSerialPort(AUTO);
         }
     }
 
     private void setVision() {
         if(oi.getAlliance() == Alliance.Blue) {
-            oi.ledDataSerialPort(BLUE_VISION);
+            oi.ledDataSerialPort(Character.toUpperCase(VISION));
         }
         else if(oi.getAlliance() == Alliance.Red) {
-            oi.ledDataSerialPort(RED_VISION);
+            oi.ledDataSerialPort(VISION);
         }
         else {
-            oi.ledDataSerialPort(BLUE_VISION);
+            oi.ledDataSerialPort(VISION);
         }
     }
 
     private void setDefault() {
         if(oi.getAlliance() == Alliance.Blue) {
-            oi.ledDataSerialPort(BLUE_DEFAULT);
+            oi.ledDataSerialPort(Character.toUpperCase(DEFAULT));
         }
         else if(oi.getAlliance() == Alliance.Red) {
-            oi.ledDataSerialPort(RED_DEFAULT);
+            oi.ledDataSerialPort(DEFAULT);
         }
         else {
-            oi.ledDataSerialPort(BLUE_DEFAULT);
+            oi.ledDataSerialPort(DEFAULT);
         }
     }
 

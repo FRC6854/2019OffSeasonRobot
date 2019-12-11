@@ -62,6 +62,7 @@ public class DriveAngle extends Command implements Constants {
     }
     else if (isTimedOut()) {
       System.out.println("Timed Out");
+      leds.setMode(LEDMode.ERROR);
       return true;
     }
     return false;

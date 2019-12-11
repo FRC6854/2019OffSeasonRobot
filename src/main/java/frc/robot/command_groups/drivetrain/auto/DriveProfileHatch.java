@@ -29,8 +29,9 @@ public class DriveProfileHatch extends CommandGroup {
     addSequential(new DriveVisionTarget());
     addParallel(new DropHatch());
     addSequential(new WaitTime(0.2));
+    addSequential(new DriveDistance(-1));
 
-    addSequential(new ProfileFollower("drive_retrieve"));
+    /*addSequential(new ProfileFollower("drive_retrieve"));
     addSequential(new DriveAngle(90));
     addSequential(new DriveDistance(0.4));
     addSequential(new SetStage(1));
@@ -42,6 +43,6 @@ public class DriveProfileHatch extends CommandGroup {
     addSequential(new DriveVisionTarget());
     addParallel(new DropHatch());
     addSequential(new WaitTime(0.2));
-    addSequential(new DriveDistance(-0.5));
+    addSequential(new DriveDistance(-0.5));*/
   }
 }
