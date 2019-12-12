@@ -11,7 +11,7 @@
 
 <img src="images/robot.jpg" alt="Robot" width="50%"/>
 
-This robot program is for our 2019 Deep Space Competition Robot. It is a very basic and rudimentary bot that uses a simple KOP drivetrain and an arm using a single motor. In this code there are many references to PID Control and the use of the Singleton Pattern. Programmers should have a basic understanding of Java and some FRC programming experience to fully understand this project.
+This robot program is for our 2019 Deep Space Competition Robot. It is a very basic and rudimentary bot that uses a simple KOP drivetrain and an arm using a single motor. In this code there are many references to PID Control and the use of the Singleton Pattern. Programmers should have a basic understanding of Java and some FRC programming experience to fully understand this project. This project uses the VIKING library for wrappers and LED Control.
 
 ## How it is organized
 

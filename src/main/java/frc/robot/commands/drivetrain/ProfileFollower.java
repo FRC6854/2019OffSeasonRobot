@@ -2,8 +2,8 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.KitDrivetrain;
-import frc.team6854.led.LEDController;
-import frc.team6854.led.LEDController.LEDMode;
+import team6854.led.LEDController;
+import team6854.led.LEDController.LEDMode;
 
 public class ProfileFollower extends Command {
 

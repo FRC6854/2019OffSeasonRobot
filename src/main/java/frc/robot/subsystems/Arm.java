@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.commands.arm.OperateArm;
-import frc.team6854.controllers.VikingSRX;
+import team6854.controllers.VikingSRX;
 
 public class Arm extends Subsystem implements Constants, RobotMap {
   private static Arm instance = null;

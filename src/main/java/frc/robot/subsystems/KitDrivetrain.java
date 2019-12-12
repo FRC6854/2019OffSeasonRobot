@@ -2,10 +2,10 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import frc.team6854.controllers.PIDController;
-import frc.team6854.CSVFileManager;
-import frc.team6854.controllers.VikingSPX;
-import frc.team6854.controllers.VikingSRX;
+import team6854.controllers.PIDController;
+import team6854.CSVFileManager;
+import team6854.controllers.VikingSPX;
+import team6854.controllers.VikingSRX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI.Port;
