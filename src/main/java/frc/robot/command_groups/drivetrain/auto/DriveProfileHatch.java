@@ -3,7 +3,6 @@ package frc.robot.command_groups.drivetrain.auto;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.commands.WaitTime;
 import frc.robot.commands.arm.DropHatch;
-import frc.robot.commands.arm.SetStage;
 import frc.robot.commands.arm.ZeroArm;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.gyro.ResetGyro;
@@ -25,10 +24,11 @@ public class DriveProfileHatch extends CommandGroup {
     addParallel(new ZeroArm());
     addSequential(new ResetGyro());
 
+    // Profile Path Name, Time Codes for Set Arm, Arm Stage
     addSequential(new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }));
     addSequential(new DriveVisionTarget());
-    addParallel(new DropHatch());
-    addSequential(new WaitTime(0.2));
+    addSequential(new DropHatch());
+    addParallel(new WaitTime(0.2));
     addSequential(new DriveDistance(-1));
 
     /*addSequential(new ProfileFollower("drive_retrieve"));
