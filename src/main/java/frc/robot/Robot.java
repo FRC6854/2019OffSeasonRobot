@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
-import team6854.Controller;
-import team6854.OI;
-import team6854.led.LEDController;
-import team6854.led.LEDController.LEDMode;
+import viking.Controller;
+import viking.OI;
+import viking.led.LEDController;
+import viking.led.LEDController.LEDMode;
 import frc.robot.commands.arm.ZeroArm;
 
 public class Robot extends TimedRobot implements RobotMap {

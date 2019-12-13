@@ -2,8 +2,8 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.KitDrivetrain;
-import team6854.led.LEDController;
-import team6854.led.LEDController.LEDMode;
+import viking.led.LEDController;
+import viking.led.LEDController.LEDMode;
 
 public class DriveDistance extends Command {
   private KitDrivetrain drivetrain = null;

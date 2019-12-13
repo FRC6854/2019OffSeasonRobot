@@ -2,10 +2,10 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.KitDrivetrain;
-import team6854.led.LEDController;
-import team6854.Limelight;
-import team6854.led.LEDController.LEDMode;
-import team6854.Limelight.LightMode;
+import viking.led.LEDController;
+import viking.Limelight;
+import viking.led.LEDController.LEDMode;
+import viking.Limelight.LightMode;
 
 public class DriveVisionTarget extends Command {
 
