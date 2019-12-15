@@ -13,8 +13,6 @@ public class DriveVisionTarget extends Command {
   private LEDController leds = null;
   private Limelight limelight = null;
 
-  private double desiredDistance = 0;
-
   private double tX = 0;
   private final double kP = 0.04;
   private final double maxCommand = 0.5;
@@ -23,18 +21,6 @@ public class DriveVisionTarget extends Command {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
     limelight = Limelight.getInstance();
-
-    setTimeout(5.0);
-
-    requires(drivetrain);
-  }
-
-  public DriveVisionTarget(double distance) {
-    drivetrain = KitDrivetrain.getInstance();
-    leds = LEDController.getInstance();
-    limelight = Limelight.getInstance();
-
-    this.desiredDistance = distance;
 
     setTimeout(5.0);
 
@@ -61,12 +47,7 @@ public class DriveVisionTarget extends Command {
       steeringAdjust = maxCommand;
     }
 
-    if (desiredDistance == 0) {
-      drivetrain.arcadeDrive(0.5, steeringAdjust);
-    }
-    else {
-
-    }
+    drivetrain.arcadeDrive(0.5, steeringAdjust);
   }
 
   @Override
