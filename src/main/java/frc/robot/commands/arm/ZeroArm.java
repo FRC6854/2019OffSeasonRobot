@@ -1,12 +1,12 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
 import viking.led.LEDController;
 import viking.led.LEDController.LEDMode;
 
-public class ZeroArm extends Command {
+public class ZeroArm extends CommandBase {
 
   private Arm arm = null;
   private LEDController leds = null;
@@ -15,37 +15,29 @@ public class ZeroArm extends Command {
     arm = Arm.getInstance();
     leds = LEDController.getInstance();
 
-    setTimeout(6.0);
+    withTimeout(6.0);
 
-    requires(arm);
+    addRequirements(arm);
   }
 
   @Override
-  protected void initialize() {
-  }
-
-  @Override
-  protected void execute() {
+  public void execute() {
     arm.updateFaults();
     arm.driveManual(-0.1);
   }
 
   @Override
-  protected boolean isFinished() {
-    if (isTimedOut()) {
-      leds.setMode(LEDMode.ERROR);
-      return true;
-    }
-    
+  public boolean isFinished() {
     return arm.getReverseLimitSwitch();
   }
 
   @Override
-  protected void end() {
-    arm.zeroSensor();
-  }
-
-  @Override
-  protected void interrupted() {
+  public void end(boolean interrupted) {
+    if (interrupted == true) {
+      leds.setMode(LEDMode.ERROR);
+    }
+    else {
+      arm.zeroSensor();
+    }
   }
 }

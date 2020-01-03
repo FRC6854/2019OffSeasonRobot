@@ -1,7 +1,11 @@
 package frc.robot.command_groups.drivetrain.auto;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.commands.WaitTime;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.robot.commands.arm.DropHatch;
 import frc.robot.commands.arm.ZeroArm;
 import frc.robot.commands.drivetrain.*;
@@ -9,7 +13,7 @@ import frc.robot.commands.gyro.ResetGyro;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.KitDrivetrain;
 
-public class DriveProfileHatch extends CommandGroup {
+public class DriveProfileHatch extends CommandGroupBase {
 
   private KitDrivetrain drivetrain = null;
   private Arm arm = null;
@@ -18,31 +22,32 @@ public class DriveProfileHatch extends CommandGroup {
     drivetrain = KitDrivetrain.getInstance();
     arm = Arm.getInstance();
 
-    requires(drivetrain);
-    requires(arm);
+    addRequirements(drivetrain, arm);
 
-    addParallel(new ZeroArm());
-    addSequential(new ResetGyro());
+    addCommands(
+      new ParallelCommandGroup(
+        new ZeroArm(), 
+        new ResetGyro()
+      ),
 
-    // Profile Path Name, Time Codes for Set Arm, Arm Stage
-    addSequential(new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }));
-    addSequential(new DriveVisionTarget());
-    addSequential(new DropHatch());
-    addParallel(new WaitTime(0.2));
-    addSequential(new DriveDistance(-1));
+      new SequentialCommandGroup(
+        new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }), 
+        new DriveVisionTarget()
+      ),
 
-    /*addSequential(new ProfileFollower("drive_retrieve"));
-    addSequential(new DriveAngle(90));
-    addSequential(new DriveDistance(0.4));
-    addSequential(new SetStage(1));
-    addSequential(new DriveDistance(-0.4));
-    addSequential(new ZeroArm());
-    addSequential(new DriveAngle(-90));
+      new ParallelCommandGroup(
+        new DropHatch(),
+        new WaitCommand(0.2)
+      ),
 
-    addSequential(new DriveProfileWithArm("drive_back", new double[] { 0.0 }, new int[] { 3 }));
-    addSequential(new DriveVisionTarget());
-    addParallel(new DropHatch());
-    addSequential(new WaitTime(0.2));
-    addSequential(new DriveDistance(-0.5));*/
+      new SequentialCommandGroup(
+        new DriveDistance(-1)
+      )
+    );
+  }
+
+  @Override
+  public void addCommands(Command... commands) {
+    System.out.println("Adding " + commands.length + " commands to DriveProfileHatch");
   }
 }

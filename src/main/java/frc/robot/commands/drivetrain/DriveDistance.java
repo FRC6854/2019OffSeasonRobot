@@ -1,11 +1,11 @@
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.KitDrivetrain;
 import viking.led.LEDController;
 import viking.led.LEDController.LEDMode;
 
-public class DriveDistance extends Command {
+public class DriveDistance extends CommandBase {
   private KitDrivetrain drivetrain = null;
   private LEDController leds = null;
   
@@ -19,37 +19,36 @@ public class DriveDistance extends Command {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
 
-    requires(drivetrain);
+    addRequirements(drivetrain);
 
     this.meters = meters;
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     drivetrain.zeroSensors();
     drivetrain.driveMeters(meters);
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     leds.setMode(LEDMode.AUTO);
     timer++;
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return (timer > waitForTime && (drivetrain.getLeftVelocity() == 0 && drivetrain.getRightVelocity() == 0));
   }
 
   @Override
-  protected void end() {
-    System.out.println("Finished Driving " + meters + "m");
-    drivetrain.arcadeDrive(0, 0);
-  }
-
-  @Override
-  protected void interrupted() {
-    System.out.println("Interrupted Driving " + meters + "m");
-    end();
+  public void end(boolean interrupted) {
+    if (interrupted == true) {
+      System.out.println("Interrupted Driving " + meters + "m");
+    }
+    else {
+      System.out.println("Finished Driving " + meters + "m");
+      drivetrain.arcadeDrive(0, 0);
+    }
   }
 }

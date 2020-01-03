@@ -1,11 +1,11 @@
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.KitDrivetrain;
 import viking.led.LEDController;
 import viking.led.LEDController.LEDMode;
 
-public class ProfileFollower extends Command {
+public class ProfileFollower extends CommandBase {
 
   private KitDrivetrain drivetrain = null;
   private LEDController leds = null;
@@ -14,15 +14,16 @@ public class ProfileFollower extends Command {
   public ProfileFollower(String path) {
     drivetrain = KitDrivetrain.getInstance();
     leds = LEDController.getInstance();
-    requires(drivetrain);
+
+    addRequirements(drivetrain);
 
     this.path = path;
 
-    setTimeout(15.0);
+    withTimeout(15.0);
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     leds.setMode(LEDMode.AUTO);
     drivetrain.zeroSensors();
     drivetrain.resetMotionProfile();
@@ -35,23 +36,13 @@ public class ProfileFollower extends Command {
   }
 
   @Override
-  protected void execute() {
-
+  public boolean isFinished() {
+    return (drivetrain.getLeftMaster().isMotionProfileFinished() && drivetrain.getRightMaster().isMotionProfileFinished());
   }
 
   @Override
-  protected boolean isFinished() {
-    return (drivetrain.getLeftMaster().isMotionProfileFinished() && drivetrain.getRightMaster().isMotionProfileFinished()) || isTimedOut();
-  }
-
-  @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     System.out.println("Done MP driving!");
     drivetrain.resetMotionProfile();
-  }
-
-  @Override
-  protected void interrupted() {
-    end();
   }
 }

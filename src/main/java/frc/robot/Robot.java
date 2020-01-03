@@ -1,15 +1,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
+import frc.robot.commands.arm.ZeroArm;
+
 import viking.Controller;
 import viking.OI;
 import viking.led.LEDController;
 import viking.led.LEDController.LEDMode;
-import frc.robot.commands.arm.ZeroArm;
 
 public class Robot extends TimedRobot implements RobotMap {
 
@@ -19,7 +21,7 @@ public class Robot extends TimedRobot implements RobotMap {
 
   private static LEDController leds;
 
-  private static Scheduler scheduler;
+  private static CommandScheduler scheduler;
 
   private static Arm arm;
 
@@ -33,7 +35,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void robotInit() {
     drivetrain = KitDrivetrain.getInstance();
-    scheduler = Scheduler.getInstance();
+    scheduler = CommandScheduler.getInstance();
     arm = Arm.getInstance();
     autoManager = AutoManager.getInstance();
     leds = LEDController.getInstance();
@@ -70,18 +72,18 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void teleopInit() {
-    scheduler.removeAll();
+    scheduler.cancelAll();
     drivetrain.setSpeedMultiplier(autoManager.getSpeedMultiplier());
-    scheduler.add(new ZeroArm());
+    scheduler.schedule(new ZeroArm());
   }
 
   @Override
   public void autonomousInit() {
-    scheduler.removeAll();
+    scheduler.cancelAll();
 
     drivetrain.changeGyroGains(gyroP, gyroI, gyroD);
 
-    scheduler.add(autoManager.getAutoChooserCommand());
+    scheduler.schedule(autoManager.getAutoChooserCommand());
   }
 
   @Override

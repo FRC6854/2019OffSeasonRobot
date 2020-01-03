@@ -1,22 +1,22 @@
 package frc.robot.command_groups.testing;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drivetrain.DriveAngle;
 import frc.robot.commands.gyro.ResetGyro;
 import frc.robot.subsystems.KitDrivetrain;
 
-public class TestingDriveAngle extends CommandGroup {
+public class TestingDriveAngle extends SequentialCommandGroup {
 
   private KitDrivetrain drivetrain = null;
 
   public TestingDriveAngle() {
     drivetrain = KitDrivetrain.getInstance();
 
-    requires(drivetrain);
+    addRequirements(drivetrain);
 
-    System.out.println("Testing");
-
-    addSequential(new ResetGyro());
-    addSequential(new DriveAngle(-180));
+    addCommands(
+      new ResetGyro(),
+      new DriveAngle(-180)
+    );
   }
 }

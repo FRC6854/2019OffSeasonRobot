@@ -1,17 +1,10 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-import viking.led.LEDController;
-import viking.led.LEDController.LEDMode;
-
-public class DropHatch extends Command {
+public class DropHatch extends CommandBase {
   private Arm arm = null;
-  private LEDController leds = null;
- 
-  boolean finished = false;
-
   int timer = 0;
 
   // execute() runs 50 times per second or every 20ms. So the command should run a minimum of half a second
@@ -20,42 +13,30 @@ public class DropHatch extends Command {
 
   public DropHatch() {
     arm = Arm.getInstance();
-    leds = LEDController.getInstance();
 
-    requires(arm);
-    setTimeout(1.0);
+    addRequirements(arm);
+    
+    withTimeout(1.0);
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     arm.dropStage();
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     timer++;
-
-    finished = (timer > waitForTime && (arm.getArmVelocity() <= velocityThreshold && arm.getArmVelocity() >= -velocityThreshold));
   }
 
   @Override
-  protected boolean isFinished() {
-    if (isTimedOut()) {
-      leds.setMode(LEDMode.ERROR);
-      return true;
-    }
-
-    return finished;
+  public boolean isFinished() {
+    return (timer > waitForTime && (arm.getArmVelocity() <= velocityThreshold && arm.getArmVelocity() >= -velocityThreshold));
   }
 
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     System.out.println("Done Dropping Hatch");
     arm.driveManual(0);
-  }
-
-  @Override
-  protected void interrupted() {
-    end();
   }
 }

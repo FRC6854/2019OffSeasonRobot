@@ -1,14 +1,13 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
-
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.KitDrivetrain;
 import viking.led.LEDController;
 import viking.led.LEDController.LEDMode;
 
-public class DriveProfileWithArm extends Command {
+public class DriveProfileWithArm extends CommandBase {
 
   private KitDrivetrain drivetrain = null;
   private Arm arm = null;
@@ -30,14 +29,13 @@ public class DriveProfileWithArm extends Command {
     this.driveAtTimes = time;
     this.stages = stages;
 
-    requires(drivetrain);
-    requires(arm);
+    addRequirements(drivetrain, arm);
 
-    setTimeout(15.0);
+    withTimeout(15.0);
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     leds.setMode(LEDMode.AUTO);
     drivetrain.zeroSensors();
     drivetrain.resetMotionProfile();
@@ -49,7 +47,7 @@ public class DriveProfileWithArm extends Command {
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     for (int i = 0; i < driveAtTimes.length; i++) {
       if(timer.get() >= driveAtTimes[i]) {
         arm.setStage(stages[i]);
@@ -58,18 +56,13 @@ public class DriveProfileWithArm extends Command {
   }
 
   @Override
-  protected boolean isFinished() {
-    return (drivetrain.getLeftMaster().isMotionProfileFinished() && drivetrain.getRightMaster().isMotionProfileFinished()) || isTimedOut();
+  public boolean isFinished() {
+    return (drivetrain.getLeftMaster().isMotionProfileFinished() && drivetrain.getRightMaster().isMotionProfileFinished());
   }
 
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     timer.stop();
     drivetrain.resetMotionProfile();
-  }
-
-  @Override
-  protected void interrupted() {
-      end();
   }
 }

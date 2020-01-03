@@ -1,6 +1,6 @@
 package frc.robot.commands.gyro;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.KitDrivetrain;
 
 public class ResetGyro extends InstantCommand {
@@ -9,10 +9,12 @@ public class ResetGyro extends InstantCommand {
 
   public ResetGyro() {
     drivetrain = KitDrivetrain.getInstance();
-    requires(drivetrain);
+
+    addRequirements(drivetrain);
   }
+
   @Override
-  protected void initialize() {
+  public void initialize() {
     drivetrain.resetGyro();
   }
 }

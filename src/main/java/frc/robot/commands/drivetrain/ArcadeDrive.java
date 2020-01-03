@@ -1,6 +1,6 @@
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.KitDrivetrain;
 import viking.led.LEDController;
@@ -8,7 +8,7 @@ import viking.Limelight;
 import viking.led.LEDController.LEDMode;
 import viking.Limelight.LightMode;
 
-public class ArcadeDrive extends Command {
+public class ArcadeDrive extends CommandBase {
   private KitDrivetrain drivetrain = null;
   private Limelight limelight = null;
   private LEDController leds = null;
@@ -22,15 +22,11 @@ public class ArcadeDrive extends Command {
     limelight = Limelight.getInstance();
     leds = LEDController.getInstance();
 
-    requires(drivetrain);
-  }
-
-  @Override
-  protected void initialize() {
+    addRequirements(drivetrain);
   }
   
   @Override
-  protected void execute() {
+  public void execute() {
     tX = limelight.targetX();
 
     // A button to vision aim using vision
@@ -57,18 +53,5 @@ public class ArcadeDrive extends Command {
 
       drivetrain.arcadeDrive(Robot.driver.getDriverLeftStickY(), Robot.driver.getDriverRightStickX());
     }
-  }
-
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  @Override
-  protected void end() {
-  }
-
-  @Override
-  protected void interrupted() {
   }
 }

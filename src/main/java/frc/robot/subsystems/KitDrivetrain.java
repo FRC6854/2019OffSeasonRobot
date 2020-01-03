@@ -9,14 +9,14 @@ import viking.controllers.VikingSRX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.RobotMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
+public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap {
   private static KitDrivetrain instance = null;
 
   private VikingSRX leftMaster;
@@ -55,6 +55,8 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 
     gyroPID = new PIDController(pGyro0, iGyro0, dGyro0);
     driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
+
+    this.setDefaultCommand(new ArcadeDrive());
   }
 
   public void writeTable() {
@@ -294,9 +296,4 @@ public class KitDrivetrain extends Subsystem implements Constants, RobotMap {
 	public void changeGyroGains(double pGyro, double iGyro, double dGyro) {
 		gyroPID.changePIDGains(pGyro, iGyro, dGyro);
 	}
-
-  @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new ArcadeDrive());
-  }
 }

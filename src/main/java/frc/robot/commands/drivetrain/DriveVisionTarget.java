@@ -1,13 +1,13 @@
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.KitDrivetrain;
 import viking.led.LEDController;
 import viking.Limelight;
 import viking.led.LEDController.LEDMode;
 import viking.Limelight.LightMode;
 
-public class DriveVisionTarget extends Command {
+public class DriveVisionTarget extends CommandBase {
 
   private KitDrivetrain drivetrain = null;
   private LEDController leds = null;
@@ -22,18 +22,18 @@ public class DriveVisionTarget extends Command {
     leds = LEDController.getInstance();
     limelight = Limelight.getInstance();
 
-    setTimeout(5.0);
+    withTimeout(5.0);
 
-    requires(drivetrain);
+    addRequirements(drivetrain);
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     drivetrain.arcadeDrive(0, 0);
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     tX = limelight.targetX();
 
     leds.setMode(LEDMode.VISION);
@@ -51,27 +51,23 @@ public class DriveVisionTarget extends Command {
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     if (drivetrain.getFrontSensor() == true) {
       System.out.println("Front Sensor End");
-      return true;
-    }
-    if (isTimedOut() == true) {
-      System.out.println("Timed Out");
       return true;
     }
 
     return false;
   }
-  
+
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
+    if (interrupted == true) {
+      System.out.println("Timed Out");
+    }
+
     drivetrain.arcadeDrive(0, 0);
     limelight.setDriverMode(true);
     limelight.setLEDMode(LightMode.OFF);
-  }
-
-  @Override
-  protected void interrupted() {
   }
 }

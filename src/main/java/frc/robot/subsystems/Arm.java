@@ -3,12 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.commands.arm.OperateArm;
 import viking.controllers.VikingSRX;
 
-public class Arm extends Subsystem implements Constants, RobotMap {
+public class Arm extends SubsystemBase implements Constants, RobotMap {
   private static Arm instance = null;
 
   private VikingSRX arm;
@@ -28,6 +28,8 @@ public class Arm extends Subsystem implements Constants, RobotMap {
   public Arm() {
     arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 2000, 1000, 0);
     faults = new Faults();
+
+    this.setDefaultCommand(new OperateArm());
   }
 
   public void driveManual(double output) {
@@ -135,10 +137,5 @@ public class Arm extends Subsystem implements Constants, RobotMap {
       }
     }
     return instance;
-  }
-
-  @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new OperateArm());
   }
 }
