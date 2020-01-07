@@ -6,10 +6,12 @@ import viking.controllers.PIDController;
 import viking.CSVFileManager;
 import viking.controllers.VikingSPX;
 import viking.controllers.VikingSRX;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.RobotMap;
 
@@ -270,8 +272,9 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
   }
 
   public static KitDrivetrain getInstance() {
-    if(instance == null)
-			instance = new KitDrivetrain();
+    if(instance == null) {
+      instance = new KitDrivetrain();
+    }
 		
 		return instance;
   }
