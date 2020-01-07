@@ -30,9 +30,9 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
   private PIDController gyroPID;
   private PIDController driveTargetPID;
 
-  private DigitalInput frontSensor;
+  private DigitalInput frontSensor = new DigitalInput(DIGITAL_DISTANCE);
 
-  private AnalogInput distanceSensor;
+  private AnalogInput distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
   
   private double leftOutput = 0;
   private double rightOutput = 0;
@@ -48,10 +48,6 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
     rightSlave = new VikingSPX(CAN_RIGHT_BACK, rightMaster, true);
 
     gyro = new AHRS(Port.kMXP);
-
-    frontSensor = new DigitalInput(DIGITAL_DISTANCE);
-
-    distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
 
     gyroPID = new PIDController(pGyro0, iGyro0, dGyro0);
     driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
