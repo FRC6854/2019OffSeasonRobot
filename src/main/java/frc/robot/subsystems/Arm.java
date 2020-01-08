@@ -28,8 +28,6 @@ public class Arm extends SubsystemBase implements Constants, RobotMap {
   public Arm() {
     arm = new VikingSRX(CAN_ARM, false, true, arm_kFeedbackDevice, arm_kF, arm_kP, arm_kI, arm_kD, 2000, 1000, 0);
     faults = new Faults();
-
-    this.setDefaultCommand(new OperateArm());
   }
 
   public void driveManual(double output) {

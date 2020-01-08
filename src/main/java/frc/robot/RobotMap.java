@@ -13,7 +13,7 @@ public interface RobotMap {
   final int ANALOG_ULTRASONIC = 1;
 
   // Distance Sensor
-  final int DIGITAL_DISTANCE = 0;
+  final int DIGITAL_DISTANCE = 1;
 
   //Drivetrain Motorcontroller CAN Id's
   final int CAN_LEFT_FRONT = 1;

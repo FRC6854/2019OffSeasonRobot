@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.RobotMap;
 
 import java.util.ArrayList;
@@ -32,9 +31,9 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
   private PIDController gyroPID;
   private PIDController driveTargetPID;
 
-  private DigitalInput frontSensor = new DigitalInput(DIGITAL_DISTANCE);
+  private DigitalInput frontSensor = null;
 
-  private AnalogInput distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
+  private AnalogInput distanceSensor = null;
   
   private double leftOutput = 0;
   private double rightOutput = 0;
@@ -51,10 +50,11 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
 
     gyro = new AHRS(Port.kMXP);
 
+    frontSensor = new DigitalInput(DIGITAL_DISTANCE);
+    distanceSensor = new AnalogInput(ANALOG_ULTRASONIC);
+
     gyroPID = new PIDController(pGyro0, iGyro0, dGyro0);
     driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
-
-    this.setDefaultCommand(new ArcadeDrive());
   }
 
   public void writeTable() {
@@ -275,7 +275,7 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
     if(instance == null) {
       instance = new KitDrivetrain();
     }
-		
+
 		return instance;
   }
 

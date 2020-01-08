@@ -6,7 +6,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
+
+import frc.robot.commands.arm.OperateArm;
 import frc.robot.commands.arm.ZeroArm;
+import frc.robot.commands.drivetrain.ArcadeDrive;
 
 import viking.Controller;
 import viking.OI;
@@ -34,8 +37,8 @@ public class Robot extends TimedRobot implements RobotMap {
   
   @Override
   public void robotInit() {
-    drivetrain = KitDrivetrain.getInstance();
     scheduler = CommandScheduler.getInstance();
+    drivetrain = KitDrivetrain.getInstance();
     arm = Arm.getInstance();
     autoManager = AutoManager.getInstance();
     leds = LEDController.getInstance();
@@ -48,6 +51,9 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("Gyro P", Constants.pGyro0);
     SmartDashboard.putNumber("Gyro I", Constants.iGyro0);
     SmartDashboard.putNumber("Gyro D", Constants.dGyro0);
+
+    drivetrain.setDefaultCommand(new ArcadeDrive());
+    arm.setDefaultCommand(new OperateArm());
   }
 
   @Override
