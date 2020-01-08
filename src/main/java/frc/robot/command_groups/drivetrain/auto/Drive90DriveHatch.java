@@ -25,24 +25,24 @@ public class Drive90DriveHatch extends SequentialCommandGroup {
     
     addCommands(
       new ParallelCommandGroup(
-        new ZeroArm(),
+        new ZeroArm().withTimeout(6.0),
         new ResetGyro()
       ),
 
       new DriveDistance(2),
-      new DriveAngle(-90),
+      new DriveAngle(-90).withTimeout(1.5),
       new DriveDistance(2),
-      new DriveAngle(0)
+      new DriveAngle(0).withTimeout(1.5)
     );
 
     switch (stage) {
       case 1:
         addCommands(
           new SetStage(1),
-          new DriveVisionTarget(),
+          new DriveVisionTarget().withTimeout(5.0),
 
           new ParallelCommandGroup(
-            new DropHatch()
+            new DropHatch().withTimeout(1.0)
           ),
 
           new WaitCommand(0.2),
@@ -53,10 +53,10 @@ public class Drive90DriveHatch extends SequentialCommandGroup {
       case 3:
         addCommands(
           new SetStage(3),
-          new DriveVisionTarget(),
+          new DriveVisionTarget().withTimeout(5.0),
 
           new ParallelCommandGroup(
-            new DropHatch()
+            new DropHatch().withTimeout(1.0)
           ),
 
           new WaitCommand(0.1),

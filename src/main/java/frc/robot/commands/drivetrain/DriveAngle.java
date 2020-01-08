@@ -30,12 +30,10 @@ public class DriveAngle extends CommandBase implements Constants {
     if (Math.abs(angle) - drivetrain.getGyroAngle() >= 135) {
       drivetrain.changeGyroGains(pGyro1, iGyro1, dGyro1);
       this.speed = 0.5;
-      withTimeout(2);
     }
     else {
       drivetrain.changeGyroGains(pGyro0, iGyro0, dGyro0);
       this.speed = 0.6;
-      withTimeout(1.5);
     }
   }
 

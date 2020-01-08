@@ -61,7 +61,7 @@ public class AutoManager {
             case 4:
               return (new TestingDriveAngle());
             case 5:
-              return (new ProfileFollower(path));
+              return (new ProfileFollower(path).withTimeout(15.0));
         }
 
         return null;

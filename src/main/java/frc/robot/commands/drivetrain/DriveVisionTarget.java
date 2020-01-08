@@ -22,8 +22,6 @@ public class DriveVisionTarget extends CommandBase {
     leds = LEDController.getInstance();
     limelight = Limelight.getInstance();
 
-    withTimeout(5.0);
-
     addRequirements(drivetrain);
   }
 

@@ -3,13 +3,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 import frc.robot.auto.AutoManager;
 import frc.robot.subsystems.*;
 
-import frc.robot.commands.arm.OperateArm;
 import frc.robot.commands.arm.ZeroArm;
-import frc.robot.commands.drivetrain.ArcadeDrive;
 
 import viking.Controller;
 import viking.OI;
@@ -51,9 +48,6 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("Gyro P", Constants.pGyro0);
     SmartDashboard.putNumber("Gyro I", Constants.iGyro0);
     SmartDashboard.putNumber("Gyro D", Constants.dGyro0);
-
-    drivetrain.setDefaultCommand(new ArcadeDrive());
-    arm.setDefaultCommand(new OperateArm());
   }
 
   @Override

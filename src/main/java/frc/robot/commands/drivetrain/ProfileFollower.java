@@ -18,8 +18,6 @@ public class ProfileFollower extends CommandBase {
     addRequirements(drivetrain);
 
     this.path = path;
-
-    withTimeout(15.0);
   }
 
   @Override

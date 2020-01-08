@@ -128,12 +128,10 @@ public class Arm extends SubsystemBase implements Constants, RobotMap {
 
   public static Arm getInstance() {
     if (instance == null) {
-      try {
-        instance = new Arm();
-      } catch (Exception ex) {
-        System.out.println(ex);
-      }
+      instance = new Arm();
+      instance.setDefaultCommand(new OperateArm());
     }
+
     return instance;
   }
 }

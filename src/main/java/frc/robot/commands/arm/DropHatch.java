@@ -15,8 +15,6 @@ public class DropHatch extends CommandBase {
     arm = Arm.getInstance();
 
     addRequirements(arm);
-    
-    withTimeout(1.0);
   }
 
   @Override

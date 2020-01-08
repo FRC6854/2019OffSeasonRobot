@@ -24,15 +24,15 @@ public class DriveProfileHatch extends SequentialCommandGroup {
 
     addCommands(
       new ParallelCommandGroup(
-        new ZeroArm(), 
+        new ZeroArm().withTimeout(6.0), 
         new ResetGyro()
       ),
 
-      new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }), 
-      new DriveVisionTarget(),
+      new DriveProfileWithArm("drive_rocket", new double[] { 2.0 }, new int[] { 1 }).withTimeout(15.0), 
+      new DriveVisionTarget().withTimeout(5.0),
 
       new ParallelCommandGroup(
-        new DropHatch(),
+        new DropHatch().withTimeout(1.0),
         new WaitCommand(0.2)
       ),
 

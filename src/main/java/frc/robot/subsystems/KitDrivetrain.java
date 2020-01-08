@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.RobotMap;
+import frc.robot.commands.drivetrain.ArcadeDrive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,6 +275,7 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
   public static KitDrivetrain getInstance() {
     if(instance == null) {
       instance = new KitDrivetrain();
+      instance.setDefaultCommand(new ArcadeDrive());
     }
 
 		return instance;

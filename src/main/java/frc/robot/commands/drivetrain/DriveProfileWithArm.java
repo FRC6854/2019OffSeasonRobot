@@ -30,8 +30,6 @@ public class DriveProfileWithArm extends CommandBase {
     this.stages = stages;
 
     addRequirements(drivetrain, arm);
-
-    withTimeout(15.0);
   }
 
   @Override

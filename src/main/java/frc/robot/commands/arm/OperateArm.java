@@ -35,7 +35,7 @@ public class OperateArm extends CommandBase implements Constants {
 
     if(Robot.driver.getDriverBButtonPressed()) {
       manualControl = true;
-      scheduler.schedule(new DropHatch());
+      scheduler.schedule(new DropHatch().withTimeout(1.0));
     }
 
     // If in manual mode and the stage switch buttons are pressed switch to stage mode

@@ -15,8 +15,6 @@ public class ZeroArm extends CommandBase {
     arm = Arm.getInstance();
     leds = LEDController.getInstance();
 
-    withTimeout(6.0);
-
     addRequirements(arm);
   }
 

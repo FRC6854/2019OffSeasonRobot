@@ -16,7 +16,7 @@ public class TestingDriveAngle extends SequentialCommandGroup {
 
     addCommands(
       new ResetGyro(),
-      new DriveAngle(-180)
+      new DriveAngle(-180).withTimeout(2)
     );
   }
 }
