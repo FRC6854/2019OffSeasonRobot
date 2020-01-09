@@ -21,8 +21,6 @@ public class Robot extends TimedRobot implements RobotMap {
 
   private static LEDController leds;
 
-  private static CommandScheduler scheduler;
-
   private static Arm arm;
 
   private static AutoManager autoManager;
@@ -34,7 +32,6 @@ public class Robot extends TimedRobot implements RobotMap {
   
   @Override
   public void robotInit() {
-    scheduler = CommandScheduler.getInstance();
     drivetrain = KitDrivetrain.getInstance();
     arm = Arm.getInstance();
     autoManager = AutoManager.getInstance();
@@ -67,40 +64,37 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putData("Auto Chooser", autoManager.getAutoChooser());
     SmartDashboard.putData("Auto Rocket Level", autoManager.getAutoHatch());
     SmartDashboard.putData("Slow Mode", autoManager.getSlowModeChooser());
-    SmartDashboard.putData("Scheduler", scheduler);
   }
 
   @Override
   public void teleopInit() {
-    scheduler.cancelAll();
+    CommandScheduler.getInstance().cancelAll();
+
     drivetrain.setSpeedMultiplier(autoManager.getSpeedMultiplier());
-    scheduler.schedule(new ZeroArm());
+    CommandScheduler.getInstance().schedule(new ZeroArm());
   }
 
   @Override
   public void autonomousInit() {
-    scheduler.cancelAll();
+    CommandScheduler.getInstance().cancelAll();
 
     drivetrain.changeGyroGains(gyroP, gyroI, gyroD);
 
-    scheduler.schedule(autoManager.getAutoChooserCommand());
+    CommandScheduler.getInstance().schedule(autoManager.getAutoChooserCommand());
   }
 
   @Override
   public void teleopPeriodic() {
-    scheduler.run();
-    drivetrain.updateTable();
+    CommandScheduler.getInstance().run();
   }
 
   @Override
   public void autonomousPeriodic() {
-    scheduler.run();
+    CommandScheduler.getInstance().run();
   }
 
   @Override
   public void disabledInit() {
     leds.setMode(LEDMode.DEFAULT);
-    drivetrain.writeTable();
-    drivetrain.clearTable();
   }
 }

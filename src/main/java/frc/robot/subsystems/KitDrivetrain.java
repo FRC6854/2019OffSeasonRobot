@@ -58,26 +58,6 @@ public class KitDrivetrain extends SubsystemBase implements Constants, RobotMap 
     driveTargetPID = new PIDController(pDriveTarget, iDriveTarget, dDriveTarget);
   }
 
-  public void writeTable() {
-    CSVFileManager.writeCSVLog(table);
-  }
-
-  public void updateTable() {
-    List<String> row = new ArrayList<String>();
-
-    String left = String.format("%1.3f", leftOutput);
-    String right = String.format("%1.3f", rightOutput);
-
-    row.add("Drivetrain");
-    row.add(left + " " + right);  
-
-    table.add(row);
-  }
-
-  public void clearTable() {
-    table.clear();
-  }
-
   // Copied from the WPILib Differential Drive Class with some minor alterations
   // for compatibility
   public void arcadeDrive(double xSpeed, double zRotation) {

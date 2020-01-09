@@ -24,7 +24,7 @@ public class DriveProfileHatch extends SequentialCommandGroup {
 
     addCommands(
       new ParallelCommandGroup(
-        new ZeroArm().withTimeout(6.0), 
+        //new ZeroArm().withTimeout(6.0), 
         new ResetGyro()
       ),
 
